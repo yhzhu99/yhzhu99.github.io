@@ -122,6 +122,43 @@
             font-style: italic;
         }
 
+        footer {
+            text-align: center;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            font-style: italic;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: underline dotted;;
+            color: #069;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -479,8 +516,24 @@
                 <li><strong>Fundamentals of Programming and Computer Science:</strong> Spring 2023</li>
             </ul>
         </section>
-
-
     </div>
+
+    <footer>
+        <p>Last Updated: December 7, 2023</p>
+    </footer>
+
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#publications">Publications</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#awards">Awards</a></li>
+            <li><a href="#talks">Talks</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#teaching">Teaching</a></li>
+        </ul>
+    </nav>
+
 </body>
 </html>

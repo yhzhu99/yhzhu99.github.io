@@ -207,6 +207,27 @@
                 padding-left: 10px;
             }
         }
+
+        /* Publications Tabs */
+        .tabs {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .tab-button {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        .tab-button.active {
+            background-color: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -323,64 +344,40 @@
 
         <section id="publications">
             <h2>Publications<div style="margin-left: 10px; font-weight: normal; font-size: 14px; display: inline;">(<sup>*</sup> indicates the equal contributions, <sup>†</sup> indicates the corresponding author.)</div></h2>
-            <ol>
-                <h3>Journals</h3>
+            <!-- Publications Tabs -->
+            <div id="pub-tabs" class="tabs">
+                <button class="tab-button active" data-category="Selected">Selected</button>
+                <button class="tab-button" data-category="LLM">LLM</button>
+                <button class="tab-button" data-category="Healthcare Modeling">Healthcare Modeling</button>
+                <button class="tab-button" data-category="Benchmark/Protocol">Benchmark/Protocol</button>
+                <button class="tab-button" data-category="Software Engineering">Software Engineering</button>
+                <button class="tab-button" data-category="Book Chapters">Book Chapters</button>
+                <button class="tab-button" data-category="All">All</button>
+            </div>
+            <ol id="pub-list">
                 <li>
-                    <div class="publication">
-                        <span class="title">A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care</span>
-                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
-                        <span class="pub-type">Cell Patterns, 2024</span>
+                    <div class="publication" data-tags="Selected,Healthcare Modeling">
+                        <span class="title">Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction</span>
+                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025</span>
                         <div class="asset-links">
-                            <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3">Paper</a></span>
-                            <span><a href="https://github.com/yhzhu99/pyehr">Code</a></span>
-                            <span><a href="https://pyehr.netlify.app">Website</a></span>
+                            <span><a href="https://arxiv.org/abs/2401.16796">Paper</a></span>
+                            <span><a href="https://github.com/MrBlankness/PAI">Code</a></span>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models</span>
-                        <span class="authors">Tianlong Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Wen Tang<sup>†</sup>, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
-                        <span class="pub-type">STAR Protocols, 2024</span>
+                    <div class="publication" data-tags="Selected,Software Engineering">
+                        <span class="title">Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor</span>
+                        <span class="authors">Xin Tan, Xiao Long, <strong>Yinghao Zhu</strong>, Lin Shi, Xiaoli Lian, Li Zhang<sup>†</sup></span>
+                        <span class="pub-type">ACM International Conference on the Foundations of Software Engineering (FSE), 2025</span>
                         <div class="asset-links">
-                            <span><a href="https://www.sciencedirect.com/science/article/pii/S2666166724005008">Paper</a></span>
+                            <span><a href="https://github.com/yhzhu99/OSSerCopilot">Code</a></span>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients</span>
-                        <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup>, Xiaoyun Zhang<sup>†</sup></span>
-                        <span class="pub-type">STAR Protocols, 2025</span>
-                        <div class="asset-links">
-                            <span><a href="https://doi.org/10.5281/zenodo.14498936">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
-                        <span class="title">Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features</span>
-                        <span class="authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang, Zhongwei Qiao<sup>†</sup></span>
-                        <span class="pub-type">Pediatric Radiology, 2024</span>
-                        <div class="asset-links">
-                            <span><a href="https://link.springer.com/article/10.1007/s00247-024-06065-6">Paper</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
-                        <span class="title">Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients</span>
-                        <span class="authors">Liantao Ma<sup>*</sup>, Chaohe Zhang<sup>*</sup>, Junyi Gao<sup>*</sup><sup>†</sup>, Xianfeng Jiao, Zhihao Yu, <strong>Yinghao Zhu</strong>, Tianlong Wang, Xinyu Ma, Yasha Wang<sup>†</sup>, Wen Tang<sup>†</sup>, Xinju Zhao, Wenjie Ruan, Tao Wang</span>
-                        <span class="pub-type">Cell Patterns, Cover, 2023</span>
-                        <div class="asset-links">
-                            <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5">Paper</a></span>
-                            <span><a href="https://github.com/Accountable-Machine-Intelligence/AICare">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <h3>Conferences</h3>
-                <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected,LLM">
                         <span class="title">ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
                         <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Huiya Zhao<sup>*</sup>, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang<sup>†</sup>, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">ACM International World Wide Web Conference (WWW), 2025</span>
@@ -392,7 +389,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected,LLM">
                         <span class="title">Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories</span>
                         <span class="authors">Tianlong Wang<sup>*</sup>, Xianfeng Jiao<sup>*</sup>, <strong>Yinghao Zhu</strong>, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">ACM International World Wide Web Conference (WWW), 2025</span>
@@ -402,28 +399,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor</span>
-                        <span class="authors">Xin Tan, Xiao Long, <strong>Yinghao Zhu</strong>, Lin Shi, Xiaoli Lian, Li Zhang<sup>†</sup></span>
-                        <span class="pub-type">ACM International Conference on the Foundations of Software Engineering (FSE), 2025</span>
-                        <div class="asset-links">
-                            <span><a href="https://github.com/yhzhu99/OSSerCopilot">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
-                        <span class="title">Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction</span>
-                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025</span>
-                        <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2401.16796">Paper</a></span>
-                            <span><a href="https://github.com/MrBlankness/PAI">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected,LLM">
                         <span class="title">Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models</span>
                         <span class="authors">Xijie Huang<sup>*</sup>, Xinyuan Wang<sup>*</sup>, Hantao Zhang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
@@ -434,7 +410,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected">
                         <span class="title">AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation</span>
                         <span class="authors">Jingkun An<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zongjian Li<sup>*</sup>, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
@@ -446,7 +422,17 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Benchmark/Protocol">
+                        <span class="title">Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients</span>
+                        <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup>, Xiaoyun Zhang<sup>†</sup></span>
+                        <span class="pub-type">STAR Protocols, 2025</span>
+                        <div class="asset-links">
+                            <span><a href="https://doi.org/10.5281/zenodo.14498936">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="Selected,LLM">
                         <span class="title">EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation</span>
                         <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Changyu Ren<sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
@@ -458,7 +444,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected,Healthcare Modeling">
                         <span class="title">PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations</span>
                         <span class="authors"><strong>Yinghao Zhu</strong>, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
@@ -470,30 +456,39 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction</span>
-                        <span class="authors">Zhichao Yang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Ziyue Niu, Yanru Huang, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
-                        <span class="pub-type">International Conference on Industrial Artificial Intelligence (IAI), 2024</span>
+                    <div class="publication" data-tags="Selected,Benchmark/Protocol">
+                        <span class="title">A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">Cell Patterns, 2024</span>
                         <div class="asset-links">
-                            <span><a href="https://ieeexplore.ieee.org/abstract/document/10730680/">Paper</a></span>
-                            <span><a href="https://github.com/yzc0912/PIGWN">Code</a></span>
+                            <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3">Paper</a></span>
+                            <span><a href="https://github.com/yhzhu99/pyehr">Code</a></span>
+                            <span><a href="https://pyehr.netlify.app">Website</a></span>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">M3Care: Learning with Missing Modalities in Multimodal Healthcare Data</span>
-                        <span class="authors">Chaohe Zhang<sup>*</sup>, Xu Chu<sup>*</sup>, Liantao Ma, <strong>Yinghao Zhu</strong>, Yasha Wang<sup>†</sup>, Jiangtao Wang, Junfeng Zhao</span>
-                        <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022</span>
+                    <div class="publication" data-tags="Benchmark/Protocol">
+                        <span class="title">Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models</span>
+                        <span class="authors">Tianlong Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Wen Tang<sup>†</sup>, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
+                        <span class="pub-type">STAR Protocols, 2024</span>
                         <div class="asset-links">
-                            <span><a href="https://dl.acm.org/doi/10.1145/3534678.3539388">Paper</a></span>
-                            <span><a href="https://github.com/choczhang/M3Care">Code</a></span>
+                            <span><a href="https://www.sciencedirect.com/science/article/pii/S2666166724005008">Paper</a></span>
                         </div>
                     </div>
                 </li>
-                <h3>Workshops & Abstracts</h3>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Healthcare Modeling">
+                        <span class="title">Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features</span>
+                        <span class="authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang, Zhongwei Qiao<sup>†</sup></span>
+                        <span class="pub-type">Pediatric Radiology, 2024</span>
+                        <div class="asset-links">
+                            <span><a href="https://link.springer.com/article/10.1007/s00247-024-06065-6">Paper</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="Selected,LLM">
                         <span class="title">EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow</span>
                         <span class="authors">Hao Wu<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024</span>
@@ -504,7 +499,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="LLM">
                         <span class="title">RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval</span>
                         <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
@@ -515,7 +510,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="">
                         <span class="title">DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction</span>
                         <span class="authors">Yuhang Wang, <strong>Yinghao Zhu</strong>, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
@@ -526,55 +521,18 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method</span>
-                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
-                        <span class="pub-type">Beijing Health Data Science Summit 2023, Health Data Science (HDSS), Abstract, 2023</span>
+                    <div class="publication" data-tags="">
+                        <span class="title">PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction</span>
+                        <span class="authors">Zhichao Yang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Ziyue Niu, Yanru Huang, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
+                        <span class="pub-type">International Conference on Industrial Artificial Intelligence (IAI), 2024</span>
                         <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2306.04118">Paper</a></span>
-                            <span><a href="https://github.com/yhzhu99/M3Fair">Code</a></span>
+                            <span><a href="https://ieeexplore.ieee.org/abstract/document/10730680/">Paper</a></span>
+                            <span><a href="https://github.com/yzc0912/PIGWN">Code</a></span>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis</span>
-                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Yasha Wang, Wen Tang, Liantao Ma<sup>†</sup></span>
-                        <span class="pub-type">American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023</span>
-                        <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2209.07805">Paper</a></span>
-                            <span><a href="https://github.com/yhzhu99/pyehr">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
-                        <span class="title">Exploration of the feasibility of using examination time order to split small sample size data for radiomics</span>
-                        <span class="authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
-                        <span class="pub-type">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
-                        <span class="title">Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA</span>
-                        <span class="authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
-                        <span class="pub-type">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
-                    </div>
-                </li>
-                <h3>Preprints</h3>
-                <li>
-                    <div class="publication">
-                        <span class="title">SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning</span>
-                        <span class="authors">Shiyun Xie, Zhiru Wang, Xu Wang, <strong>Yinghao Zhu</strong>, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
-                        <span class="pub-type">Preprint, 2024</span>
-                        <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2410.02571">Paper</a></span>
-                            <span><a href="https://github.com/SYXieee/SuperGS">Code</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Selected,Benchmark/Protocol">
                         <span class="title">Is larger always better? Evaluating and prompting large language models for non-generative medical tasks.</span>
                         <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao<sup>*</sup>, Zixiang Wang<sup>*</sup>, Weibin Liao<sup>*</sup>, Xiaochen Zheng, Lifang Liang, Yasha Wang, Chengwei Pan<sup>†</sup>, Ewen M. Harrison<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
@@ -585,7 +543,18 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="">
+                        <span class="title">SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning</span>
+                        <span class="authors">Shiyun Xie, Zhiru Wang, Xu Wang, <strong>Yinghao Zhu</strong>, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
+                        <span class="pub-type">Preprint, 2024</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2410.02571">Paper</a></span>
+                            <span><a href="https://github.com/SYXieee/SuperGS">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
                         <span class="title">Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data</span>
                         <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang<sup>*</sup>, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
@@ -596,7 +565,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Healthcare Modeling">
                         <span class="title">LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation</span>
                         <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Xinyuan Wang, Chengwei Pan, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
@@ -607,7 +576,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Healthcare Modeling">
                         <span class="title">Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients</span>
                         <span class="authors">Yueying Wu<sup>*</sup>, Junyi Gao<sup>*</sup>, Wen Tang<sup>†</sup>, Chunyan Su, <strong>Yinghao Zhu</strong>, Tianlong Wang, Weibin Liao, Xu Chu, Ewen M. Harrison, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
@@ -617,7 +586,64 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Software Engineering">
+                        <span class="title">How far are AI-powered programming assistants from meeting developers' needs?</span>
+                        <span class="authors">Xin Tan, Xiao Long, Xianjun Ni, <strong>Yinghao Zhu</strong>, Jing Jiang, Li Zhang<sup>†</sup></span>
+                        <span class="pub-type">Preprint, 2024</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2404.12000">Paper</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="Selected,Healthcare Modeling">
+                        <span class="title">Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients</span>
+                        <span class="authors">Liantao Ma<sup>*</sup>, Chaohe Zhang<sup>*</sup>, Junyi Gao<sup>*</sup><sup>†</sup>, Xianfeng Jiao, Zhihao Yu, <strong>Yinghao Zhu</strong>, Tianlong Wang, Xinyu Ma, Yasha Wang<sup>†</sup>, Wen Tang<sup>†</sup>, Xinju Zhao, Wenjie Ruan, Tao Wang</span>
+                        <span class="pub-type">Cell Patterns, Cover, 2023</span>
+                        <div class="asset-links">
+                            <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5">Paper</a></span>
+                            <span><a href="https://github.com/Accountable-Machine-Intelligence/AICare">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
+                        <span class="title">M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">Beijing Health Data Science Summit 2023, Health Data Science (HDSS), Abstract, 2023</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2306.04118">Paper</a></span>
+                            <span><a href="https://github.com/yhzhu99/M3Fair">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
+                        <span class="title">A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Yasha Wang, Wen Tang, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2209.07805">Paper</a></span>
+                            <span><a href="https://github.com/yhzhu99/pyehr">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
+                        <span class="title">Exploration of the feasibility of using examination time order to split small sample size data for radiomics</span>
+                        <span class="authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
+                        <span class="pub-type">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
+                        <span class="title">Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA</span>
+                        <span class="authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
+                        <span class="pub-type">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication" data-tags="">
                         <span class="title">Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets</span>
                         <span class="authors">Zhongji Zhang, Yuhang Wang, <strong>Yinghao Zhu</strong>, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang<sup>†</sup>, and Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2023</span>
@@ -627,20 +653,18 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
-                        <span class="title">How far are AI-powered programming assistants from meeting developers' needs?</span>
-                        <span class="authors">Xin Tan, Xiao Long, Xianjun Ni, <strong>Yinghao Zhu</strong>, Jing Jiang, Li Zhang<sup>†</sup></span>
-                        <span class="pub-type">Preprint, 2024</span>
+                    <div class="publication" data-tags="Healthcare Modeling">
+                        <span class="title">M3Care: Learning with Missing Modalities in Multimodal Healthcare Data</span>
+                        <span class="authors">Chaohe Zhang<sup>*</sup>, Xu Chu<sup>*</sup>, Liantao Ma, <strong>Yinghao Zhu</strong>, Yasha Wang<sup>†</sup>, Jiangtao Wang, Junfeng Zhao</span>
+                        <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022</span>
                         <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2404.12000">Paper</a></span>
+                            <span><a href="https://dl.acm.org/doi/10.1145/3534678.3539388">Paper</a></span>
+                            <span><a href="https://github.com/choczhang/M3Care">Code</a></span>
                         </div>
                     </div>
                 </li>
-            </ol>
-            <h3>Book Chapters</h3>
-            <ol>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Book Chapters">
                         <span class="title">Python Data Analysis</span>
                         <span class="authors">Yunxiang Lyu, Zhipeng Wang, Lihua Xu, Zhaoyi Wang, <strong>Yinghao Zhu</strong>, Kun Yan, Shanzhao Qiu, Jiawei Tang, Kaiwen Feng, Wei Chen, Tianyi Chen, Zhendong Hong, Yunfei Yang, Jinman Xie, Zeliang Yao, Yangang Han, Yihang Wu</span>
                         <span class="pub-type">Tsinghua University Press, 2023</span>
@@ -650,7 +674,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Book Chapters">
                         <span class="title">Big Data Visualization Techniques</span>
                         <span class="authors">Yunxiang Lyu, Zeliang Yao, Jili Xie, <strong>Yinghao Zhu</strong>, Shanzhao Qiu, Yangang Han, Zehuan Huang</span>
                         <span class="pub-type">Tsinghua University Press, 2023</span>
@@ -660,7 +684,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication">
+                    <div class="publication" data-tags="Book Chapters">
                         <span class="title">Theory and Practice of Artificial Intelligence</span>
                         <span class="authors">Yunxiang Lyu, Luting Huang, Zezhong Liang, Wenzhi Yin, Xueting Han, <strong>Yinghao Zhu</strong>, Miaoran Chen</span>
                         <span class="pub-type">Tsinghua University Press, 2022</span>
@@ -980,8 +1004,36 @@
     </div>
 
     <footer>
-        <p>© 2025 Yinghao Zhu, Last Updated: January 4, 2025</p>
+        <p>© 2025 Yinghao Zhu, Last Updated: January 5, 2025</p>
     </footer>
+
+    <script>
+        document.querySelectorAll('#pub-tabs .tab-button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#pub-tabs .tab-button').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                filterPublications(this.getAttribute('data-category'));
+            });
+        });
+
+        function filterPublications(category) {
+            const pubs = document.querySelectorAll('#pub-list .publication');
+            pubs.forEach(function(pub) {
+                const tags = pub.getAttribute('data-tags') ? pub.getAttribute('data-tags').split(',') : [];
+                if (category === 'All' || tags.includes(category)) {
+                    pub.parentElement.style.display = '';
+                } else {
+                    pub.parentElement.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            filterPublications('Selected');
+        });
+    </script>
 
 </body>
 </html>

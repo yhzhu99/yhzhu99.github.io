@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             width: 100%;
             padding: 0 20px;
         }
@@ -106,36 +106,39 @@
         }
 
         .asset-links span {
+            font-size: 0.9em;
             margin-right: 10px;
         }
 
         .publication {
             position: relative;
-            margin: 20px 0;
+            margin: 8px 0;
             padding-left: 15px;
-            border-left: 6px solid #e8ecf1; /* Light blue bar */
+            border-left: 6px solid #e8ecf1;
             transition: border-left-color 0.3s ease;
         }
 
         .publication:hover {
-            border-left-color: #b8c6db; /* Darker blue on hover */
+            border-left-color: #b8c6db;
         }
 
         .publication .title {
             font-weight: bold;
-            color: #003366;
+            color: #000;
             display: block;
-            font-size: 1.1em;
+            font-size: 1em;
         }
 
         .publication .authors {
             display: block;
+            font-size: 0.9em;
         }
 
         .publication .pub-type {
             font-style: italic;
             display: block;
             color: #666;
+            font-size: 0.9em;
         }
 
         .publication .authors strong {
@@ -162,6 +165,7 @@
 
         .position {
             font-style: italic;
+            font-size: 0.9em;
         }
 
         footer {
@@ -174,7 +178,6 @@
             margin-top: 30px;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 600px) {
             .header-content {
                 flex-direction: column;
@@ -205,7 +208,7 @@
                 <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" height="100px" alt="Yinghao Zhu Avatar">
             </div>
             <div class="contact-info">
-                <p><strong>Email:</strong>yhzhu99 [at] gmail [dot] com</p>
+                <p><strong>Email:</strong> yhzhu99 [at] gmail [dot] com</p>
                 <p><strong>Phone:</strong> (+86) 15026559349</p>
             </div>
             <p style="font-family: 'Consolas'";>
@@ -213,7 +216,7 @@
             </p>
             <p class="intro">
                 <strong><i>[About Me]</i></strong>
-                I graduated from Beihang University under the supervision of <a href="https://scholar.google.com.hk/citations?user=7i1dqbEAAAAJ">Prof. Chengwei Pan</a>. My research primarily focuses on <strong>AI for Healthcare</strong>, particularly in the areas of data mining within electronic health records (EHR) and developing multimodal foundation models for healthcare applications.
+                My research primarily focuses on <strong>AI for Healthcare</strong>, particularly in the areas of data mining within electronic health records (EHR) and developing multimodal foundation models for healthcare applications.
             </p>
         </header>
 
@@ -223,66 +226,100 @@
                 <li>
                     <div class="experience-item">
                         <div class="institute"><strong>M.Eng. in Artificial Intelligence</strong>, Beihang University, Beijing, China</div>
-                        <div class="time">Sept. 2022 - Jan. 2025</div>
+                        <div class="time">2022.09 - 2025.01</div>
                     </div>
                 </li>
                 <li>
                     <div class="experience-item">
                         <div class="institute"><strong>Exchange in Computer Science and Engineering</strong>, Politecnico di Milano, Milan, Italy</div>
-                        <div class="time">Feb. 2024 - July 2024</div>
+                        <div class="time">2024.02 - 2024.07</div>
                     </div>
                 </li>
                 <li>
                     <div class="experience-item">
                         <div class="institute"><strong>B.Eng. in Software Engineering</strong>, Beihang University, Beijing, China</div>
-                        <div class="time">Sept. 2018 - June 2022</div>
+                        <div class="time">2018.09 - 2022.06</div>
                     </div>
                 </li>
                 <li>
                     <div class="experience-item">
                         <div class="institute">Shanghai High School, Shanghai, China</div>
-                        <div class="time">Sept. 2015 - June 2018</div>
+                        <div class="time">2015.09 - 2018.06</div>
                     </div>
                 </li>
             </ul>
         </section>
 
         <section id="experience">
-            <h2>Experience</h2>
+            <h2>Professional Experience</h2>
             <ul>
                 <li>
                     <div class="experience-item">
-                        <div class="institute">School of Computer Science, Peking University, Beijing, China</div>
-                        <div class="time">May 2021 - Present</div>
+                        <div class="institute"><strong>School of Computer Science, Peking University</strong>, Beijing, China</div>
+                        <div class="time">2023.09 - Present</div>
                     </div>
                     <div class="experience-detail">
                         <div class="position">
-                            <strong>Research Assistant</strong>, advised by <a href="http://scholar.pku.edu.cn/malt/home">Prof. Liantao Ma</a> and <a href="https://faculty.pku.edu.cn/wangyasha/en/index.htm">Prof. Yasha Wang</a>
+                            External Research Advisor, working with <a href="http://scholar.pku.edu.cn/malt/home">Prof. Liantao Ma</a>
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="experience-item">
-                        <div class="institute">Department of Radiology, Children's Hospital of Fudan University, Shanghai, China</div>
-                        <div class="time">Oct. 2022 - Present</div>
+                        <div class="institute"><strong>Stanford Casual Science Center, Stanford University</strong>, Remote</div>
+                        <div class="time">2024.03 - Present</div>
                     </div>
                     <div class="experience-detail">
                         <div class="position">
-                            <strong>Research Assistant</strong>, advised by <a href="https://ch.shmu.edu.cn/doctor/intro/id/375/pid/412.html">Prof. Zhongwei Qiao</a> 
-                        </div>   
+                            Research Assistant, advised by <a href="https://yiqingxu.org">Prof. Yiqing Xu</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute"><strong>KrauthammerLab, University of Zurich &amp; University Hospital Zurich</strong>, Zurich, Switzerland</div>
+                        <div class="time">2024.04 - 2024.12</div>
+                    </div>
+                    <div class="experience-detail">
+                        <div class="position">
+                            Research Assistant, advised by <a href="https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en">Dr. Ahmed Allam</a> and <a href="http://www.krauthammerlab.ch">Prof. Michael Krauthammer</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute"><strong>Department of Radiology, Children's Hospital of Fudan University</strong>, Shanghai, China</div>
+                        <div class="time">2022.10 - 2023.12</div>
+                    </div>
+                    <div class="experience-detail">
+                        <div class="position">
+                            Research Assistant, advised by <a href="https://ch.shmu.edu.cn/doctor/intro/id/375/pid/412.html">Prof. Zhongwei Qiao</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute"><strong>National Engineering Research Center for Software Engineering, Peking University</strong>, Beijing, China</div>
+                        <div class="time">2021.05 - 2023.08</div>
+                    </div>
+                    <div class="experience-detail">
+                        <div class="position">
+                            Research Assistant, advised by <a href="https://faculty.pku.edu.cn/wangyasha/en/index.htm">Prof. Yasha Wang</a>
+                        </div>
                     </div>
                 </li>
             </ul>
         </section>
 
+
         <section id="publications">
-            <h2>Publications<div style="margin-left: 10px; font-weight: normal; font-size: 14px; display: inline;">(* indicates the equal contributions, # indicates the corresponding author.)</div></h2>
+            <h2>Publications<div style="margin-left: 10px; font-weight: normal; font-size: 14px; display: inline;">(<sup>*</sup> indicates the equal contributions, <sup>†</sup> indicates the corresponding author.)</div></h2>
             <ol>
-                <h3 style="font-style: italic; color: #666;">Journals</h3>
+                <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Journals</h3>
                 <li>
                     <div class="publication">
                         <span class="title">A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care</span>
-                        <span class="authors">Junyi Gao*, <strong>Yinghao Zhu</strong>*, Wenqing Wang*, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma#</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Cell Patterns, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3">Paper</a></span>
@@ -294,7 +331,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models</span>
-                        <span class="authors">Tianlong Wang*, <strong>Yinghao Zhu</strong>*, Zixiang Wang, Wen Tang#, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao#, Liantao Ma#, Ling Wang#</span>
+                        <span class="authors">Tianlong Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Wen Tang<sup>†</sup>, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
                         <span class="pub-type">STAR Protocols, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://www.sciencedirect.com/science/article/pii/S2666166724005008">Paper</a></span>
@@ -303,8 +340,18 @@
                 </li>
                 <li>
                     <div class="publication">
+                        <span class="title">Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients</span>
+                        <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup>, Xiaoyun Zhang<sup>†</sup></span>
+                        <span class="pub-type">STAR Protocols, 2025</span>
+                        <div class="asset-links">
+                            <span><a href="https://doi.org/10.5281/zenodo.14498936">Code</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication">
                         <span class="title">Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features</span>
-                        <span class="authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang, Zhongwei Qiao#</span>
+                        <span class="authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang, Zhongwei Qiao<sup>†</sup></span>
                         <span class="pub-type">Pediatric Radiology, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://link.springer.com/article/10.1007/s00247-024-06065-6">Paper</a></span>
@@ -314,7 +361,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients</span>
-                        <span class="authors">Liantao Ma*, Chaohe Zhang*, Junyi Gao*#, Xianfeng Jiao, Zhihao Yu, <strong>Yinghao Zhu</strong>, Tianlong Wang, Xinyu Ma, Yasha Wang#, Wen Tang#, Xinju Zhao, Wenjie Ruan, Tao Wang</span>
+                        <span class="authors">Liantao Ma<sup>*</sup>, Chaohe Zhang<sup>*</sup>, Junyi Gao<sup>*</sup><sup>†</sup>, Xianfeng Jiao, Zhihao Yu, <strong>Yinghao Zhu</strong>, Tianlong Wang, Xinyu Ma, Yasha Wang<sup>†</sup>, Wen Tang<sup>†</sup>, Xinju Zhao, Wenjie Ruan, Tao Wang</span>
                         <span class="pub-type">Cell Patterns, Cover, 2023</span>
                         <div class="asset-links">
                             <span><a href="https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5">Paper</a></span>
@@ -322,11 +369,43 @@
                         </div>
                     </div>
                 </li>
-                <h3 style="font-style: italic; color: #666;">Conferences</h3>
+                <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Conferences</h3>
+                <li>
+                    <div class="publication">
+                        <span class="title">ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
+                        <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Huiya Zhao<sup>*</sup>, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang<sup>†</sup>, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">ACM International World Wide Web Conference (WWW), 2025</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2410.02551">Paper</a></span>
+                            <span><a href="https://github.com/PKU-AICare/ColaCare">Code</a></span>
+                            <span><a href="https://colacare.netlify.app">Website</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication">
+                        <span class="title">Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories</span>
+                        <span class="authors">Tianlong Wang<sup>*</sup>, Xianfeng Jiao<sup>*</sup>, <strong>Yinghao Zhu</strong>, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma<sup>†</sup></span>
+                        <span class="pub-type">ACM International World Wide Web Conference (WWW), 2025</span>
+                        <div class="asset-links">
+                            <span><a href="https://arxiv.org/abs/2406.00034">Paper</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication">
+                        <span class="title">Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor</span>
+                        <span class="authors">Xin Tan, Xiao Long, <strong>Yinghao Zhu</strong>, Lin Shi, Xiaoli Lian, Li Zhang<sup>†</sup></span>
+                        <span class="pub-type">ACM International Conference on the Foundations of Software Engineering (FSE), 2025</span>
+                        <div class="asset-links">
+                            <span><a href="https://github.com/yhzhu99/OSSerCopilot">Code</a></span>
+                        </div>
+                    </div>
+                </li>
                 <li>
                     <div class="publication">
                         <span class="title">Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction</span>
-                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang#, Liantao Ma#</span>
+                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2401.16796">Paper</a></span>
@@ -337,7 +416,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models</span>
-                        <span class="authors">Xijie Huang*, Xinyuan Wang*, Hantao Zhang*, <strong>Yinghao Zhu</strong>*, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan#</span>
+                        <span class="authors">Xijie Huang<sup>*</sup>, Xinyuan Wang<sup>*</sup>, Hantao Zhang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2405.20775">Paper</a></span>
@@ -348,7 +427,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation</span>
-                        <span class="authors">Jingkun An*, <strong>Yinghao Zhu</strong>*, Zongjian Li*, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan#</span>
+                        <span class="authors">Jingkun An<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zongjian Li<sup>*</sup>, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2403.13352">Paper</a></span>
@@ -360,7 +439,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation</span>
-                        <span class="authors"><strong>Yinghao Zhu</strong>*, Changyu Ren*, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan#</span>
+                        <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Changyu Ren<sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
                         <div class="asset-links">
                             <span><a href="https://dl.acm.org/doi/10.1145/3627673.3679582">Paper</a></span>
@@ -372,7 +451,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations</span>
-                        <span class="authors"><strong>Yinghao Zhu</strong>, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma#, Chengwei Pan#</span>
+                        <span class="authors"><strong>Yinghao Zhu</strong>, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
                         <div class="asset-links">
                             <span><a href="https://dl.acm.org/doi/10.1145/3627673.3679521">Paper</a></span>
@@ -384,7 +463,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction</span>
-                        <span class="authors">Zhichao Yang*, <strong>Yinghao Zhu</strong>*, Ziyue Niu, Yanru Huang, Chengwei Pan#, Xiwang Dong</span>
+                        <span class="authors">Zhichao Yang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Ziyue Niu, Yanru Huang, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
                         <span class="pub-type">International Conference on Industrial Artificial Intelligence (IAI), 2024</span>
                         <div class="asset-links">
                             <span><a href="https://ieeexplore.ieee.org/abstract/document/10730680/">Paper</a></span>
@@ -395,7 +474,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">M3Care: Learning with Missing Modalities in Multimodal Healthcare Data</span>
-                        <span class="authors">Chaohe Zhang*, Xu Chu*, Liantao Ma, <strong>Yinghao Zhu</strong>, Yasha Wang#, Jiangtao Wang, Junfeng Zhao</span>
+                        <span class="authors">Chaohe Zhang<sup>*</sup>, Xu Chu<sup>*</sup>, Liantao Ma, <strong>Yinghao Zhu</strong>, Yasha Wang<sup>†</sup>, Jiangtao Wang, Junfeng Zhao</span>
                         <span class="pub-type">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022</span>
                         <div class="asset-links">
                             <span><a href="https://dl.acm.org/doi/10.1145/3534678.3539388">Paper</a></span>
@@ -403,11 +482,11 @@
                         </div>
                     </div>
                 </li>
-                <h3 style="font-style: italic; color: #666;">Workshops & Abstracts</h3>
+                <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Workshops & Abstracts</h3>
                 <li>
                     <div class="publication">
                         <span class="title">EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow</span>
-                        <span class="authors">Hao Wu*, <strong>Yinghao Zhu</strong>*, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao#, Liantao Ma#</span>
+                        <span class="authors">Hao Wu<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://openreview.net/pdf?id=lvycHSrFgk">Paper</a></span>
@@ -418,7 +497,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval</span>
-                        <span class="authors">Zixiang Wang*, <strong>Yinghao Zhu</strong>*, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma#, Ling Wang#</span>
+                        <span class="authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
                         <div class="asset-links">
                             <span><a href="https://openreview.net/pdf?id=jqo1vk63qE">Paper</a></span>
@@ -429,7 +508,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction</span>
-                        <span class="authors">Yuhang Wang, <strong>Yinghao Zhu</strong>, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao#</span>
+                        <span class="authors">Yuhang Wang, <strong>Yinghao Zhu</strong>, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao<sup>†</sup></span>
                         <span class="pub-type">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
                         <div class="asset-links">
                             <span><a href="https://openreview.net/pdf?id=YzWC6huGQq">Paper</a></span>
@@ -440,7 +519,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method</span>
-                        <span class="authors">Junyi Gao*, <strong>Yinghao Zhu</strong>*, Wenqing Wang*, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma#</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Beijing Health Data Science Summit 2023, Health Data Science (HDSS), Abstract, 2023</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2306.04118">Paper</a></span>
@@ -451,7 +530,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis</span>
-                        <span class="authors">Junyi Gao*, <strong>Yinghao Zhu</strong>*, Wenqing Wang*, Yasha Wang, Wen Tang, Liantao Ma#</span>
+                        <span class="authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Yasha Wang, Wen Tang, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2209.07805">Paper</a></span>
@@ -473,23 +552,11 @@
                         <span class="pub-type">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
                     </div>
                 </li>
-                <h3 style="font-style: italic; color: #666;">Preprints</h3>
-                <li>
-                    <div class="publication">
-                        <span class="title">ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
-                        <span class="authors">Zixiang Wang*, <strong>Yinghao Zhu</strong>*, Huiya Zhao*, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao#, Liantao Ma#</span>
-                        <span class="pub-type">Preprint, 2024</span>
-                        <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2410.02551">Paper</a></span>
-                            <span><a href="https://github.com/PKU-AICare/ColaCare">Code</a></span>
-                            <span><a href="https://colacare.netlify.app">Website</a></span>
-                        </div>
-                    </div>
-                </li>
+                <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Preprints</h3>
                 <li>
                     <div class="publication">
                         <span class="title">SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning</span>
-                        <span class="authors">Shiyun Xie, Zhiru Wang, Xu Wang, <strong>Yinghao Zhu</strong>, Chengwei Pan#, Xiwang Dong</span>
+                        <span class="authors">Shiyun Xie, Zhiru Wang, Xu Wang, <strong>Yinghao Zhu</strong>, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2410.02571">Paper</a></span>
@@ -500,7 +567,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Is larger always better? Evaluating and prompting large language models for non-generative medical tasks.</span>
-                        <span class="authors"><strong>Yinghao Zhu</strong>*, Junyi Gao*, Zixiang Wang*, Weibin Liao*, Xiaochen Zheng, Lifang Liang, Yasha Wang, Chengwei Pan#, Ewen M. Harrison#, Liantao Ma#</span>
+                        <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao<sup>*</sup>, Zixiang Wang<sup>*</sup>, Weibin Liao<sup>*</sup>, Xiaochen Zheng, Lifang Liang, Yasha Wang, Chengwei Pan<sup>†</sup>, Ewen M. Harrison<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2407.18525">Paper</a></span>
@@ -511,7 +578,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data</span>
-                        <span class="authors"><strong>Yinghao Zhu</strong>*, Zixiang Wang*, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma#, Chengwei Pan#</span>
+                        <span class="authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang<sup>*</sup>, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2402.01713">Paper</a></span>
@@ -522,7 +589,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation</span>
-                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Xinyuan Wang, Chengwei Pan, Yasha Wang#, Liantao Ma#</span>
+                        <span class="authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Xinyuan Wang, Chengwei Pan, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2403.05246">Paper</a></span>
@@ -533,7 +600,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients</span>
-                        <span class="authors">Yueying Wu*, Junyi Gao*, Wen Tang#, Chunyan Su, <strong>Yinghao Zhu</strong>, Tianlong Wang, Weibin Liao, Xu Chu, Ewen M. Harrison, Yasha Wang#, Liantao Ma#</span>
+                        <span class="authors">Yueying Wu<sup>*</sup>, Junyi Gao<sup>*</sup>, Wen Tang<sup>†</sup>, Chunyan Su, <strong>Yinghao Zhu</strong>, Tianlong Wang, Weibin Liao, Xu Chu, Ewen M. Harrison, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://assets.researchsquare.com/files/rs-4218674/v1_covered_ad799f15-8e08-460d-991a-0f91ddbc79ed.pdf">Paper</a></span>
@@ -543,7 +610,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets</span>
-                        <span class="authors">Zhongji Zhang, Yuhang Wang, <strong>Yinghao Zhu</strong>, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang#, and Liantao Ma#</span>
+                        <span class="authors">Zhongji Zhang, Yuhang Wang, <strong>Yinghao Zhu</strong>, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang<sup>†</sup>, and Liantao Ma<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2023</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2310.07799">Paper</a></span>
@@ -552,18 +619,8 @@
                 </li>
                 <li>
                     <div class="publication">
-                        <span class="title">Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories</span>
-                        <span class="authors">Tianlong Wang*, Xianfeng Jiao*, Yifan He, Zhongzhi Chen, <strong>Yinghao Zhu</strong>, Xu Chu, Junyi Gao, Yasha Wang#, Liantao Ma#</span>
-                        <span class="pub-type">Preprint, 2024</span>
-                        <div class="asset-links">
-                            <span><a href="https://arxiv.org/abs/2406.00034">Paper</a></span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication">
                         <span class="title">How far are AI-powered programming assistants from meeting developers' needs?</span>
-                        <span class="authors">Xin Tan, Xiao Long, Xianjun Ni, <strong>Yinghao Zhu</strong>, Jing Jiang, Li Zhang#</span>
+                        <span class="authors">Xin Tan, Xiao Long, Xianjun Ni, <strong>Yinghao Zhu</strong>, Jing Jiang, Li Zhang<sup>†</sup></span>
                         <span class="pub-type">Preprint, 2024</span>
                         <div class="asset-links">
                             <span><a href="https://arxiv.org/abs/2404.12000">Paper</a></span>
@@ -571,7 +628,7 @@
                     </div>
                 </li>
             </ol>
-            <h3 style="font-style: italic; color: #666;">Book Chapters</h3>
+            <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Book Chapters</h3>
             <ol>
                 <li>
                     <div class="publication">
@@ -613,6 +670,7 @@
                     <div class="publication">
                         <span class="title">PyEHR: A Predictive Modeling Toolkit for Electronic Health Records</span>
                         <span class="authors"><strong>Yinghao Zhu</strong>, Wenqing Wang, Junyi Gao, Liantao Ma</span>
+                        <span class="pub-type">GitHub</span>
                         <div class="asset-links">
                             <span><a href="https://github.com/yhzhu99/pyehr">Code</a></span>
                         </div>
@@ -702,9 +760,20 @@
             <ol>
                 <li>
                     <div class="publication">
+                        <span class="title">Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
+                        <span class="pub-type">Seminar on Advancing Trustworthy and Accessible Healthcare Informatics at Peking University & Cell Press, 2024.10.31</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication">
+                        <span class="title">What Makes a Next-Generation AI-Powered Healthcare System?</span>
+                        <span class="pub-type">University of Zurich & University Hospital Zurich, 2024.07.08</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="publication">
                         <span class="title">Deep learning interpretable analysis of multivariate time-series electronic medical record data</span>
-                        <span class="authors">Liantao Ma, <strong>Yinghao Zhu</strong></span>
-                        <span class="pub-type">HIT Webinar, 2023</span>
+                        <span class="pub-type">HIT Webinar, 2023.01.06</span>
                         <div class="asset-links">
                             <span><a href="https://www.bilibili.com/video/BV1YA411U7yw">Video</a></span>
                         </div>
@@ -713,8 +782,7 @@
                 <li>
                     <div class="publication">
                         <span class="title">Invited talk for the High Risk Breast Cancer Prediction Challenge</span>
-                        <span class="authors"><strong>Yinghao Zhu</strong></span>
-                        <span class="pub-type">Machine Learning for Health (ML4H), 2022</span>
+                        <span class="pub-type">Machine Learning for Health (ML4H), 2022.11.28</span>
                         <div class="asset-links">
                             <span><a href="https://ml4health.github.io/2022">Video</a></span>
                         </div>
@@ -725,49 +793,185 @@
         
         <section id="services">
             <h2>Services</h2>
-            <p style="font-style: italic; border-left: 4px solid #ccc; padding-left: 10px; margin-left: 0px; color: #666;">Reviewer (2023 - Present)</p>
+            <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Reviewer</h3>
             <ul>
-                <li>IJCNN 2025 Conference</li>
-                <li>ICML 2025 Conference</li>
-                <li>AMIA 2025 Clinical Informatics Conference</li>
-                <li>AISTATS 2025 Conference</li>
-                <li>TheWebConf 2025 Conference</li>
-                <li>ICASSP 2025 Conference</li>
-                <li>ICLR 2025 Conference</li>
-                <li>KDD 2025 Research Track</li>
-                <li>AMIA 2025 Informatics Summit</li>
-                <li>ML4H 2024 Conference</li>
-                <li>NeurIPS 2024 TSALM & OWA & FM4Science Workshop</li>
-                <li>NeurIPS 2024 Datasets and Benchmarks Track</li>
-                <li>NeurIPS 2024 Main Track</li>
-                <li>KDD 2024 Research Track</li>
-                <li>KDD 2024 AIDSH Workshop</li>
-                <li>AMIA 2024 Annual Symposium</li>
-                <li>AMIA 2024 Clinical Informatics Conference</li>
-                <li>NeurIPS 2023 Datasets and Benchmarks Track</li>
-                <li>AMIA 2023 Annual Symposium</li>
-                <li>Journal of Data-centric Machine Learning Research (DMLR)</li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">ACM Transactions on Knowledge Discovery from Data (TKDD)</div><div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">IJCNN 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">ICML 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AMIA 2025 Clinical Informatics Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AISTATS 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">TheWebConf 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">ICASSP 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">ICLR 2025 Conference</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">KDD 2025 Research Track</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AMIA 2025 Informatics Summit</div>
+                        <div class="time">2025</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">ML4H 2024 Conference</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">NeurIPS 2024 TSALM &amp; OWA &amp; FM4Science Workshop</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">NeurIPS 2024 Datasets and Benchmarks Track</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">NeurIPS 2024 Main Track</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">KDD 2024 Research Track</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">KDD 2024 AIDSH Workshop</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AMIA 2024 Annual Symposium</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AMIA 2024 Clinical Informatics Conference</div>
+                        <div class="time">2024</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">NeurIPS 2023 Datasets and Benchmarks Track</div>
+                        <div class="time">2023</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">AMIA 2023 Annual Symposium</div>
+                        <div class="time">2023</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Journal of Data-centric Machine Learning Research (DMLR)</div>
+                        <div class="time">2023</div>
+                    </div>
+                </li>
             </ul>
-        </section>
 
-
-        <section id="teaching">
-            <h2>Teaching</h2>
-            <p style="font-style: italic; border-left: 4px solid #ccc; padding-left: 10px; margin-left: 0px; color: #666;">Teaching Assistant at Beihang University (2020 - 2023)</p>
+            <h3 style="font-style: italic; color: #990000; margin-bottom: 0%;">Teaching Assistant</h3>
             <ul>
-                <li><strong>Discrete Mathematics:</strong> Spring 2020, Autumn 2020, Spring 2021</li>
-                <li><strong>Object-oriented Programming:</strong> Spring 2021</li>
-                <li><strong>System Programming:</strong> Spring 2021</li>
-                <li><strong>Network Storage:</strong> Autumn 2021</li>
-                <li><strong>Operating System:</strong> Autumn 2021</li>
-                <li><strong>Design and Analysis of Algorithms:</strong> Spring 2022, Autumn 2022</li>
-                <li><strong>Fundamentals of Programming and Computer Science:</strong> Spring 2023</li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Fundamentals of Programming and Computer Science</div>
+                        <div class="time">Spring 2023</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Design and Analysis of Algorithms</div>
+                        <div class="time">Spring 2022, Autumn 2022</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Operating System</div>
+                        <div class="time">Autumn 2021</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Network Storage</div>
+                        <div class="time">Autumn 2021</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">System Programming</div>
+                        <div class="time">Spring 2021</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Object-oriented Programming</div>
+                        <div class="time">Spring 2021</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="experience-item">
+                        <div class="institute">Discrete Mathematics</div>
+                        <div class="time">Spring 2020, Autumn 2020, Spring 2021</div>
+                    </div>
+                </li>
             </ul>
         </section>
     </div>
 
     <footer>
-        <p>© 2024 Yinghao Zhu, Last Updated: December 12, 2024</p>
+        <p>© 2025 Yinghao Zhu, Last Updated: January 4, 2025</p>
     </footer>
 
 </body>

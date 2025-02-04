@@ -1006,6 +1006,11 @@
     </footer>
 
     <script>
+        document.querySelectorAll('a').forEach(link => {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+        });
+
         document.querySelectorAll('#pub-tabs .tab-button').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('#pub-tabs .tab-button').forEach(function(b) {

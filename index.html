@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Yinghao Zhu</title>
 
+<head>
     <meta charset="UTF-8">
+    <title>Yinghao Zhu</title>
     <meta name="author" content="Yinghao Zhu">
     <meta name="description" content="Yinghao Zhu's Homepage">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,101 +18,101 @@
             align-items: center;
             line-height: 1.5;
         }
-        
+
         .container {
             max-width: 1000px;
             width: 100%;
             padding: 0 1.25rem;
             box-sizing: border-box;
         }
-        
+
         header {
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         header p {
             margin: 0;
         }
-        
+
         .contact-info {
             display: flex;
             justify-content: center;
             gap: 20px;
         }
-        
+
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
+
         .header-content img {
             border-radius: 50%;
             margin-left: 15px;
         }
-        
+
         .intro {
             margin-top: 20px;
             text-align: left;
         }
-        
+
         .intro a {
             text-decoration: none;
         }
-        
+
         /* Headings */
         h1, h2, h3 {
             font-family: Georgia, serif;
             color: #2c3e50;
             margin: 0;
         }
-        
+
         h1 {
             font-size: 2em;
         }
-        
+
         h2 {
             font-size: 1.5em;
             margin-top: 30px;
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 5px;
         }
-        
+
         h3 {
             font-style: italic;
             margin-top: 10px;
         }
-        
+
         p {
             line-height: 1.5;
             margin: 10px 0;
         }
-        
+
         ul {
             margin: 10px 0;
             padding-left: 20px;
         }
-        
+
         ol {
             margin: 10px 0;
             padding-left: 0;
             list-style-type: none;
         }
-        
+
         section {
             padding: 0;
         }
-        
+
         a {
             color: #069;
             text-decoration: underline dotted;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
-        
+
         #experience a {
             text-decoration: none;
         }
@@ -120,12 +120,12 @@
         #experience a:hover {
             text-decoration: underline;
         }
-        
+
         .asset-links span {
             font-size: 0.9em;
             margin-right: 10px;
         }
-        
+
         .publication {
             position: relative;
             margin: 8px 0;
@@ -133,57 +133,57 @@
             border-left: 6px solid #e8ecf1;
             transition: border-left-color 0.3s ease;
         }
-        
+
         .publication:hover {
             border-left-color: #b8c6db;
         }
-        
+
         .publication .title {
             font-weight: bold;
             color: #000;
             display: block;
             font-size: 1em;
         }
-        
+
         .publication .authors {
             display: block;
             font-size: 0.9em;
         }
-        
+
         .publication .pub-type {
             font-style: italic;
             display: block;
             color: #666;
             font-size: 0.9em;
         }
-        
+
         .publication .authors strong {
             font-weight: bold;
             color: #000;
         }
-        
+
         .experience-item {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             margin: 0;
         }
-        
+
         .institute {
             flex-grow: 1;
             margin-right: 10px;
         }
-        
+
         .time {
             text-align: right;
             white-space: nowrap;
         }
-        
+
         .position {
             font-style: italic;
             font-size: 0.9em;
         }
-        
+
         footer {
             font-family: Georgia, serif;
             text-align: center;
@@ -193,35 +193,36 @@
             background-color: #f1f1f1;
             margin-top: 30px;
         }
-        
+
         @media (max-width: 600px) {
             .header-content {
                 flex-direction: column;
             }
-        
+
             .contact-info {
                 flex-direction: column;
                 align-items: center;
             }
-        
+
             .time {
                 text-align: left;
                 margin-top: 5px;
             }
-        
+
             .publication {
                 margin: 15px 0;
                 padding-left: 10px;
             }
-            
+
             .tabs {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
             }
+
             .tab-button {
                 flex: none;
             }
-            
+
             .container {
                 padding: 0 1rem;
             }
@@ -233,22 +234,60 @@
             display: flex;
             gap: 10px;
         }
+
         .tab-button {
             padding: 6px 12px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: Arial, sans-serif;
             font-size: 14px;
+            transition: background-color 0.3s ease;
         }
+
         .tab-button.active {
             background-color: #2c3e50;
             color: #fff;
             border-color: #2c3e50;
         }
+
+        .tab-button:hover {
+            background-color: #e0e0e0;
+            color: #000;
+        }
+
+        /* Collapsible sections for Services */
+        .collapsible .summary {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .collapsible .summary:hover {
+            background-color: #f0f0f0;
+        }
+
+        .collapsible .detailed {
+            display: none;
+            margin-top: 5px;
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            margin-left: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -846,179 +885,192 @@
         <section id="services">
             <h2>Services</h2>
             <h3>Reviewer</h3>
-            <ul>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">ACM Transactions on Knowledge Discovery from Data (TKDD)</div><div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">IJCNN 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">ICML 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AMIA 2025 Clinical Informatics Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AISTATS 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">TheWebConf 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">ICASSP 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">ICLR 2025 Conference</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">KDD 2025 Research Track</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AMIA 2025 Informatics Summit</div>
-                        <div class="time">2025</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">ML4H 2024 Conference</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">NeurIPS 2024 TSALM &amp; OWA &amp; FM4Science Workshop</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">NeurIPS 2024 Datasets and Benchmarks Track</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">NeurIPS 2024 Main Track</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">KDD 2024 Research Track</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">KDD 2024 AIDSH Workshop</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AMIA 2024 Annual Symposium</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AMIA 2024 Clinical Informatics Conference</div>
-                        <div class="time">2024</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">NeurIPS 2023 Datasets and Benchmarks Track</div>
-                        <div class="time">2023</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">AMIA 2023 Annual Symposium</div>
-                        <div class="time">2023</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Journal of Data-centric Machine Learning Research (DMLR)</div>
-                        <div class="time">2023</div>
-                    </div>
-                </li>
-            </ul>
+            <div class="collapsible">
+                <div class="summary">
+                    <span class="summary-text">Reviewer for NeurIPS, ICLR, ICML, KDD, WWW, etc.</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <ul class="detailed">
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">ACM Transactions on Knowledge Discovery from Data (TKDD)</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">IJCNN 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">ICML 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AMIA 2025 Clinical Informatics Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AISTATS 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">TheWebConf 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">ICASSP 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">ICLR 2025 Conference</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">KDD 2025 Research Track</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AMIA 2025 Informatics Summit</div>
+                            <div class="time">2025</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">ML4H 2024 Conference</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">NeurIPS 2024 TSALM & OWA & FM4Science Workshop</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">NeurIPS 2024 Datasets and Benchmarks Track</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">NeurIPS 2024 Main Track</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">KDD 2024 Research Track</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">KDD 2024 AIDSH Workshop</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AMIA 2024 Annual Symposium</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AMIA 2024 Clinical Informatics Conference</div>
+                            <div class="time">2024</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">NeurIPS 2023 Datasets and Benchmarks Track</div>
+                            <div class="time">2023</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">AMIA 2023 Annual Symposium</div>
+                            <div class="time">2023</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Journal of Data-centric Machine Learning Research (DMLR)</div>
+                            <div class="time">2023</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
             <h3>Teaching Assistant</h3>
-            <ul>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Fundamentals of Programming and Computer Science</div>
-                        <div class="time">Spring 2023</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Design and Analysis of Algorithms</div>
-                        <div class="time">Spring 2022, Autumn 2022</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Operating System</div>
-                        <div class="time">Autumn 2021</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Network Storage</div>
-                        <div class="time">Autumn 2021</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">System Programming</div>
-                        <div class="time">Spring 2021</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Object-oriented Programming</div>
-                        <div class="time">Spring 2021</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="institute">Discrete Mathematics</div>
-                        <div class="time">Spring 2020, Autumn 2020, Spring 2021</div>
-                    </div>
-                </li>
-            </ul>
+            <div class="collapsible">
+                <div class="summary">
+                    <span class="summary-text">TA for Algorithms, Operating Systems, Discrete Mathematics, etc.</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <ul class="detailed">
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Fundamentals of Programming and Computer Science</div>
+                            <div class="time">Spring 2023</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Design and Analysis of Algorithms</div>
+                            <div class="time">Spring 2022, Autumn 2022</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Operating System</div>
+                            <div class="time">Autumn 2021</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Network Storage</div>
+                            <div class="time">Autumn 2021</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">System Programming</div>
+                            <div class="time">Spring 2021</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Object-oriented Programming</div>
+                            <div class="time">Spring 2021</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="experience-item">
+                            <div class="institute">Discrete Mathematics</div>
+                            <div class="time">Spring 2020, Autumn 2020, Spring 2021</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </section>
     </div>
 
@@ -1057,7 +1109,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             filterPublications('Selected');
         });
-    </script>
 
+        document.querySelectorAll('.collapsible .summary').forEach(function (summary) {
+            summary.addEventListener('click', function() {
+                const detailed = this.nextElementSibling;
+                if (detailed.style.display === 'block') {
+                    detailed.style.display = 'none';
+                    this.querySelector('.toggle-icon').textContent = '▼';
+                } else {
+                    detailed.style.display = 'block';
+                    this.querySelector('.toggle-icon').textContent = '▲';
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

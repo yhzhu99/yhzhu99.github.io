@@ -208,18 +208,20 @@
 
     .interests-list li {
         margin-bottom: 0.5rem;
-        padding-left: 1.5rem;
+        padding-left: 0.8rem;
         position: relative;
         color: var(--text-secondary);
         font-size: 0.9rem;
     }
 
     .interests-list li::before {
-        content: "▪";
+        content: "•";
         color: var(--accent-color);
         position: absolute;
         left: 0;
+        top: 0.1em;
         font-size: 1.2em;
+        line-height: 1;
     }
 
     .interests-list strong {
@@ -496,30 +498,32 @@
         background-color: #6b7280; /* Default dot color */
     }
 
-    #publications .publication[data-tag="LLM Agents for Healthcare"]::before,
+    #publications .publication[data-tag="LLM Agents for Healthcare"]::before {
+        background-color: #2563eb; /* Strong Blue */
+    }
     #publications .publication[data-tag="LLM for Healthcare"]::before {
-        background-color: #3b82f6; /* Blue */
+        background-color: #0ea5e9; /* Sky Blue */
     }
     #publications .publication[data-tag="Healthcare Modeling"]::before {
-        background-color: #10b981; /* Green */
+        background-color: #059669; /* Emerald Green */
     }
     #publications .publication[data-tag="Healthcare Benchmark"]::before {
-        background-color: #22c55e; /* Lime */
+        background-color: #65a30d; /* Lime Green */
     }
     #publications .publication[data-tag="Trustworthy AI"]::before {
-        background-color: #8b5cf6; /* Violet */
+        background-color: #7c3aed; /* Deep Violet */
     }
     #publications .publication[data-tag="Software Engineering"]::before {
-        background-color: #6366f1; /* Indigo */
+        background-color: #4f46e5; /* Strong Indigo */
     }
     #publications .publication[data-tag="Toolkits & Platforms"]::before {
-        background-color: #ec4899; /* Pink */
+        background-color: #dc2626; /* Red */
     }
     #publications .publication[data-tag="Survey"]::before {
-        background-color: #f43f5e; /* Rose */
+        background-color: #c2410c; /* Orange-Red */
     }
     #publications .publication[data-tag="Book Chapters"]::before {
-        background-color: #a855f7; /* Purple */
+        background-color: #9333ea; /* Purple */
     }
     #publications .publication[data-tag="Other Topics"]::before {
         background-color: #6b7280; /* Gray */
@@ -645,6 +649,16 @@
         section, header { padding: 1rem; margin-bottom: 1rem; }
         .experience-item { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
         .time-period { white-space: normal; }
+
+        .publication-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .publication-footer button {
+            margin-bottom: 0.5rem;
+        }
     }
 </style>
 </head>
@@ -1391,15 +1405,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagColors = {
         'Featured': '#f97316', // Orange
         'All': '#475569', // Slate
-        'LLM Agents for Healthcare': '#3b82f6', // Blue
-        'LLM for Healthcare': '#3b82f6', // Blue
-        'Healthcare Modeling': '#10b981', // Green
-        'Healthcare Benchmark': '#22c55e', // Lime
-        'Trustworthy AI': '#8b5cf6', // Violet
-        'Software Engineering': '#6366f1', // Indigo
-        'Toolkits & Platforms': '#ec4899', // Pink
-        'Survey': '#f43f5e', // Rose
-        'Book Chapters': '#a855f7', // Purple
+        'LLM Agents for Healthcare': '#2563eb', // Strong Blue
+        'LLM for Healthcare': '#0ea5e9', // Sky Blue
+        'Healthcare Modeling': '#059669', // Emerald Green
+        'Healthcare Benchmark': '#65a30d', // Lime Green
+        'Trustworthy AI': '#7c3aed', // Deep Violet
+        'Software Engineering': '#4f46e5', // Strong Indigo
+        'Toolkits & Platforms': '#dc2626', // Red
+        'Survey': '#c2410c', // Orange-Red
+        'Book Chapters': '#9333ea', // Purple
         'Other Topics': '#6b7280', // Gray
     };
 

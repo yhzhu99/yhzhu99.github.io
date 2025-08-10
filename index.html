@@ -1483,8 +1483,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.value = '';
         yearFilter.value = 'All';
         tagsContainer.querySelector('.tag-btn.active')?.classList.remove('active');
-        // Reset to "All"
-        tagsContainer.querySelector('[data-tag="All"]').classList.add('active');
+        // Reset to "Featured"
+        tagsContainer.querySelector('[data-tag="Featured"]').classList.add('active');
         updateView();
     });
 

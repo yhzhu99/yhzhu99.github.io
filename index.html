@@ -104,17 +104,16 @@
 
 <style>
     :root {
-        /* [OPTIMIZED] Refined, elegant blue-toned color palette */
-        --accent-color: #3b82f6; /* A brighter, modern blue */
-        --accent-hover: #2563eb; /* A darker shade for hover */
-        --background-primary: #f8fafc; /* Lighter off-white */
-        --background-secondary: #f1f5f9; /* Slate 100 */
+        --accent-color: #3b82f6;
+        --accent-hover: #2563eb;
+        --background-primary: #f8fafc;
+        --background-secondary: #f1f5f9;
         --surface-primary: rgba(255, 255, 255, 0.8);
-        --surface-secondary: rgba(241, 245, 249, 0.7); /* Slate 100 with transparency */
-        --text-primary: #0f172a; /* Slate 900 - very dark for high contrast */
-        --text-secondary: #475569; /* Slate 600 */
-        --text-tertiary: #94a3b8; /* Slate 400 */
-        --border-subtle: rgba(148, 163, 184, 0.2); /* Slate 400 with transparency */
+        --surface-secondary: rgba(241, 245, 249, 0.7);
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-tertiary: #94a3b8;
+        --border-subtle: rgba(148, 163, 184, 0.2);
         --border-medium: rgba(148, 163, 184, 0.4);
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
@@ -141,12 +140,11 @@
         background-color: var(--background-primary);
         margin: 0;
         padding: 0;
-        line-height: 1.55; /* [OPTIMIZED] Slightly reduced for compactness */
+        line-height: 1.55;
         padding-top: var(--nav-height);
         min-height: 100vh;
     }
 
-    /* Navigation */
     .nav-bar {
         position: fixed;
         top: 0;
@@ -197,38 +195,42 @@
         box-shadow: var(--shadow-sm);
     }
 
-    /* Main Container */
     .container {
-        max-width: 1000px; /* [OPTIMIZED] More compact width */
-        margin: 1.25rem auto; /* [OPTIMIZED] Compact margin */
+        max-width: 1000px;
+        margin: 1.25rem auto;
         padding: 0 1rem;
     }
 
-    /* Header Section */
     header {
         background: white;
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-lg);
-        padding: 1.25rem; /* [OPTIMIZED] Compact padding */
-        margin-bottom: 1.25rem; /* [OPTIMIZED] Compact margin */
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
         box-shadow: var(--shadow-md);
     }
 
     .profile-section {
         display: flex;
-        gap: 1.25rem; /* [OPTIMIZED] Reduced gap */
+        gap: 1.5rem;
         align-items: flex-start;
         margin-bottom: 1.25rem;
     }
 
     .profile-image {
-        border-radius: 50%;
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
         object-fit: cover;
-        border: 3px solid var(--accent-color);
         flex-shrink: 0;
-        box-shadow: var(--shadow-sm);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .profile-image:hover {
+        transform: scale(1.03) translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
     }
 
     h1 {
@@ -251,8 +253,8 @@
     .social-links {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.4rem; /* [OPTIMIZED] Reduced gap */
-        margin-top: 0.75rem; /* [OPTIMIZED] Reduced margin */
+        gap: 0.4rem;
+        margin-top: 0.75rem;
     }
 
     .social-links a {
@@ -323,21 +325,20 @@
         font-weight: 600;
     }
 
-    /* Generic Section Styling */
     section {
         background: white;
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-lg);
-        padding: 1.25rem; /* [OPTIMIZED] Compact padding */
-        margin-bottom: 1.25rem; /* [OPTIMIZED] Compact margin */
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
         box-shadow: var(--shadow-md);
     }
 
     h2 {
         font-size: 1.75rem;
         font-weight: 700;
-        margin: 0 0 1rem 0; /* [OPTIMIZED] Reduced bottom margin */
-        padding-bottom: 0.5rem; /* [OPTIMIZED] Reduced padding */
+        margin: 0 0 1rem 0;
+        padding-bottom: 0.5rem;
         border-bottom: 2px solid var(--accent-color);
         letter-spacing: -0.025em;
     }
@@ -350,7 +351,6 @@
         vertical-align: middle;
     }
 
-    /* [OPTIMIZED] Scoped list item border only to Education and Experience sections */
     #education ul > li, #experience ul > li {
         padding-bottom: 0.75rem;
         margin-bottom: 0.75rem;
@@ -361,7 +361,6 @@
         margin-bottom: 0;
         padding-bottom: 0;
     }
-
 
     .experience-item {
         display: flex;
@@ -391,14 +390,12 @@
         margin-top: 0.4rem;
     }
 
-    /* ===== [OPTIMIZED] PUBLICATION SECTION ===== */
-
     .publication-controls {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem; /* [OPTIMIZED] Reduced gap for tighter controls */
+        gap: 0.75rem;
         margin-bottom: 1.25rem;
-        padding: 0.75rem; /* [OPTIMIZED] Reduced padding */
+        padding: 0.75rem;
         background-color: var(--background-primary);
         border-radius: var(--radius-md);
         border: 1px solid var(--border-subtle);
@@ -475,7 +472,7 @@
         padding: 0.25rem 0.75rem;
         border: 1px solid var(--border-medium);
         background-color: white;
-        border-radius: 9999px; /* Pill shape */
+        border-radius: 9999px;
         font-size: 0.8rem;
         font-weight: 500;
         cursor: pointer;
@@ -519,14 +516,12 @@
         color: white;
     }
 
-    /* [OPTIMIZED] Publication footer layout for compactness */
     .publication-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-top: 0.75rem; /* Reduced padding */
+        padding-top: 0.75rem;
         border-top: 1px solid var(--border-subtle);
-        /* Removed margin-top to fix large gap issue */
     }
 
     #reset-filters-btn {
@@ -551,7 +546,6 @@
         margin: 0;
     }
 
-    /* Publication Item Styling (also applies to Projects, Awards etc.) */
     #pub-list, #projects ul, #awards ul, #talks ul {
       list-style: none;
       padding: 0;
@@ -559,7 +553,7 @@
     }
 
     #pub-list > li, #projects ul > li, #awards ul > li, #talks ul > li {
-        border-bottom: none; /* remove default li border */
+        border-bottom: none;
         margin: 0;
         padding: 0;
     }
@@ -568,7 +562,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.2rem;
-        padding: 0.75rem; /* Generic padding for all cards */
+        padding: 0.75rem;
         margin-bottom: 0.5rem;
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-md);
@@ -580,7 +574,6 @@
         padding-left: 1.75rem;
     }
 
-    /* [CORRECTED] Create the dot only for cards inside #publications */
     #publications .publication::before {
         content: '';
         position: absolute;
@@ -589,40 +582,39 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: #6b7280; /* Default dot color */
+        background-color: #6b7280;
     }
 
     #publications .publication[data-tag="LLM Agents for Healthcare"]::before {
-        background-color: #2563eb; /* Strong Blue */
+        background-color: #2563eb;
     }
     #publications .publication[data-tag="LLM for Healthcare"]::before {
-        background-color: #0ea5e9; /* Sky Blue */
+        background-color: #0ea5e9;
     }
     #publications .publication[data-tag="Healthcare Modeling"]::before {
-        background-color: #059669; /* Emerald Green */
+        background-color: #059669;
     }
     #publications .publication[data-tag="Healthcare Benchmark"]::before {
-        background-color: #65a30d; /* Lime Green */
+        background-color: #65a30d;
     }
     #publications .publication[data-tag="Trustworthy AI"]::before {
-        background-color: #7c3aed; /* Deep Violet */
+        background-color: #7c3aed;
     }
     #publications .publication[data-tag="Software Engineering"]::before {
-        background-color: #4f46e5; /* Strong Indigo */
+        background-color: #4f46e5;
     }
     #publications .publication[data-tag="Toolkits & Platforms"]::before {
-        background-color: #dc2626; /* Red */
+        background-color: #dc2626;
     }
     #publications .publication[data-tag="Survey"]::before {
-        background-color: #c2410c; /* Orange-Red */
+        background-color: #c2410c;
     }
     #publications .publication[data-tag="Book Chapters"]::before {
-        background-color: #9333ea; /* Purple */
+        background-color: #9333ea;
     }
     #publications .publication[data-tag="Other Topics"]::before {
-        background-color: #6b7280; /* Gray */
+        background-color: #6b7280;
     }
-    /* End of correction */
 
     .publication:hover {
         transform: translateY(-2px);
@@ -652,7 +644,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
-        margin-top: 0.4rem; /* [OPTIMIZED] Reduced margin */
+        margin-top: 0.4rem;
     }
     .publication-links a {
         background: white;
@@ -668,14 +660,12 @@
         color: white;
     }
 
-    /* [NEW] Add separator for Services sub-sections */
     #services h3:not(:first-of-type) {
         border-top: 1px solid var(--border-subtle);
         margin-top: 1rem;
         padding-top: 1rem;
     }
 
-    /* Collapsible Sections */
     .collapsible-summary {
         cursor: pointer;
         display: flex;
@@ -694,7 +684,7 @@
     .collapsible-content {
         display: none;
         padding: 1rem;
-        margin-top: -1px; /* Overlap border */
+        margin-top: -1px;
         border: 1px solid var(--border-subtle);
         border-top: none;
         border-radius: 0 0 var(--radius-md) var(--radius-md);
@@ -728,7 +718,6 @@
         margin-top: 2rem;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
         .container {
             margin: 1rem auto;
@@ -758,7 +747,6 @@
 </head>
 
 <body>
-    <!-- HTML 结构保持不变 -->
     <nav class="nav-bar">
         <ul class="nav-links">
             <li><a href="#about">About</a></li>

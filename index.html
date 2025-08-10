@@ -471,60 +471,60 @@
     .publication {
         display: flex;
         flex-direction: column;
-        gap: 0.2rem; /* [OPTIMIZED] Reduced gap for tighter item layout */
-        /* [MODIFIED] Adjusted padding to make space for the colored dot */
-        padding: 0.75rem 0.75rem 0.75rem 1.75rem;
-        margin-bottom: 0.5rem; /* [OPTIMIZED] Reduced margin */
+        gap: 0.2rem;
+        padding: 0.75rem; /* Generic padding for all cards */
+        margin-bottom: 0.5rem;
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-md);
         transition: all 0.2s ease;
-        /* [MODIFIED] Added for positioning context of the pseudo-element */
         position: relative;
     }
 
-    /* [NEW] The colored dot for each publication card */
-    .publication::before {
+    #publications .publication {
+        padding-left: 1.75rem;
+    }
+
+    /* [CORRECTED] Create the dot only for cards inside #publications */
+    #publications .publication::before {
         content: '';
         position: absolute;
-        left: 0.75rem; /* Position in the new padding area */
-        top: 1rem;     /* Vertically align with the title's approximate centerline */
+        left: 0.75rem;
+        top: 1rem;
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        /* Default color for items without a specific tag (e.g., in Awards/Talks) */
-        background-color: #6b7280;
+        background-color: #6b7280; /* Default dot color */
     }
 
-    /* [NEW] Color mapping for publication dots, matching the filter tags */
-    .publication[data-tag="LLM Agents for Healthcare"]::before,
-    .publication[data-tag="LLM for Healthcare"]::before {
+    #publications .publication[data-tag="LLM Agents for Healthcare"]::before,
+    #publications .publication[data-tag="LLM for Healthcare"]::before {
         background-color: #3b82f6; /* Blue */
     }
-    .publication[data-tag="Healthcare Modeling"]::before {
+    #publications .publication[data-tag="Healthcare Modeling"]::before {
         background-color: #10b981; /* Green */
     }
-    .publication[data-tag="Healthcare Benchmark"]::before {
+    #publications .publication[data-tag="Healthcare Benchmark"]::before {
         background-color: #22c55e; /* Lime */
     }
-    .publication[data-tag="Trustworthy AI"]::before {
+    #publications .publication[data-tag="Trustworthy AI"]::before {
         background-color: #8b5cf6; /* Violet */
     }
-    .publication[data-tag="Software Engineering"]::before {
+    #publications .publication[data-tag="Software Engineering"]::before {
         background-color: #6366f1; /* Indigo */
     }
-    .publication[data-tag="Toolkits & Platforms"]::before {
+    #publications .publication[data-tag="Toolkits & Platforms"]::before {
         background-color: #ec4899; /* Pink */
     }
-    .publication[data-tag="Survey"]::before {
+    #publications .publication[data-tag="Survey"]::before {
         background-color: #f43f5e; /* Rose */
     }
-    .publication[data-tag="Book Chapters"]::before {
+    #publications .publication[data-tag="Book Chapters"]::before {
         background-color: #a855f7; /* Purple */
     }
-    .publication[data-tag="Other Topics"]::before {
+    #publications .publication[data-tag="Other Topics"]::before {
         background-color: #6b7280; /* Gray */
     }
-    /* End of new styles */
+    /* End of correction */
 
     .publication:hover {
         transform: translateY(-2px);
@@ -1171,7 +1171,7 @@
             <h2>Projects</h2>
             <ul>
                 <li>
-                    <div class="publication" data-tag="Toolkits & Platforms" data-year="2024">
+                    <div class="publication" data-year="2024">
                         <span class="publication-title">PyEHR: A Predictive Modeling Toolkit for Electronic Health Records</span>
                         <span class="publication-authors"><strong>Yinghao Zhu</strong>, Wenqing Wang, Junyi Gao, Liantao Ma</span>
                         <span class="publication-venue">GitHub Project</span>
@@ -1179,7 +1179,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2023">
+                    <div class="publication" data-year="2023">
                         <span class="publication-title">Envisioning the Future Through AI: Perspectives on Global Landscapes and Lifestyles</span>
                         <span class="publication-authors"><strong>Yinghao Zhu</strong>, Ziyi Wang, Caixin Kang, Hao Li, Jingkun An, Enshen Zhou, Haoran Feng, Bo Hou, Long He, Xinlei Bao, Zihao Li, Chuang Wang, Xinyuan Wang</span>
                         <span class="publication-venue">Computer Vision and Pattern Recognition (CVPR) Art Gallery, 2023</span>

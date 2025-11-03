@@ -311,19 +311,19 @@
             }
         }
 
-        /* Responsive design based on window aspect ratio and width */
-        @media (max-width: 768px), (max-aspect-ratio: 4/3) {
-            /* Hide Featured Publications section for narrow windows */
+        /* Responsive design for compact viewports (e.g., mobile, portrait tablets, short windows) */
+        @media (max-width: 1023px) or (max-height: 599px) {
+            /* Hide Featured Publications on About page for small/short screens */
             .featured-publications-section {
                 display: none !important;
             }
 
-            /* Hide publication tags and time for narrow windows */
+            /* Hide publication tags and time for compact view */
             .publication-meta {
                 display: none !important;
             }
 
-            /* Adjust publication layout for narrow windows */
+            /* Adjust publication layout for compact view */
             .publication-item .publication-content {
                 flex: 1 !important;
                 margin-right: 0 !important;

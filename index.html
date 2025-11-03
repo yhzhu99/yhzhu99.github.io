@@ -952,8 +952,42 @@
                     { title: "Reviewer", items: [{ year: "2026", content: "CHI Conference" }, { year: "2026", content: "AAAI Conference" }, { year: "2025, 2026", content: "ICLR Conference" }, { year: "2025, 2026", content: "AISTATS Conference" }, { year: "2025, 2026", content: "ICASSP Conference" }, { year: "2025", content: "NeurIPS ER & SEA Workshop" }, { year: "2025", content: "ICML Conference" }, { year: "2025", content: "ICML FMSD & MAS Workshop" }, { year: "2025", content: "ACMMM Conference" }, { year: "2025", content: "CVPR SynData4CV Workshop" }, { year: "2025", content: "TheWebConf (WWW) Conference" }, { year: "2025", content: "CHIL Conference" }, { year: "2025", content: "IJCNN Conference" }, { year: "2025", content: "ICCV CVAMD & MMRAgI Workshop" }, { year: "2025", content: "AMIA Informatics Summit" }, { year: "2025", content: "BMC Artificial Intelligence" }, { year: "2025", content: "ACM Transactions on Knowledge Discovery from Data (TKDD)" }, { year: "2025", content: "PeerJ Computer Science" }, { year: "2024, 2025", content: "NeurIPS Main Track" }, { year: "2024, 2025", content: "KDD Research Track" }, { year: "2024, 2025", content: "AMIA Clinical Informatics Conference" }, { year: "2024", content: "NeurIPS TSALM & OWA & FM4Science Workshop" }, { year: "2024", content: "KDD AIDSH Workshop" }, { year: "2024", content: "ML4H Conference" }, { year: "2023, 2024, 2025", content: "NeurIPS Datasets and Benchmarks Track" }, { year: "2023, 2024, 2025", content: "AMIA Annual Symposium" }, { year: "2023", content: "Journal of Data-centric Machine Learning Research (DMLR)" }] },
                     { title: "Operational Committee", items: [{ year: "2025.12.15", content: "BIBM 2025 Workshop on Advancing Data for Better Health" }] },
                     { title: "Volunteer", items: [{ year: "2025.04.27", content: "ICLR 2025 Workshop on AI for Children" }] },
-                    { title: "Teaching Assistant", items: [{ year: "Fall 2025", content: "Statistical Machine Learning" }, { year: "Spring 2023", content: "Fundamentals of Programming and Computer Science" }, { year: "Spring, Fall 2022", content: "Design and Analysis of Algorithms" }, { year: "Fall 2021", content: "Operating System" }, { year: "Fall 2021", content: "Network Storage" }, { year: "Spring 2021", content: "System Programming" }, { year: "Spring 2021", content: "Object-oriented Programming" }, { year: "Spring, Fall 2020, Spring 2021", content: "Discrete Mathematics" }] }
+                    { title: "Teaching Assistant", items: [{ year: "Fall 2025", content: "Statistical Machine Learning" }, { year: "Spring 2023", content: "Fundamentals of Programming and Computer Science" }, { year: "Spring, Fall 2022", content: "Design and Analysis of Algorithms" }, { year: "Fall 2021", content: "Operating System" }, { year: "Fall 2021", content: "Network Storage" }, { year: "Spring 2021", content: "System Programming" }, { year: "Spring, Fall 2020, Spring 2021", content: "Discrete Mathematics" }] }
                 ],
+
+                // Helper function to determine venue type priority
+                getVenueTypePriority(venue) {
+                    if (!venue) return 4; // Default to lowest priority if no venue
+
+                    const venueLower = venue.toLowerCase();
+
+                    // Priority 4: Preprints (arXiv, "Preprint" in venue name)
+                    if (venueLower.includes('arxiv') || venueLower.includes('preprint')) {
+                        return 4;
+                    }
+
+                    // Priority 3: Abstract papers, posters, demos
+                    if (venueLower.includes('abstract') || venueLower.includes('poster') ||
+                        venueLower.includes('demo') || venueLower.includes('nominee')) {
+                        return 3;
+                    }
+
+                    // Priority 2: Workshops and symposiums
+                    if (venueLower.includes('workshop') || venueLower.includes('symposium') ||
+                        venueLower.includes('summit')) {
+                        return 2;
+                    }
+
+                    // Priority 1: Published papers (conferences, journals, transactions, etc.)
+                    return 1;
+                },
+
+                // Helper function to determine if a publication is published
+                isPublished(venue) {
+                    if (!venue) return false;
+                    const venueLower = venue.toLowerCase();
+                    return !venueLower.includes('arxiv') && !venueLower.includes('preprint');
+                },
 
                 // Computed properties
                 get featuredPublications() {
@@ -968,15 +1002,90 @@
                     this.allPublications.forEach(pub => {
                         if (pub.tag) tagCounts[pub.tag] = (tagCounts[pub.tag] || 0) + 1;
                     });
-                    return Object.entries(tagCounts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+
+                    // Create array of tags with counts
+                    let tags = Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
+
+                    // Sort tags: Featured first, then All, then other tags, with Other Topics last
+                    return tags.sort((a, b) => {
+                        // Featured comes first
+                        if (a.name === 'LLM Agents for Healthcare') return -1;
+                        if (b.name === 'LLM Agents for Healthcare') return 1;
+
+                        // LLM for Healthcare comes second
+                        if (a.name === 'LLM for Healthcare') return -1;
+                        if (b.name === 'LLM for Healthcare') return 1;
+
+                        // Healthcare Benchmark comes third
+                        if (a.name === 'Healthcare Benchmark') return -1;
+                        if (b.name === 'Healthcare Benchmark') return 1;
+
+                        // Healthcare Modeling comes fourth
+                        if (a.name === 'Healthcare Modeling') return -1;
+                        if (b.name === 'Healthcare Modeling') return 1;
+
+                        // Trustworthy AI comes fifth
+                        if (a.name === 'Trustworthy AI') return -1;
+                        if (b.name === 'Trustworthy AI') return 1;
+
+                        // Software Engineering
+                        if (a.name === 'Software Engineering') return -1;
+                        if (b.name === 'Software Engineering') return 1;
+
+                        // Toolkits & Platforms
+                        if (a.name === 'Toolkits & Platforms') return -1;
+                        if (b.name === 'Toolkits & Platforms') return 1;
+
+                        // Survey
+                        if (a.name === 'Survey') return -1;
+                        if (b.name === 'Survey') return 1;
+
+                        // Book Chapters
+                        if (a.name === 'Book Chapters') return -1;
+                        if (b.name === 'Book Chapters') return 1;
+
+                        // Other Topics comes last
+                        if (a.name === 'Other Topics') return 1;
+                        if (b.name === 'Other Topics') return -1;
+
+                        // Otherwise sort by count (descending)
+                        return b.count - a.count;
+                    });
                 },
                 get filteredPublications() {
                     let publications = this.selectedTag === 'All' ? this.allPublications : (this.selectedTag === '' ? this.featuredPublications : this.allPublications.filter(pub => pub.tag === this.selectedTag));
-                    return publications.filter(pub => {
+
+                    // Apply search and year filters
+                    publications = publications.filter(pub => {
                         const searchContent = `${pub.title} ${pub.authors} ${pub.venue}`.toLowerCase();
                         const matchesSearch = !this.searchQuery || searchContent.includes(this.searchQuery.toLowerCase());
                         const matchesYear = !this.selectedYear || pub.year === this.selectedYear;
                         return matchesSearch && matchesYear;
+                    });
+
+                    // Sort publications according to the priority order
+                    return publications.sort((a, b) => {
+                        // 1. Year (Descending)
+                        if (a.year !== b.year) {
+                            return b.year.localeCompare(a.year);
+                        }
+
+                        // 2. Published Status: Published papers first, then preprints
+                        const aPublished = this.isPublished(a.venue);
+                        const bPublished = this.isPublished(b.venue);
+                        if (aPublished !== bPublished) {
+                            return aPublished ? -1 : 1;
+                        }
+
+                        // 3. Venue Type Priority
+                        const aPriority = this.getVenueTypePriority(a.venue);
+                        const bPriority = this.getVenueTypePriority(b.venue);
+                        if (aPriority !== bPriority) {
+                            return aPriority - bPriority;
+                        }
+
+                        // 4. Title (Alphabetical): As final tiebreaker
+                        return a.title.localeCompare(b.title);
                     });
                 },
 

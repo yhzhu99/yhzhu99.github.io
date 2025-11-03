@@ -184,6 +184,15 @@
             font-weight: 600; /* semi-bold */
             color: #1e3a8a; /* primary-blue-dark */
         }
+        /* Style for linked authors */
+        .author-link {
+            transition: color 0.2s ease-out, border-bottom-color 0.2s ease-out;
+            border-bottom: 1px dotted rgba(30, 64, 175, 0.4); /* subtle dotted underline */
+        }
+        .author-link:hover {
+            border-bottom-color: #1e3a8a; /* solid underline on hover */
+            border-bottom-style: solid;
+        }
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -716,7 +725,7 @@
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h4 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="project.title"></h4>
-                                                    <p class="text-xs text-text-gray-light mb-1" x-text="project.authors"></p>
+                                                    <p class="text-xs text-text-gray-light mb-1" x-html="formatAuthors(project.authors)"></p>
                                                     <p class="text-xs text-primary-blue italic mb-2" x-show="project.venue" x-text="project.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in project.links" :key="link.type">
@@ -836,6 +845,41 @@
                     { id: 'experience', name: 'Experience' },
                     { id: 'awards', name: 'Activities & Honors' }
                 ],
+
+                // Name-to-Link Dictionary for Collaborators
+                authorLinks: {
+                    'Lequan Yu': 'https://yulequan.github.io/',
+                    'Liantao Ma': 'http://scholar.pku.edu.cn/malt/home',
+                    'Chengwei Pan': 'https://scholar.google.com/citations?user=7i1dqbEAAAAJ&hl=en',
+                    'Yasha Wang': 'https://faculty.pku.edu.cn/wangyasha/en/index.htm',
+                    'Junyi Gao': 'https://v1xerunt.github.io/',
+                    'Zixiang Wang': 'https://fieldry.github.io/',
+                    'Haoran Hu': 'https://openreview.net/profile?id=~Haoran_Hu3',
+                    'Dehao Sui': 'https://openreview.net/profile?id=~Dehao_Sui1',
+                    'Lei Gu': 'https://openreview.net/profile?id=~Lei_Gu5',
+                    'Xiaochen Zheng': 'https://www.linkedin.com/in/xiaochen-zheng-a058429b/',
+                    'Ziyi He': 'https://www.linkedin.com/in/ziyi-he-8a142122b/',
+                    'Xichen Zhang': 'https://www.linkedin.com/in/xichen-zhang-205704259/',
+                    'Yifan Qi': 'https://openreview.net/profile?id=~Yifan_Qi4',
+                    'Huiya Zhao': 'https://openreview.net/profile?id=~Huiya_Zhao1',
+                    'Tianlong Wang': 'https://openreview.net/profile?id=~Tianlong_Wang1',
+                    'Weibin Liao': 'https://openreview.net/profile?id=~Weibin_Liao1',
+                    'Junjun He': 'https://junjun2016.github.io/',
+                    'Wen Tang': 'https://baike.baidu.com/item/%E5%94%90%E9%9B%AF/15893218',
+                    'Ewen M. Harrison': 'https://www.ed.ac.uk/profile/ewen-harrison',
+                    'Ewen Harrison': 'https://www.ed.ac.uk/profile/ewen-harrison',
+                    'Miguel O. Bernabeu': 'https://edwebprofiles.ed.ac.uk/profile/miguel-o-bernabeu',
+                    'Michael Krauthammer': 'https://krauthammerlab.ch/authors/michaelkrauthammer/',
+                    'Ahmed Allam': 'https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en',
+                    'Jiaya Jia': 'https://jiaya.me/home',
+                    'Junlan Feng': 'https://scholar.google.com/citations?user=rBjPtmQAAAAJ&hl=en',
+                    'Zhoujun Li': 'https://scholar.google.com/citations?user=e-4LoEcAAAAJ&hl=en',
+                    'Xu Chu': 'https://cfcs.pku.edu.cn/english/people/faculty/xuchu/index.htm',
+                    'Zhongwei Qiao': 'https://ch.shmu.edu.cn/main/doctor/intro/id/375/pid/334.html',
+                    'Fang Liu': 'https://liufang816.github.io/',
+                    'Xin Tan': 'https://scholar.google.com/citations?user=vi1H6KMAAAAJ&hl=en',
+                    'Li Zhang': 'https://scholar.google.com/citations?user=WQuLq0MAAAAJ&hl=en'
+                },
 
                 newsItems: [
                     { id: 3, date: 'Sep. 2025', content: 'Our multi-agent benchmark, MedAgentBoard, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
@@ -1102,18 +1146,32 @@
                     const authors = authorString.split(/,\s*/);
                     const firstAuthors = firstAuthorsStr ? firstAuthorsStr.split(',').map(s => s.trim()) : [];
                     const correspondingAuthors = correspondingAuthorsStr ? correspondingAuthorsStr.split(',').map(s => s.trim()) : [];
+
                     return authors.map(author => {
-                        let formattedAuthor = author.trim();
-                        if (formattedAuthor.includes('Yinghao Zhu')) {
-                            formattedAuthor = `<strong class="author-highlight">${formattedAuthor}</strong>`;
+                        const trimmedAuthor = author.trim();
+                        let formattedAuthor;
+
+                        // Special handling for the site owner
+                        if (trimmedAuthor === 'Yinghao Zhu') {
+                            formattedAuthor = `<strong class="author-highlight">${trimmedAuthor}</strong>`;
                         }
-                        // * for co-first author, † for corresponding author (unified gray color)
-                        if (firstAuthors.includes(author.trim())) {
+                        // Check for a link for other authors in the dictionary
+                        else if (this.authorLinks[trimmedAuthor]) {
+                            formattedAuthor = `<a href="${this.authorLinks[trimmedAuthor]}" target="_blank" rel="noopener noreferrer" class="author-link">${trimmedAuthor}</a>`;
+                        }
+                        // Default case for authors without links
+                        else {
+                            formattedAuthor = trimmedAuthor;
+                        }
+
+                        // Append symbols for co-first and corresponding authors
+                        if (firstAuthors.includes(trimmedAuthor)) {
                             formattedAuthor += '<sup class="text-text-gray font-bold">*</sup>';
                         }
-                        if (correspondingAuthors.includes(author.trim())) {
+                        if (correspondingAuthors.includes(trimmedAuthor)) {
                             formattedAuthor += '<sup class="text-text-gray font-bold">†</sup>';
                         }
+
                         return formattedAuthor;
                     }).join(', ');
                 },

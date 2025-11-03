@@ -743,8 +743,15 @@
                                                 <button @click="openServiceModal(service.title)" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
                                             </div>
                                             <div class="flex flex-wrap gap-2">
-                                                <template x-for="item in service.items.slice(0, 8)" :key="item.content">
-                                                    <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item.content"></div>
+                                                <template x-if="service.title === 'Reviewer'">
+                                                    <template x-for="item in ['NeurIPS', 'ICML', 'ICLR', 'KDD', 'WWW', 'AAAI', 'CHI', 'AMIA']" :key="item">
+                                                        <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item"></div>
+                                                    </template>
+                                                </template>
+                                                <template x-if="service.title !== 'Reviewer'">
+                                                    <template x-for="item in service.items.slice(0, 8)" :key="item.content">
+                                                        <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item.content"></div>
+                                                    </template>
                                                 </template>
                                             </div>
                                         </div>
@@ -1110,6 +1117,13 @@
                     }).join(', ');
                 },
 
+                getLatestYear(yearString) {
+                    if (!yearString || typeof yearString !== 'string') return 0;
+                    const years = yearString.match(/\d{4}/g); // Find all 4-digit numbers
+                    if (!years || years.length === 0) return 0;
+                    return Math.max(...years.map(Number));
+                },
+
                 openServiceModal(title) {
                     let flatItems = [];
                     if (title === 'Awards & Honors') {
@@ -1145,11 +1159,18 @@
                     } else {
                         const serviceData = this.services.find(s => s.title === title);
                         if (serviceData) {
-                            flatItems = [...serviceData.items].sort((a, b) => {
-                                const yearA = String(a.year); const yearB = String(b.year);
-                                if (yearA.includes('Journal')) return 1; if (yearB.includes('Journal')) return -1;
-                                return (yearB.match(/\d+/g) || [0])[0] - (yearA.match(/\d+/g) || [0])[0];
-                            }).map(item => ({ date: item.year, content: item.content }));
+                            flatItems = [...serviceData.items]
+                                .sort((a, b) => {
+                                    const latestYearA = this.getLatestYear(String(a.year));
+                                    const latestYearB = this.getLatestYear(String(b.year));
+                                    // Primary sort: by latest year, descending
+                                    if (latestYearA !== latestYearB) {
+                                        return latestYearB - latestYearA;
+                                    }
+                                    // Secondary sort: by content (name), alphabetical
+                                    return a.content.localeCompare(b.content);
+                                })
+                                .map(item => ({ date: item.year, content: item.content }));
                         }
                     }
                     this.selectedService = { title, items: flatItems };

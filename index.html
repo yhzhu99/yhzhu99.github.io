@@ -436,11 +436,11 @@
                     <!-- News -->
                     <div class="academic-card rounded-lg p-4 interactive-element flex-1 flex flex-col min-h-0">
                         <h3 class="font-bold text-text-gray mb-3 pb-2 border-b border-primary-blue/20 text-sm flex-shrink-0">Recent News</h3>
-                        <div class="flex-1 overflow-y-auto scrollable-container pr-1 space-y-2 min-h-0">
+                        <div class="flex-1 overflow-y-auto scrollable-container pr-1 space-y-1 min-h-0">
                             <template x-for="item in newsItems.slice(0, 10)" :key="item.id">
                                 <div class="unified-item">
                                     <div class="unified-item-content">
-                                        <p class="text-xs text-text-gray leading-relaxed" x-html="item.content"></p>
+                                        <p class="text-xs text-text-gray" x-html="item.content"></p>
                                     </div>
                                     <span class="time-tag" x-text="item.date"></span>
                                 </div>
@@ -474,7 +474,7 @@
                                 </div>
                                 <div class="mb-6">
                                     <h3 class="font-bold text-text-gray mb-3 text-sm">Recent News</h3>
-                                    <div class="space-y-2">
+                                    <div class="space-y-1">
                                         <template x-for="item in newsItems.slice(0, 3)" :key="item.id">
                                             <div class="unified-item">
                                                 <div class="unified-item-content">
@@ -517,14 +517,14 @@
                             <!-- Featured Publications Section (Mobile-responsive) -->
                             <div class="featured-publications-section flex-1 overflow-y-auto scrollable-container min-h-0">
                                 <!-- Desktop/Tablet View: Show publication items -->
-                                <div class="hidden md:block space-y-3">
+                                <div class="hidden md:block space-y-2">
                                     <template x-for="pub in featuredPublications" :key="pub.id">
                                         <div class="border border-primary-blue/15 rounded-lg p-4 bg-white/50 interactive-element interactive-border transition-all duration-200 publication-item">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
-                                                    <h5 class="font-semibold text-text-gray text-sm mb-2 leading-tight" x-text="pub.title"></h5>
-                                                    <p class="text-xs text-text-gray-light mb-2" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
-                                                    <p class="text-xs text-primary-blue italic mb-3" x-text="pub.venue"></p>
+                                                    <h5 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="pub.title"></h5>
+                                                    <p class="text-xs text-text-gray-light mb-1" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
+                                                    <p class="text-xs text-primary-blue italic mb-2" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
                                                             <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
@@ -609,12 +609,12 @@
                                 </div>
                             </div>
                             <div class="flex-1 overflow-y-auto scrollable-container p-6 lg:p-8 pt-1 lg:pt-1">
-                                <div class="space-y-3">
+                                <div class="space-y-2">
                                     <template x-for="pub in filteredPublications" :key="pub.id">
                                         <div class="border border-gray-200 rounded-lg p-4 bg-white/70 interactive-element interactive-border transition-all duration-200 publication-item">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
-                                                    <h4 class="font-semibold text-text-gray text-sm mb-2 leading-tight" x-text="pub.title"></h4>
+                                                    <h4 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="pub.title"></h4>
                                                     <p class="text-xs text-text-gray-light mb-1" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
                                                     <p class="text-xs text-primary-blue italic mb-2" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
@@ -639,7 +639,7 @@
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 <div>
                                     <h3 class="text-lg font-bold text-text-gray mb-4 pb-2 border-b-2 border-primary-blue">Education</h3>
-                                    <div class="relative pl-5 border-l-2 border-primary-blue/30 space-y-5">
+                                    <div class="relative pl-5 border-l-2 border-primary-blue/30 space-y-3">
                                         <template x-for="edu in education" :key="edu.id">
                                             <div class="relative timeline-item timeline-item-blue">
                                                 <div class="bg-white/80 p-4 rounded-lg border border-primary-blue/15 interactive-element hover:bg-bg-light">
@@ -659,7 +659,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-bold text-text-gray mb-4 pb-2 border-b-2 border-accent-gray">Professional Experience</h3>
-                                    <div class="relative pl-5 border-l-2 border-accent-gray/30 space-y-5">
+                                    <div class="relative pl-5 border-l-2 border-accent-gray/30 space-y-3">
                                         <template x-for="exp in experience" :key="exp.id">
                                             <div class="relative timeline-item timeline-item-gray">
                                                 <div class="bg-white/80 p-4 rounded-lg border border-accent-gray/15 interactive-element hover:bg-bg-light">
@@ -746,7 +746,7 @@
                             <!-- Professional Services Section -->
                             <div class="mt-6">
                                 <h3 class="flex-shrink-0 text-lg font-bold text-text-gray mb-4 pb-1 border-b-2 border-accent-blue">Professional Services</h3>
-                                <div class="space-y-4">
+                                <div class="space-y-2">
                                     <template x-for="(service, index) in services" :key="service.id">
                                         <div>
                                             <!-- Add separator line between sections (except first one) -->
@@ -796,7 +796,7 @@
                 <h3 class="text-lg font-bold text-text-gray">All News</h3>
                 <button @click="showNewsModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors">&times;</button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-3 scrollable-container">
+            <div class="p-6 overflow-y-auto space-y-2 scrollable-container">
                 <template x-for="item in newsItems" :key="item.id">
                     <div class="modal-unified-item border-l-4 border-primary-blue pl-4 py-2">
                         <div class="modal-unified-item-content">
@@ -813,7 +813,7 @@
                 <h3 class="text-lg font-bold text-text-gray" x-text="selectedService?.title"></h3>
                 <button @click="showServiceModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors">&times;</button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-3 scrollable-container">
+            <div class="p-6 overflow-y-auto space-y-2 scrollable-container">
                 <template x-for="item in selectedService?.items || []" :key="item.id">
                     <div class="modal-unified-item border-l-4 border-primary-blue pl-4 py-2">
                         <div class="modal-unified-item-content">

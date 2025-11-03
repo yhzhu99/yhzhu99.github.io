@@ -428,7 +428,7 @@
                     <div class="academic-card rounded-lg p-4 interactive-element flex-shrink-0">
                         <h3 class="font-bold text-text-gray mb-3 pb-2 border-b border-primary-blue/20 text-sm">Quick Links</h3>
                         <div class="grid grid-cols-2 gap-1.5 text-xs">
-                            <template x-for="link in quickLinks" :key="link.name">
+                            <template x-for="link in quickLinks" :key="link.id">
                                 <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
                             </template>
                         </div>
@@ -468,7 +468,7 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mb-4">
-                                    <template x-for="link in quickLinks" :key="link.name">
+                                    <template x-for="link in quickLinks" :key="link.id">
                                         <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue/10 rounded text-center border border-primary-blue/15 text-xs transition-colors interactive-element" x-text="link.name"></a>
                                     </template>
                                 </div>
@@ -495,7 +495,7 @@
                                 </p>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                                    <template x-for="area in detailedInterests" :key="area.title">
+                                    <template x-for="area in detailedInterests" :key="area.id">
                                         <div class="academic-border pl-4 py-3 bg-bg-light/50 rounded-r interactive-element hover:bg-bg-light">
                                             <h5 class="font-semibold text-text-gray text-sm" x-text="area.title + ':'"></h5>
                                             <p class="text-xs text-text-gray-light mt-1" x-text="area.description"></p>
@@ -747,7 +747,7 @@
                             <div class="mt-6">
                                 <h3 class="flex-shrink-0 text-lg font-bold text-text-gray mb-4 pb-1 border-b-2 border-accent-blue">Professional Services</h3>
                                 <div class="space-y-4">
-                                    <template x-for="(service, index) in services" :key="service.title">
+                                    <template x-for="(service, index) in services" :key="service.id">
                                         <div>
                                             <!-- Add separator line between sections (except first one) -->
                                             <div x-show="index > 0" class="service-separator"></div>
@@ -762,7 +762,7 @@
                                                     </template>
                                                 </template>
                                                 <template x-if="service.title !== 'Reviewer'">
-                                                    <template x-for="item in service.items.slice(0, 8)" :key="item.content">
+                                                    <template x-for="item in service.items.slice(0, 8)" :key="item.id">
                                                         <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item.content"></div>
                                                     </template>
                                                 </template>
@@ -814,7 +814,7 @@
                 <button @click="showServiceModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto space-y-3 scrollable-container">
-                <template x-for="(item, index) in selectedService?.items || []" :key="index">
+                <template x-for="item in selectedService?.items || []" :key="item.id">
                     <div class="modal-unified-item border-l-4 border-primary-blue pl-4 py-2">
                         <div class="modal-unified-item-content">
                             <p class="text-sm text-text-gray" x-html="item.content"></p>
@@ -829,8 +829,33 @@
 
 
     <script>
+        // Utility to assign unique IDs to items in arrays.
+        // This function is defined once and captures the idCounter in a closure.
+        const autoAssignIds = (() => {
+            let idCounter = 1;
+            return (dataArrays) => {
+                dataArrays.forEach(arr => {
+                    if (Array.isArray(arr)) {
+                        arr.forEach(item => {
+                            if (item && typeof item === 'object' && !item.id) {
+                                item.id = idCounter++;
+                            }
+                            // Special case for services which have a nested 'items' array
+                            if (item.items && Array.isArray(item.items)) {
+                                item.items.forEach(subItem => {
+                                   if (subItem && typeof subItem === 'object' && !subItem.id) {
+                                        subItem.id = idCounter++;
+                                   }
+                                });
+                            }
+                        });
+                    }
+                });
+            };
+        })();
+
         function academicWebsite() {
-            return {
+            const componentData = {
                 // UI State
                 activeTab: 'about',
                 showNewsModal: false,
@@ -844,10 +869,10 @@
                 selectedTag: '', // Default to 'Featured'
 
                 tabs: [
-                    { id: 'about', name: 'About' },
-                    { id: 'publications', name: 'Publications' },
-                    { id: 'experience', name: 'Experience' },
-                    { id: 'awards', name: 'Activities & Honors' }
+                    { name: 'About', id: 'about' },
+                    { name: 'Publications', id: 'publications' },
+                    { name: 'Experience', id: 'experience' },
+                    { name: 'Activities & Honors', id: 'awards' }
                 ],
 
                 // Name-to-Link Dictionary for Collaborators
@@ -886,9 +911,9 @@
                 },
 
                 newsItems: [
-                    { id: 3, date: 'Sep. 2025', content: 'Our multi-agent benchmark, MedAgentBoard, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
-                    { id: 4, date: 'Aug. 2025', content: 'Our autonomous agent for healthcare, HealthFlow, was released as a preprint.' },
-                    { id: 6, date: 'Jan. 2025', content: 'Our agent collaboration paper, ColaCare, was accepted to <strong class="font-semibold text-primary-blue">WWW 2025</strong>.' },
+                    { date: 'Sep. 2025', content: 'Our multi-agent benchmark, MedAgentBoard, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
+                    { date: 'Aug. 2025', content: 'Our autonomous agent for healthcare, HealthFlow, was released as a preprint.' },
+                    { date: 'Jan. 2025', content: 'Our agent collaboration paper, ColaCare, was accepted to <strong class="font-semibold text-primary-blue">WWW 2025</strong>.' },
                 ],
 
                 quickLinks: [
@@ -911,98 +936,98 @@
 
                 // All publications with featured property
                 allPublications: [
-                    { id: 1, featured: false, title: "SecureReviewer: Enhancing Large Language Models for Secure Code Review through Secure-aware Fine-tuning", authors: "Fang Liu, Simiao Liu, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "IEEE/ACM International Conference on Software Engineering (ICSE), 2026", year: "2026", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.26457" }, { type: "Code", url: "https://github.com/SIMIAO515/SecureReviewer" }] },
-                    { id: 2, featured: true, title: "HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research", authors: "Yinghao Zhu, Yifan Qi, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Yifan Qi", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.02621" }, { type: "Code", url: "https://github.com/yhzhu99/HealthFlow" }, { type: "Website", url: "https://healthflow-agent.netlify.app/" }] },
-                    { id: 3, featured: true, title: "MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks", authors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.12371" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentBoard" }, { type: "Website", url: "https://medagentboard.netlify.app/" }] },
-                    { id: 4, featured: true, title: "MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems", authors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu, Liantao Ma", firstAuthors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang", correspondingAuthors: "Lequan Yu, Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.10185" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentAudit" }] },
-                    { id: 5, featured: true, title: "ClinicRealm: Re-evaluating Large Language Models with Conventional Machine Learning for Non-Generative Clinical Prediction Tasks", authors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao", correspondingAuthors: "Chengwei Pan, Ewen M. Harrison, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2407.18525" }, { type: "Code", url: "https://github.com/yhzhu99/ehr-llm-benchmark" }, { type: "Website", url: "https://yhzhu99.github.io/ehr-llm-benchmark/" }] },
-                    { id: 6, featured: true, title: "AICare: An AI-Clinician Interaction System for Transparent and Actionable Clinical Decision Support", authors: "Junyi Gao, Zixiang Wang, Dehao Sui, Wen Tang, Yasha Wang, Ling Wang, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "", venue: "The Symposium on Artificial Intelligence in Learning Health Systems (SAIL), Best abstract nominee, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://aboutme.vixerunt.org/assets/material/sail_aicare.pdf" }, { type: "Website", url: "http://47.93.42.104/215" }] },
-                    { id: 7, featured: false, title: "Magical: Medical Lay Language Generation via Semantic Invariance and Layperson-tailored Adaptation", authors: "Weibin Liao, Tianlong Wang, Yinghao Zhu, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Weibin Liao, Tianlong Wang", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Conference on Neural Information Processing Systems (NeurIPS), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.08730" }, { type: "Code", url: "https://github.com/tianlwang/Magical" }] },
-                    { id: 8, featured: false, title: "Foundation models and intelligent decision-making: Progress, challenges, and perspectives", authors: "Jincai Huang, Yongjun Xu, Qi Wang, et al.", firstAuthors: "", correspondingAuthors: "", venue: "The Innovation, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://www.cell.com/the-innovation/fulltext/S2666-6758(25)00151-1" }] },
-                    { id: 9, featured: false, title: "Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction", authors: "Weibin Liao, Yinghao Zhu, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Liantao Ma", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3690624.3709166" }, { type: "Code", url: "https://github.com/MrBlankness/PAI" }] },
-                    { id: 10, featured: false, title: "Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor", authors: "Xin Tan, Xiao Long, Yinghao Zhu, Lin Shi, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Lin Shi", venue: "ACM International Conference on the Foundations of Software Engineering (FSE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3715767" }, { type: "Code", url: "https://github.com/yhzhu99/OSSerCopilot" }] },
-                    { id: 11, featured: true, title: "ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", authors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao", correspondingAuthors: "Yasha Wang, Junyi Gao, Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714877" }, { type: "Code", url: "https://github.com/PKU-AICare/ColaCare" }, { type: "Website", url: "https://colacare.netlify.app" }] },
-                    { id: 12, featured: false, title: "Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories", authors: "Tianlong Wang, Xianfeng Jiao, Yinghao Zhu, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma", firstAuthors: "Tianlong Wang, Xianfeng Jiao", correspondingAuthors: "Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714640" }, { type: "Code", url: "https://github.com/tianlwang/ACT" }] },
-                    { id: 13, featured: false, title: "Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models", authors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan", firstAuthors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32396" }, { type: "Code", url: "https://github.com/dirtycomputer/O2M_attack" }] },
-                    { id: 14, featured: false, title: "Project Imaging-X: A Survey of 1000+ Open-Access Medical Imaging Datasets for Foundation Model Development", authors: "Project Imaging-X Contributors", firstAuthors: "", correspondingAuthors: "", venue: "GitHub, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://github.com/uni-medical/Project-Imaging-X/" }] },
-                    { id: 15, featured: false, title: "AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation", authors: "Jingkun An, Yinghao Zhu, Zongjian Li, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan", firstAuthors: "Jingkun An, Yinghao Zhu, Zongjian Li", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32168" }, { type: "Code", url: "https://github.com/Anjingkun/AGFSync" }, { type: "Dataset", url: "https://huggingface.co/datasets/JingkunAn/AGFSync" }, { type: "Website", url: "https://anjingkun.github.io/AGFSync/" }] },
-                    { id: 16, featured: false, title: "Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients", authors: "Zixiang Wang, Yinghao Zhu, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", venue: "STAR Protocols, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/4069" }, { type: "Code", url: "https://doi.org/10.5281/zenodo.14498936" }] },
-                    { id: 17, featured: false, title: "Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients Stratified by Serum Albumin Levels", authors: "Yueying Wu, Junyi Gao, Wen Tang, Chunyan Su, Yinghao Zhu, Tianlong Wang, Ling Wang, Weibin Liao, Xu Chu, Yasha Wang, Xinju Zhao, Tao Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yueying Wu, Junyi Gao", correspondingAuthors: "Wen Tang, Ling Wang, Yasha Wang, Liantao Ma", venue: "Health Data Science, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://spj.science.org/doi/pdf/10.34133/hds.0280" }, { type: "Code", url: "https://github.com/Hundredl/ESRD-Exploring" }] },
-                    { id: 18, featured: false, title: "Evaluation of radiomics as an assistant tool for radiologists in the diagnosis of necrotizing enterocolitis", authors: "Chaogang Lu, Mingshu Yang, Yinghao Zhu, Yaqin Xia, Siqi Luo, Guang Yang, Mei Bai, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Mei Bai, Zhongwei Qiao", venue: "Translational Pediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://tp.amegroups.org/article/view/137557" }] },
-                    { id: 19, featured: false, title: "Correlation analysis between MRI-based radiomics features and clinical grading of neonatal hypoxic-ischemic encephalopathy", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Laishuan Wang, Zhongwei Qiao", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "http://www.cjebp.cn/CN/abstract/abstract1807.shtml" }] },
-                    { id: 20, featured: false, title: "Empowering medical systematic reviews with large language models: methods, development directions, and applications", authors: "Yannan Huang, Haoran Sang, Yu Liu, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "Liantao Ma, Yinghao Zhu", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://journal.gxmu.edu.cn/article/doi/10.16190/j.cnki.45-1211/r.2025.03.001" }] },
-                    { id: 21, featured: false, title: "EfficientEdit: Accelerating Code Editing via Edit-Oriented Speculative Decoding", authors: "Peiding Wang, Li Zhang, Fang Liu, Yinghao Zhu, Wang Xu, Lin Shi, Xiaoli Lian, Minxiao Li, Bo Shen, An Fu", firstAuthors: "", correspondingAuthors: "Fang Liu, Lin Shi", venue: "IEEE/ACM International Conference on Automated Software Engineering (ASE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2506.02780" }, { type: "Code", url: "https://github.com/zhu-zhu-ding/EfficientEdit" }] },
-                    { id: 22, featured: false, title: "Toward Better EHR Reasoning in LLMs: Reinforcement Learning with Expert Attention Guidance", authors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding, Xinke Jiang, Weibin Liao, Yongxin Xu, Yinghao Zhu, Zhibang Yang, Liantao Ma, Junfeng Zhao, Yasha Wang", firstAuthors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding", correspondingAuthors: "Liantao Ma, Junfeng Zhao, Yasha Wang", venue: "Preprint, 2025", year: "2025", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.13579" }, { type: "Code", url: "https://github.com/devilran6/EAG-RL" }] },
-                    { id: 23, featured: false, title: "ConfAgents: A Conformal-Guided Multi-Agent Framework for Cost-Efficient Medical Diagnosis", authors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.04915" }, { type: "Code", url: "https://github.com/PKU-AICare/ConfAgents" }] },
-                    { id: 24, featured: false, title: "MedMMV: A Controllable Multimodal Multi-Agent Framework for Reliable and Verifiable Clinical Reasoning", authors: "Hongjun Liu, Yinghao Zhu, Yuhui Wang, Yitao Long, Zeyu Lai, Lequan Yu, Chen Zhao", firstAuthors: "", correspondingAuthors: "Chen Zhao", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.24314" }] },
-                    { id: 25, featured: false, title: "Scaf-GRPO: Scaffolded Group Relative Policy Optimization for Enhancing LLM Reasoning", authors: "Xichen Zhang, Sitong Wu, Yinghao Zhu, Haoru Tan, Shaozuo Yu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19807" }, { type: "Code", url: "https://github.com/dvlab-research/Scaf-GRPO" }] },
-                    { id: 26, featured: false, title: "SmartSwitch: Advancing LLM Reasoning by Overcoming Underthinking via Promoting Deeper Thought Exploration", authors: "Xichen Zhang, Sitong Wu, Haoru Tan, Shaozuo Yu, Yinghao Zhu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19767" }, { type: "Code", url: "https://github.com/dvlab-research/SmartSwitch" }] },
-                    { id: 27, featured: false, title: "An Empirical Study on Failures in Automated Issue Solving", authors: "Simiao Liu, Fang Liu, Liehao Li, Xin Tan, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Fang Liu", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.13941" }, { type: "Code", url: "https://anonymous.4open.science/r/IssueSolvingEmpirical" }] },
-                    { id: 28, featured: false, title: "LLM-Driven Collaborative Model for Untangling Commits via Explicit and Implicit Dependency Reasoning", authors: "Bo Hou, Xin Tan, Kai Zheng, Fang Liu, Yinghao Zhu, Li Zhang", firstAuthors: "", correspondingAuthors: "Xin Tan", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2507.16395" }, { type: "Code", url: "https://anonymous.4open.science/r/ColaUntangle-0109" }] },
-                    { id: 29, featured: false, title: "SuperGS: Consistent and Detailed 3D Super-Resolution Scene Reconstruction via Gaussian Splatting", authors: "Shiyun Xie, Zhiru Wang, Yinghao Zhu, Xu Wang, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.18649" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
-                    { id: 30, featured: true, title: "EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation", authors: "Yinghao Zhu, Changyu Ren, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Changyu Ren", correspondingAuthors: "Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679582" }, { type: "Code", url: "https://github.com/yhzhu99/EMERGE" }, { type: "Video", url: "https://www.youtube.com/watch?v=gqGX6tzkFtM" }] },
-                    { id: 31, featured: false, title: "PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations", authors: "Yinghao Zhu, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma, Chengwei Pan", firstAuthors: "", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679521" }, { type: "Code", url: "https://github.com/yhzhu99/PRISM" }, { type: "Video", url: "https://www.youtube.com/watch?v=_v0h-Izl2V0" }] },
-                    { id: 32, featured: true, title: "A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "Cell Patterns, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }, { type: "Website", url: "https://pyehr.netlify.app" }] },
-                    { id: 33, featured: false, title: "Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models", authors: "Tianlong Wang, Yinghao Zhu, Zixiang Wang, Wen Tang, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao, Liantao Ma, Ling Wang", firstAuthors: "Tianlong Wang, Yinghao Zhu", correspondingAuthors: "Wen Tang, Junyi Gao, Liantao Ma, Ling Wang", venue: "STAR Protocols, 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/3756" }, { type: "Code", url: "https://zenodo.org/records/13342417" }] },
-                    { id: 34, featured: false, title: "Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Zhongwei Qiao", venue: "Pediatric Radiology, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://link.springer.com/article/10.1007/s00247-024-06065-6" }] },
-                    { id: 35, featured: true, title: "EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow", authors: "Hao Wu, Yinghao Zhu, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Hao Wu, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024", year: "2024", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=lvycHSrFgk" }, { type: "Code", url: "https://github.com/PKU-AICare/EHRFlow" }] },
-                    { id: 36, featured: false, title: "RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval", authors: "Zixiang Wang, Yinghao Zhu, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma, Ling Wang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Liantao Ma, Ling Wang", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=jqo1vk63qE" }, { type: "Code", url: "https://github.com/PKU-AICare/RetCare" }] },
-                    { id: 37, featured: false, title: "DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction", authors: "Yuhang Wang, Yinghao Zhu, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao", firstAuthors: "", correspondingAuthors: "Junyi Gao", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=YzWC6huGQq" }, { type: "Code", url: "https://github.com/v1xerunt/DeepEST" }] },
-                    { id: 38, featured: false, title: "PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction", authors: "Zhichao Yang, Yinghao Zhu, Ziyue Niu, Yanru Huang, Chengwei Pan, Xiwang Dong", firstAuthors: "Zhichao Yang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "International Conference on Industrial Artificial Intelligence (IAI), 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://ieeexplore.ieee.org/abstract/document/10730680/" }, { type: "Code", url: "https://github.com/yzc0912/PIGWN" }] },
-                    { id: 39, featured: false, title: "SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning", authors: "Shiyun Xie, Zhiru Wang, Xu Wang, Yinghao Zhu, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2410.02571" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
-                    { id: 40, featured: false, title: "Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data", authors: "Yinghao Zhu, Zixiang Wang, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2402.01713" }, { type: "Code", url: "https://github.com/yhzhu99/llm4healthcare" }] },
-                    { id: 41, featured: false, title: "LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation", authors: "Weibin Liao, Yinghao Zhu, Xinyuan Wang, Chengwei Pan, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2403.05246" }, { type: "Code", url: "https://github.com/MrBlankness/LightM-UNet" }] },
-                    { id: 42, featured: false, title: "How far are AI-powered programming assistants from meeting developers' needs?", authors: "Xin Tan, Xiao Long, Xianjun Ni, Yinghao Zhu, Jing Jiang, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "Preprint, 2024", year: "2024", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2404.12000" }] },
-                    { id: 43, featured: false, title: "Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients", authors: "Liantao Ma, Chaohe Zhang, Junyi Gao, Xianfeng Jiao, Zhihao Yu, Yinghao Zhu, Tianlong Wang, Xinyu Ma, Yasha Wang, Wen Tang, Xinju Zhao, Wenjie Ruan, Tao Wang", firstAuthors: "Liantao Ma, Chaohe Zhang, Junyi Gao", correspondingAuthors: "Junyi Gao, Yasha Wang, Wen Tang", venue: "Cell Patterns, Cover, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5" }, { type: "Code", url: "https://github.com/Accountable-Machine-Intelligence/AICare" }] },
-                    { id: 44, featured: false, title: "M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method", authors: "Yinghao Zhu, Jingkun An, Enshen Zhou, Lu An, Junyi Gao, Hao Li, Haoran Feng, Bo Hou, Wen Tang, Chengwei Pan, Liantao Ma", firstAuthors: "Yinghao Zhu, Jingkun An", correspondingAuthors: "Chengwei Pan, Liantao Ma", venue: "Beijing Health Data Science Summit 2023, Abstract, 2023", year: "2023", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://arxiv.org/abs/2306.04118" }, { type: "Code", url: "https://github.com/yhzhu99/M3Fair" }] },
-                    { id: 45, featured: false, title: "A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Yasha Wang, Wen Tang, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023", year: "2023", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2209.07805" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }] },
-                    { id: 46, featured: false, title: "Exploration of the feasibility of using examination time order to split small sample size data for radiomics", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
-                    { id: 47, featured: false, title: "Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
-                    { id: 48, featured: false, title: "Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets", authors: "Zhongji Zhang, Yuhang Wang, Yinghao Zhu, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang, and Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2310.07799" }, { type: "Code", url: "https://github.com/wang1yuhang/domain_invariant_network" }] },
-                    { id: 49, featured: false, title: "M3Care: Learning with Missing Modalities in Multimodal Healthcare Data", authors: "Chaohe Zhang, Xu Chu, Liantao Ma, Yinghao Zhu, Yasha Wang, Jiangtao Wang, Junfeng Zhao", firstAuthors: "Chaohe Zhang, Xu Chu", correspondingAuthors: "Yasha Wang", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022", year: "2022", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3534678.3539388" }, { type: "Code", url: "https://github.com/choczhang/M3Care" }] },
-                    { id: 50, featured: false, title: "TAMER: A Test-Time Adaptive MoE-Driven Framework for EHR Representation Learning", authors: "Yinghao Zhu, Xiaochen Zheng, Ahmed Allam, Michael Krauthammer", firstAuthors: "Yinghao Zhu, Xiaochen Zheng", correspondingAuthors: "Xiaochen Zheng", venue: "AMIA 2025 Annual Symposium, Poster, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2501.05661" }, { type: "Code", url: "https://github.com/yhzhu99/TAMER" }] },
-                    { id: 51, featured: false, title: "Python Data Analysis", authors: "Yunxiang Lyu, Zhipeng Wang, Lihua Xu, Zhaoyi Wang, Yinghao Zhu, Kun Yan, Shanzhao Qiu, Jiawei Tang, Kaiwen Feng, Wei Chen, Tianyi Chen, Zhendong Hong, Yunfei Yang, Jinman Xie, Zeliang Yao, Yangang Han, Yihang Wu", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/bookscenter/book_09724901.html" }] },
-                    { id: 52, featured: false, title: "Big Data Visualization Techniques", authors: "Yunxiang Lyu, Zeliang Yao, Jili Xie, Yinghao Zhu, Shanzhao Qiu, Yangang Han, Zehuan Huang", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09321701.html" }] },
-                    { id: 53, featured: false, title: "Theory and Practice of Artificial Intelligence", authors: "Yunxiang Lyu, Luting Huang, Zezhong Liang, Wenzhi Yin, Xueting Han, Yinghao Zhu, Miaoran Chen", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2022", year: "2022", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09059601.html" }] }
+                    { featured: false, title: "SecureReviewer: Enhancing Large Language Models for Secure Code Review through Secure-aware Fine-tuning", authors: "Fang Liu, Simiao Liu, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "IEEE/ACM International Conference on Software Engineering (ICSE), 2026", year: "2026", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.26457" }, { type: "Code", url: "https://github.com/SIMIAO515/SecureReviewer" }] },
+                    { featured: true, title: "HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research", authors: "Yinghao Zhu, Yifan Qi, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Yifan Qi", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.02621" }, { type: "Code", url: "https://github.com/yhzhu99/HealthFlow" }, { type: "Website", url: "https://healthflow-agent.netlify.app/" }] },
+                    { featured: true, title: "MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks", authors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.12371" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentBoard" }, { type: "Website", url: "https://medagentboard.netlify.app/" }] },
+                    { featured: true, title: "MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems", authors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu, Liantao Ma", firstAuthors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang", correspondingAuthors: "Lequan Yu, Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.10185" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentAudit" }] },
+                    { featured: true, title: "ClinicRealm: Re-evaluating Large Language Models with Conventional Machine Learning for Non-Generative Clinical Prediction Tasks", authors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao", correspondingAuthors: "Chengwei Pan, Ewen M. Harrison, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2407.18525" }, { type: "Code", url: "https://github.com/yhzhu99/ehr-llm-benchmark" }, { type: "Website", url: "https://yhzhu99.github.io/ehr-llm-benchmark/" }] },
+                    { featured: true, title: "AICare: An AI-Clinician Interaction System for Transparent and Actionable Clinical Decision Support", authors: "Junyi Gao, Zixiang Wang, Dehao Sui, Wen Tang, Yasha Wang, Ling Wang, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "", venue: "The Symposium on Artificial Intelligence in Learning Health Systems (SAIL), Best abstract nominee, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://aboutme.vixerunt.org/assets/material/sail_aicare.pdf" }, { type: "Website", url: "http://47.93.42.104/215" }] },
+                    { featured: false, title: "Magical: Medical Lay Language Generation via Semantic Invariance and Layperson-tailored Adaptation", authors: "Weibin Liao, Tianlong Wang, Yinghao Zhu, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Weibin Liao, Tianlong Wang", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Conference on Neural Information Processing Systems (NeurIPS), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.08730" }, { type: "Code", url: "https://github.com/tianlwang/Magical" }] },
+                    { featured: false, title: "Foundation models and intelligent decision-making: Progress, challenges, and perspectives", authors: "Jincai Huang, Yongjun Xu, Qi Wang, et al.", firstAuthors: "", correspondingAuthors: "", venue: "The Innovation, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://www.cell.com/the-innovation/fulltext/S2666-6758(25)00151-1" }] },
+                    { featured: false, title: "Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction", authors: "Weibin Liao, Yinghao Zhu, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Liantao Ma", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3690624.3709166" }, { type: "Code", url: "https://github.com/MrBlankness/PAI" }] },
+                    { featured: false, title: "Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor", authors: "Xin Tan, Xiao Long, Yinghao Zhu, Lin Shi, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Lin Shi", venue: "ACM International Conference on the Foundations of Software Engineering (FSE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3715767" }, { type: "Code", url: "https://github.com/yhzhu99/OSSerCopilot" }] },
+                    { featured: true, title: "ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", authors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao", correspondingAuthors: "Yasha Wang, Junyi Gao, Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714877" }, { type: "Code", url: "https://github.com/PKU-AICare/ColaCare" }, { type: "Website", url: "https://colacare.netlify.app" }] },
+                    { featured: false, title: "Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories", authors: "Tianlong Wang, Xianfeng Jiao, Yinghao Zhu, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma", firstAuthors: "Tianlong Wang, Xianfeng Jiao", correspondingAuthors: "Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714640" }, { type: "Code", url: "https://github.com/tianlwang/ACT" }] },
+                    { featured: false, title: "Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models", authors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan", firstAuthors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32396" }, { type: "Code", url: "https://github.com/dirtycomputer/O2M_attack" }] },
+                    { featured: false, title: "Project Imaging-X: A Survey of 1000+ Open-Access Medical Imaging Datasets for Foundation Model Development", authors: "Project Imaging-X Contributors", firstAuthors: "", correspondingAuthors: "", venue: "GitHub, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://github.com/uni-medical/Project-Imaging-X/" }] },
+                    { featured: false, title: "AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation", authors: "Jingkun An, Yinghao Zhu, Zongjian Li, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan", firstAuthors: "Jingkun An, Yinghao Zhu, Zongjian Li", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32168" }, { type: "Code", url: "https://github.com/Anjingkun/AGFSync" }, { type: "Dataset", url: "https://huggingface.co/datasets/JingkunAn/AGFSync" }, { type: "Website", url: "https://anjingkun.github.io/AGFSync/" }] },
+                    { featured: false, title: "Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients", authors: "Zixiang Wang, Yinghao Zhu, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", venue: "STAR Protocols, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/4069" }, { type: "Code", url: "https://doi.org/10.5281/zenodo.14498936" }] },
+                    { featured: false, title: "Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients Stratified by Serum Albumin Levels", authors: "Yueying Wu, Junyi Gao, Wen Tang, Chunyan Su, Yinghao Zhu, Tianlong Wang, Ling Wang, Weibin Liao, Xu Chu, Yasha Wang, Xinju Zhao, Tao Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yueying Wu, Junyi Gao", correspondingAuthors: "Wen Tang, Ling Wang, Yasha Wang, Liantao Ma", venue: "Health Data Science, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://spj.science.org/doi/pdf/10.34133/hds.0280" }, { type: "Code", url: "https://github.com/Hundredl/ESRD-Exploring" }] },
+                    { featured: false, title: "Evaluation of radiomics as an assistant tool for radiologists in the diagnosis of necrotizing enterocolitis", authors: "Chaogang Lu, Mingshu Yang, Yinghao Zhu, Yaqin Xia, Siqi Luo, Guang Yang, Mei Bai, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Mei Bai, Zhongwei Qiao", venue: "Translational Pediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://tp.amegroups.org/article/view/137557" }] },
+                    { featured: false, title: "Correlation analysis between MRI-based radiomics features and clinical grading of neonatal hypoxic-ischemic encephalopathy", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Laishuan Wang, Zhongwei Qiao", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "http://www.cjebp.cn/CN/abstract/abstract1807.shtml" }] },
+                    { featured: false, title: "Empowering medical systematic reviews with large language models: methods, development directions, and applications", authors: "Yannan Huang, Haoran Sang, Yu Liu, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "Liantao Ma, Yinghao Zhu", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://journal.gxmu.edu.cn/article/doi/10.16190/j.cnki.45-1211/r.2025.03.001" }] },
+                    { featured: false, title: "EfficientEdit: Accelerating Code Editing via Edit-Oriented Speculative Decoding", authors: "Peiding Wang, Li Zhang, Fang Liu, Yinghao Zhu, Wang Xu, Lin Shi, Xiaoli Lian, Minxiao Li, Bo Shen, An Fu", firstAuthors: "", correspondingAuthors: "Fang Liu, Lin Shi", venue: "IEEE/ACM International Conference on Automated Software Engineering (ASE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2506.02780" }, { type: "Code", url: "https://github.com/zhu-zhu-ding/EfficientEdit" }] },
+                    { featured: false, title: "Toward Better EHR Reasoning in LLMs: Reinforcement Learning with Expert Attention Guidance", authors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding, Xinke Jiang, Weibin Liao, Yongxin Xu, Yinghao Zhu, Zhibang Yang, Liantao Ma, Junfeng Zhao, Yasha Wang", firstAuthors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding", correspondingAuthors: "Liantao Ma, Junfeng Zhao, Yasha Wang", venue: "Preprint, 2025", year: "2025", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.13579" }, { type: "Code", url: "https://github.com/devilran6/EAG-RL" }] },
+                    { featured: false, title: "ConfAgents: A Conformal-Guided Multi-Agent Framework for Cost-Efficient Medical Diagnosis", authors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.04915" }, { type: "Code", url: "https://github.com/PKU-AICare/ConfAgents" }] },
+                    { featured: false, title: "MedMMV: A Controllable Multimodal Multi-Agent Framework for Reliable and Verifiable Clinical Reasoning", authors: "Hongjun Liu, Yinghao Zhu, Yuhui Wang, Yitao Long, Zeyu Lai, Lequan Yu, Chen Zhao", firstAuthors: "", correspondingAuthors: "Chen Zhao", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.24314" }] },
+                    { featured: false, title: "Scaf-GRPO: Scaffolded Group Relative Policy Optimization for Enhancing LLM Reasoning", authors: "Xichen Zhang, Sitong Wu, Yinghao Zhu, Haoru Tan, Shaozuo Yu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19807" }, { type: "Code", url: "https://github.com/dvlab-research/Scaf-GRPO" }] },
+                    { featured: false, title: "SmartSwitch: Advancing LLM Reasoning by Overcoming Underthinking via Promoting Deeper Thought Exploration", authors: "Xichen Zhang, Sitong Wu, Haoru Tan, Shaozuo Yu, Yinghao Zhu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19767" }, { type: "Code", url: "https://github.com/dvlab-research/SmartSwitch" }] },
+                    { featured: false, title: "An Empirical Study on Failures in Automated Issue Solving", authors: "Simiao Liu, Fang Liu, Liehao Li, Xin Tan, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Fang Liu", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.13941" }, { type: "Code", url: "https://anonymous.4open.science/r/IssueSolvingEmpirical" }] },
+                    { featured: false, title: "LLM-Driven Collaborative Model for Untangling Commits via Explicit and Implicit Dependency Reasoning", authors: "Bo Hou, Xin Tan, Kai Zheng, Fang Liu, Yinghao Zhu, Li Zhang", firstAuthors: "", correspondingAuthors: "Xin Tan", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2507.16395" }, { type: "Code", url: "https://anonymous.4open.science/r/ColaUntangle-0109" }] },
+                    { featured: false, title: "SuperGS: Consistent and Detailed 3D Super-Resolution Scene Reconstruction via Gaussian Splatting", authors: "Shiyun Xie, Zhiru Wang, Yinghao Zhu, Xu Wang, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.18649" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
+                    { featured: true, title: "EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation", authors: "Yinghao Zhu, Changyu Ren, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Changyu Ren", correspondingAuthors: "Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679582" }, { type: "Code", url: "https://github.com/yhzhu99/EMERGE" }, { type: "Video", url: "https://www.youtube.com/watch?v=gqGX6tzkFtM" }] },
+                    { featured: false, title: "PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations", authors: "Yinghao Zhu, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma, Chengwei Pan", firstAuthors: "", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679521" }, { type: "Code", url: "https://github.com/yhzhu99/PRISM" }, { type: "Video", url: "https://www.youtube.com/watch?v=_v0h-Izl2V0" }] },
+                    { featured: true, title: "A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "Cell Patterns, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }, { type: "Website", url: "https://pyehr.netlify.app" }] },
+                    { featured: false, title: "Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models", authors: "Tianlong Wang, Yinghao Zhu, Zixiang Wang, Wen Tang, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao, Liantao Ma, Ling Wang", firstAuthors: "Tianlong Wang, Yinghao Zhu", correspondingAuthors: "Wen Tang, Junyi Gao, Liantao Ma, Ling Wang", venue: "STAR Protocols, 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/3756" }, { type: "Code", url: "https://zenodo.org/records/13342417" }] },
+                    { featured: false, title: "Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Zhongwei Qiao", venue: "Pediatric Radiology, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://link.springer.com/article/10.1007/s00247-024-06065-6" }] },
+                    { featured: true, title: "EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow", authors: "Hao Wu, Yinghao Zhu, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Hao Wu, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024", year: "2024", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=lvycHSrFgk" }, { type: "Code", url: "https://github.com/PKU-AICare/EHRFlow" }] },
+                    { featured: false, title: "RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval", authors: "Zixiang Wang, Yinghao Zhu, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma, Ling Wang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Liantao Ma, Ling Wang", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=jqo1vk63qE" }, { type: "Code", url: "https://github.com/PKU-AICare/RetCare" }] },
+                    { featured: false, title: "DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction", authors: "Yuhang Wang, Yinghao Zhu, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao", firstAuthors: "", correspondingAuthors: "Junyi Gao", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=YzWC6huGQq" }, { type: "Code", url: "https://github.com/v1xerunt/DeepEST" }] },
+                    { featured: false, title: "PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction", authors: "Zhichao Yang, Yinghao Zhu, Ziyue Niu, Yanru Huang, Chengwei Pan, Xiwang Dong", firstAuthors: "Zhichao Yang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "International Conference on Industrial Artificial Intelligence (IAI), 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://ieeexplore.ieee.org/abstract/document/10730680/" }, { type: "Code", url: "https://github.com/yzc0912/PIGWN" }] },
+                    { featured: false, title: "SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning", authors: "Shiyun Xie, Zhiru Wang, Xu Wang, Yinghao Zhu, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2410.02571" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
+                    { featured: false, title: "Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data", authors: "Yinghao Zhu, Zixiang Wang, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2402.01713" }, { type: "Code", url: "https://github.com/yhzhu99/llm4healthcare" }] },
+                    { featured: false, title: "LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation", authors: "Weibin Liao, Yinghao Zhu, Xinyuan Wang, Chengwei Pan, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2403.05246" }, { type: "Code", url: "https://github.com/MrBlankness/LightM-UNet" }] },
+                    { featured: false, title: "How far are AI-powered programming assistants from meeting developers' needs?", authors: "Xin Tan, Xiao Long, Xianjun Ni, Yinghao Zhu, Jing Jiang, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "Preprint, 2024", year: "2024", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2404.12000" }] },
+                    { featured: false, title: "Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients", authors: "Liantao Ma, Chaohe Zhang, Junyi Gao, Xianfeng Jiao, Zhihao Yu, Yinghao Zhu, Tianlong Wang, Xinyu Ma, Yasha Wang, Wen Tang, Xinju Zhao, Wenjie Ruan, Tao Wang", firstAuthors: "Liantao Ma, Chaohe Zhang, Junyi Gao", correspondingAuthors: "Junyi Gao, Yasha Wang, Wen Tang", venue: "Cell Patterns, Cover, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5" }, { type: "Code", url: "https://github.com/Accountable-Machine-Intelligence/AICare" }] },
+                    { featured: false, title: "M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method", authors: "Yinghao Zhu, Jingkun An, Enshen Zhou, Lu An, Junyi Gao, Hao Li, Haoran Feng, Bo Hou, Wen Tang, Chengwei Pan, Liantao Ma", firstAuthors: "Yinghao Zhu, Jingkun An", correspondingAuthors: "Chengwei Pan, Liantao Ma", venue: "Beijing Health Data Science Summit 2023, Abstract, 2023", year: "2023", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://arxiv.org/abs/2306.04118" }, { type: "Code", url: "https://github.com/yhzhu99/M3Fair" }] },
+                    { featured: false, title: "A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Yasha Wang, Wen Tang, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023", year: "2023", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2209.07805" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }] },
+                    { featured: false, title: "Exploration of the feasibility of using examination time order to split small sample size data for radiomics", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
+                    { featured: false, title: "Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
+                    { featured: false, title: "Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets", authors: "Zhongji Zhang, Yuhang Wang, Yinghao Zhu, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang, and Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2310.07799" }, { type: "Code", url: "https://github.com/wang1yuhang/domain_invariant_network" }] },
+                    { featured: false, title: "M3Care: Learning with Missing Modalities in Multimodal Healthcare Data", authors: "Chaohe Zhang, Xu Chu, Liantao Ma, Yinghao Zhu, Yasha Wang, Jiangtao Wang, Junfeng Zhao", firstAuthors: "Chaohe Zhang, Xu Chu", correspondingAuthors: "Yasha Wang", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022", year: "2022", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3534678.3539388" }, { type: "Code", url: "https://github.com/choczhang/M3Care" }] },
+                    { featured: false, title: "TAMER: A Test-Time Adaptive MoE-Driven Framework for EHR Representation Learning", authors: "Yinghao Zhu, Xiaochen Zheng, Ahmed Allam, Michael Krauthammer", firstAuthors: "Yinghao Zhu, Xiaochen Zheng", correspondingAuthors: "Xiaochen Zheng", venue: "AMIA 2025 Annual Symposium, Poster, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2501.05661" }, { type: "Code", url: "https://github.com/yhzhu99/TAMER" }] },
+                    { featured: false, title: "Python Data Analysis", authors: "Yunxiang Lyu, Zhipeng Wang, Lihua Xu, Zhaoyi Wang, Yinghao Zhu, Kun Yan, Shanzhao Qiu, Jiawei Tang, Kaiwen Feng, Wei Chen, Tianyi Chen, Zhendong Hong, Yunfei Yang, Jinman Xie, Zeliang Yao, Yangang Han, Yihang Wu", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/bookscenter/book_09724901.html" }] },
+                    { featured: false, title: "Big Data Visualization Techniques", authors: "Yunxiang Lyu, Zeliang Yao, Jili Xie, Yinghao Zhu, Shanzhao Qiu, Yangang Han, Zehuan Huang", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09321701.html" }] },
+                    { featured: false, title: "Theory and Practice of Artificial Intelligence", authors: "Yunxiang Lyu, Luting Huang, Zezhong Liang, Wenzhi Yin, Xueting Han, Yinghao Zhu, Miaoran Chen", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2022", year: "2022", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09059601.html" }] }
                 ],
 
                 projects: [
-                    { id: 1, year: '2024', title: 'PyEHR: A Predictive Modeling Toolkit for Electronic Health Records', authors: 'Yinghao Zhu, Wenqing Wang, Junyi Gao, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/pyehr'}] },
-                    { id: 2, year: '2023', title: 'Envisioning the Future Through AI: Perspectives on Global Landscapes and Lifestyles', authors: 'Yinghao Zhu, Ziyi Wang, Caixin Kang, Hao Li, Jingkun An, Enshen Zhou, Haoran Feng, Bo Hou, Long He, Xinlei Bao, Zihao Li, Chuang Wang, Xinyuan Wang', venue: 'Computer Vision and Pattern Recognition (CVPR) Art Gallery, 2023', links: [{ type: 'Video', url: 'https://www.youtube.com/watch?v=eoSW6a_hMsY'}] }
+                    { year: '2024', title: 'PyEHR: A Predictive Modeling Toolkit for Electronic Health Records', authors: 'Yinghao Zhu, Wenqing Wang, Junyi Gao, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/pyehr'}] },
+                    { year: '2023', title: 'Envisioning the Future Through AI: Perspectives on Global Landscapes and Lifestyles', authors: 'Yinghao Zhu, Ziyi Wang, Caixin Kang, Hao Li, Jingkun An, Enshen Zhou, Haoran Feng, Bo Hou, Long He, Xinlei Bao, Zihao Li, Chuang Wang, Xinyuan Wang', venue: 'Computer Vision and Pattern Recognition (CVPR) Art Gallery, 2023', links: [{ type: 'Video', url: 'https://www.youtube.com/watch?v=eoSW6a_hMsY'}] }
                 ],
 
                 education: [
-                    { id: 1, institution: "The University of Hong Kong", degree: "PhD Student", location: "School of Computing and Data Science, Hong Kong SAR, China", period: "2025.07 - Present", details: "Supervised by <a href='https://yulequan.github.io/' class='text-primary-blue hover:underline'>Prof. Lequan Yu</a>" },
-                    { id: 2, institution: "Beihang University", degree: "M.Eng. in Artificial Intelligence", location: "School of Artificial Intelligence, Beijing, China", period: "2022.09 - 2025.01", details: "Supervised by <a href='https://scholar.google.com/citations?user=7i1dqbEAAAAJ&hl=en' class='text-primary-blue hover:underline'>Prof. Chengwei Pan</a>" },
-                    { id: 3, institution: "Politecnico di Milano", degree: "Exchange in Computer Science and Engineering", location: "Milan, Italy", period: "2024.02 - 2024.07", details: "Exchange Program" },
-                    { id: 4, institution: "Beihang University", degree: "B.Eng. in Software Engineering", location: "School of Software, Beijing, China", period: "2018.09 - 2022.06", details: "" },
-                    { id: 5, institution: "Shanghai High School", degree: "", location: "Shanghai, China", period: "2015.09 - 2018.06", details: "" }
+                    { institution: "The University of Hong Kong", degree: "PhD Student", location: "School of Computing and Data Science, Hong Kong SAR, China", period: "2025.07 - Present", details: "Supervised by <a href='https://yulequan.github.io/' class='text-primary-blue hover:underline'>Prof. Lequan Yu</a>" },
+                    { institution: "Beihang University", degree: "M.Eng. in Artificial Intelligence", location: "School of Artificial Intelligence, Beijing, China", period: "2022.09 - 2025.01", details: "Supervised by <a href='https://scholar.google.com/citations?user=7i1dqbEAAAAJ&hl=en' class='text-primary-blue hover:underline'>Prof. Chengwei Pan</a>" },
+                    { institution: "Politecnico di Milano", degree: "Exchange in Computer Science and Engineering", location: "Milan, Italy", period: "2024.02 - 2024.07", details: "Exchange Program" },
+                    { institution: "Beihang University", degree: "B.Eng. in Software Engineering", location: "School of Software, Beijing, China", period: "2018.09 - 2022.06", details: "" },
+                    { institution: "Shanghai High School", degree: "", location: "Shanghai, China", period: "2015.09 - 2018.06", details: "" }
                 ],
                 experience: [
-                    { id: 1, organization: "Peking University", position: "External Research Advisor", location: "School of Computer Science, Beijing, China", period: "2023.09 - Present", details: "Working with <a href='http://scholar.pku.edu.cn/malt/home' class='text-primary-blue hover:underline'>Prof. Liantao Ma</a>" },
-                    { id: 2, organization: "Stanford University", position: "Research Assistant", location: "Stanford Casual Science Center, Remote", period: "2024.03 - 2024.12", details: "Advised by <a href='https://yiqingxu.org' class='text-primary-blue hover:underline'>Prof. Yiqing Xu</a>" },
-                    { id: 3, organization: "University of Zurich & University Hospital Zurich", position: "Research Assistant", location: "KrauthammerLab, Zurich, Switzerland", period: "2024.04 - 2024.12", details: "Advised by <a href='https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en' class='text-primary-blue hover:underline'>Dr. Ahmed Allam</a> and <a href='https://krauthammerlab.ch/' class='text-primary-blue hover:underline'>Prof. Michael Krauthammer</a>" },
-                    { id: 4, organization: "Children's Hospital of Fudan University", position: "Research Assistant", location: "Department of Radiology, Shanghai, China", period: "2022.10 - 2023.12", details: "Advised by <a href='https://ch.shmu.edu.cn/main/doctor/intro/id/375/pid/334.html' class='text-primary-blue hover:underline'>Prof. Zhongwei Qiao</a>" },
-                    { id: 5, organization: "Peking University", position: "Research Assistant", location: "National Engineering Research Center for Software Engineering, Beijing, China", period: "2021.05 - 2023.08", details: "Advised by <a href='https://faculty.pku.edu.cn/wangyasha/en/index.htm' class='text-primary-blue hover:underline'>Prof. Yasha Wang</a>" }
+                    { organization: "Peking University", position: "External Research Advisor", location: "School of Computer Science, Beijing, China", period: "2023.09 - Present", details: "Working with <a href='http://scholar.pku.edu.cn/malt/home' class='text-primary-blue hover:underline'>Prof. Liantao Ma</a>" },
+                    { organization: "Stanford University", position: "Research Assistant", location: "Stanford Casual Science Center, Remote", period: "2024.03 - 2024.12", details: "Advised by <a href='https://yiqingxu.org' class='text-primary-blue hover:underline'>Prof. Yiqing Xu</a>" },
+                    { organization: "University of Zurich & University Hospital Zurich", position: "Research Assistant", location: "KrauthammerLab, Zurich, Switzerland", period: "2024.04 - 2024.12", details: "Advised by <a href='https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en' class='text-primary-blue hover:underline'>Dr. Ahmed Allam</a> and <a href='https://krauthammerlab.ch/' class='text-primary-blue hover:underline'>Prof. Michael Krauthammer</a>" },
+                    { organization: "Children's Hospital of Fudan University", position: "Research Assistant", location: "Department of Radiology, Shanghai, China", period: "2022.10 - 2023.12", details: "Advised by <a href='https://ch.shmu.edu.cn/main/doctor/intro/id/375/pid/334.html' class='text-primary-blue hover:underline'>Prof. Zhongwei Qiao</a>" },
+                    { organization: "Peking University", position: "Research Assistant", location: "National Engineering Research Center for Software Engineering, Beijing, China", period: "2021.05 - 2023.08", details: "Advised by <a href='https://faculty.pku.edu.cn/wangyasha/en/index.htm' class='text-primary-blue hover:underline'>Prof. Yasha Wang</a>" }
                 ],
                 awards: [
-                    { id: 1, title: "Outstanding Graduate of Beijing", organization: "Beijing Municipal Education Commission", year: "2025" },
-                    { id: 2, title: "Detecting Active Tuberculosis Bacilli", organization: "Top 4 out of all teams, Nightingale Open Science and Wellgen Medical", year: "2024", authors: 'Yinghao Zhu, Junyi Gao, Liantao Ma' },
-                    { id: 3, title: "Bias Detection Tools for Clinical Decision Making Challenge", organization: "Third Place Prize, NIH/NCATS", year: "2023", authors: 'Yinghao Zhu, Jingkun An, Enshen Zhou, Hao Li, Haoran Feng', links: [{ type: 'Code', url: 'https://github.com/Anjingkun/NIH-Bias-Detection' }, { type: 'Project', url: 'https://yhzhu99.github.io/BeFair' }, { type: 'Video', url: 'https://expeditionhacks.com/bias-detection-healthcare/' }] },
-                    { id: 4, title: "Alibaba Tianchi UNiLAB Algorithm Competition", organization: "Encouragement Award, Top 11/230 & Top 10/324", year: "2023", authors: 'Yinghao Zhu, Zhihao Yu, Xianfeng Jiao' },
-                    { id: 5, title: "\"Challenge Cup\" Competition of Science Achievement in China", organization: "Special Prize (Top 1), China Association for Science and Technology, etc", year: "2023" },
-                    { id: 6, title: "High Risk Breast Cancer Prediction Contest 1", organization: "Top 3 out of all teams, Nightingale Open Science, AHLI, and Providence St. Joseph Health", year: "2022", authors: 'Yinghao Zhu, Junyi Gao, Xinze Li, Yifan He, Wenqing Wang, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/predict-breast-cancer-phase01' }] },
-                    { id: 7, title: "Outstanding Graduate of Beihang University", organization: "Beihang University", year: "2022" },
-                    { id: 8, title: "\"Feng Ru Cup\" Competition of Academic and Technological Works", organization: "First Prize (Top 1%), Beihang University", year: "2021, 2022" }
+                    { title: "Outstanding Graduate of Beijing", organization: "Beijing Municipal Education Commission", year: "2025" },
+                    { title: "Detecting Active Tuberculosis Bacilli", organization: "Top 4 out of all teams, Nightingale Open Science and Wellgen Medical", year: "2024", authors: 'Yinghao Zhu, Junyi Gao, Liantao Ma' },
+                    { title: "Bias Detection Tools for Clinical Decision Making Challenge", organization: "Third Place Prize, NIH/NCATS", year: "2023", authors: 'Yinghao Zhu, Jingkun An, Enshen Zhou, Hao Li, Haoran Feng', links: [{ type: 'Code', url: 'https://github.com/Anjingkun/NIH-Bias-Detection' }, { type: 'Project', url: 'https://yhzhu99.github.io/BeFair' }, { type: 'Video', url: 'https://expeditionhacks.com/bias-detection-healthcare/' }] },
+                    { title: "Alibaba Tianchi UNiLAB Algorithm Competition", organization: "Encouragement Award, Top 11/230 & Top 10/324", year: "2023", authors: 'Yinghao Zhu, Zhihao Yu, Xianfeng Jiao' },
+                    { title: "\"Challenge Cup\" Competition of Science Achievement in China", organization: "Special Prize (Top 1), China Association for Science and Technology, etc", year: "2023" },
+                    { title: "High Risk Breast Cancer Prediction Contest 1", organization: "Top 3 out of all teams, Nightingale Open Science, AHLI, and Providence St. Joseph Health", year: "2022", authors: 'Yinghao Zhu, Junyi Gao, Xinze Li, Yifan He, Wenqing Wang, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/predict-breast-cancer-phase01' }] },
+                    { title: "Outstanding Graduate of Beihang University", organization: "Beihang University", year: "2022" },
+                    { title: "\"Feng Ru Cup\" Competition of Academic and Technological Works", organization: "First Prize (Top 1%), Beihang University", year: "2021, 2022" }
                 ],
                 talks: [
-                    { id: 1, year: "2025", title: "Accelerating Medical Research with DeepSeek", venue: "Tibet Autonomous Region People's Hospital, 2025.06.14" },
-                    { id: 2, year: "2025", title: "Traceable and Reliable PubMed Literature Retrieval Based on DeepSeek", venue: "Department of Obstetrics, Beijing University Third Hospital & Beijing Tiantan Hospital, 2025.04.18, 2025.04.20" },
-                    { id: 3, year: "2025", title: "Building accessible and trustworthy clinical AI in the era of LLM", venue: "Department of Nephrology, Beijing University Third Hospital & Beijing University Cancer Hospital & Department of Obstetrics, Beijing University Third Hospital, 2025.02.19,20,21" },
-                    { id: 4, year: "2024", title: "Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", venue: "Seminar on Advancing Trustworthy and Accessible Healthcare Informatics at Peking University & Cell Press, 2024.10.31" },
-                    { id: 5, year: "2024", title: "What Makes a Next-Generation AI-Powered Healthcare System?", venue: "University of Zurich & University Hospital Zurich, 2024.07.08" },
-                    { id: 6, year: "2023", title: "Deep learning interpretable analysis of multivariate time-series electronic medical record data", venue: "HIT Webinar, 2023.01.06", links: [{ type: 'Video', url: 'https://www.bilibili.com/video/BV1YA411U7yw' }] },
-                    { id: 7, year: "2022", title: "Invited talk for the High Risk Breast Cancer Prediction Challenge", venue: "Machine Learning for Health (ML4H), 2022.11.28", links: [{ type: 'Video', url: 'https://ml4health.github.io/2022' }] }
+                    { year: "2025", title: "Accelerating Medical Research with DeepSeek", venue: "Tibet Autonomous Region People's Hospital, 2025.06.14" },
+                    { year: "2025", title: "Traceable and Reliable PubMed Literature Retrieval Based on DeepSeek", venue: "Department of Obstetrics, Beijing University Third Hospital & Beijing Tiantan Hospital, 2025.04.18, 2025.04.20" },
+                    { year: "2025", title: "Building accessible and trustworthy clinical AI in the era of LLM", venue: "Department of Nephrology, Beijing University Third Hospital & Beijing University Cancer Hospital & Department of Obstetrics, Beijing University Third Hospital, 2025.02.19,20,21" },
+                    { year: "2024", title: "Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", venue: "Seminar on Advancing Trustworthy and Accessible Healthcare Informatics at Peking University & Cell Press, 2024.10.31" },
+                    { year: "2024", title: "What Makes a Next-Generation AI-Powered Healthcare System?", venue: "University of Zurich & University Hospital Zurich, 2024.07.08" },
+                    { year: "2023", title: "Deep learning interpretable analysis of multivariate time-series electronic medical record data", venue: "HIT Webinar, 2023.01.06", links: [{ type: 'Video', url: 'https://www.bilibili.com/video/BV1YA411U7yw' }] },
+                    { year: "2022", title: "Invited talk for the High Risk Breast Cancer Prediction Challenge", venue: "Machine Learning for Health (ML4H), 2022.11.28", links: [{ type: 'Video', url: 'https://ml4health.github.io/2022' }] }
                 ],
                 services: [
                     { title: "Reviewer", items: [{ year: "2026", content: "CHI Conference" }, { year: "2026", content: "AAAI Conference" }, { year: "2025, 2026", content: "ICLR Conference" }, { year: "2025, 2026", content: "AISTATS Conference" }, { year: "2025, 2026", content: "ICASSP Conference" }, { year: "2025", content: "NeurIPS ER & SEA Workshop" }, { year: "2025", content: "ICML Conference" }, { year: "2025", content: "ICML FMSD & MAS Workshop" }, { year: "2025", content: "ACMMM Conference" }, { year: "2025", content: "CVPR SynData4CV Workshop" }, { year: "2025", content: "TheWebConf (WWW) Conference" }, { year: "2025", content: "CHIL Conference" }, { year: "2025", content: "IJCNN Conference" }, { year: "2025", content: "ICCV CVAMD & MMRAgI Workshop" }, { year: "2025", content: "AMIA Informatics Summit" }, { year: "2025", content: "BMC Artificial Intelligence" }, { year: "2025", content: "ACM Transactions on Knowledge Discovery from Data (TKDD)" }, { year: "2025", content: "PeerJ Computer Science" }, { year: "2024, 2025", content: "NeurIPS Main Track" }, { year: "2024, 2025", content: "KDD Research Track" }, { year: "2024, 2025", content: "AMIA Clinical Informatics Conference" }, { year: "2024", content: "NeurIPS TSALM & OWA & FM4Science Workshop" }, { year: "2024", content: "KDD AIDSH Workshop" }, { year: "2024", content: "ML4H Conference" }, { year: "2023, 2024, 2025", content: "NeurIPS Datasets and Benchmarks Track" }, { year: "2023, 2024, 2025", content: "AMIA Annual Symposium" }, { year: "2023", content: "Journal of Data-centric Machine Learning Research (DMLR)" }] },
@@ -1013,28 +1038,11 @@
 
                 // Helper function to determine venue type priority
                 getVenueTypePriority(venue) {
-                    if (!venue) return 4; // Default to lowest priority if no venue
-
+                    if (!venue) return 4;
                     const venueLower = venue.toLowerCase();
-
-                    // Priority 4: Preprints (arXiv, "Preprint" in venue name)
-                    if (venueLower.includes('arxiv') || venueLower.includes('preprint')) {
-                        return 4;
-                    }
-
-                    // Priority 3: Abstract papers, posters, demos
-                    if (venueLower.includes('abstract') || venueLower.includes('poster') ||
-                        venueLower.includes('demo') || venueLower.includes('nominee')) {
-                        return 3;
-                    }
-
-                    // Priority 2: Workshops and symposiums
-                    if (venueLower.includes('workshop') || venueLower.includes('symposium') ||
-                        venueLower.includes('summit')) {
-                        return 2;
-                    }
-
-                    // Priority 1: Published papers (conferences, journals, transactions, etc.)
+                    if (venueLower.includes('arxiv') || venueLower.includes('preprint')) return 4;
+                    if (venueLower.includes('abstract') || venueLower.includes('poster') || venueLower.includes('demo') || venueLower.includes('nominee')) return 3;
+                    if (venueLower.includes('workshop') || venueLower.includes('symposium') || venueLower.includes('summit')) return 2;
                     return 1;
                 },
 
@@ -1059,59 +1067,25 @@
                         if (pub.tag) tagCounts[pub.tag] = (tagCounts[pub.tag] || 0) + 1;
                     });
 
-                    // Create array of tags with counts
-                    let tags = Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
+                    const tags = Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
 
-                    // Sort tags: Featured first, then All, then other tags, with Other Topics last
+                    const sortOrder = ['LLM Agents for Healthcare', 'LLM for Healthcare', 'Healthcare Benchmark', 'Healthcare Modeling', 'Trustworthy AI', 'Software Engineering', 'Toolkits & Platforms', 'Survey', 'Book Chapters'];
+                    const otherTopicsTag = 'Other Topics';
+
                     return tags.sort((a, b) => {
-                        // Featured comes first
-                        if (a.name === 'LLM Agents for Healthcare') return -1;
-                        if (b.name === 'LLM Agents for Healthcare') return 1;
-
-                        // LLM for Healthcare comes second
-                        if (a.name === 'LLM for Healthcare') return -1;
-                        if (b.name === 'LLM for Healthcare') return 1;
-
-                        // Healthcare Benchmark comes third
-                        if (a.name === 'Healthcare Benchmark') return -1;
-                        if (b.name === 'Healthcare Benchmark') return 1;
-
-                        // Healthcare Modeling comes fourth
-                        if (a.name === 'Healthcare Modeling') return -1;
-                        if (b.name === 'Healthcare Modeling') return 1;
-
-                        // Trustworthy AI comes fifth
-                        if (a.name === 'Trustworthy AI') return -1;
-                        if (b.name === 'Trustworthy AI') return 1;
-
-                        // Software Engineering
-                        if (a.name === 'Software Engineering') return -1;
-                        if (b.name === 'Software Engineering') return 1;
-
-                        // Toolkits & Platforms
-                        if (a.name === 'Toolkits & Platforms') return -1;
-                        if (b.name === 'Toolkits & Platforms') return 1;
-
-                        // Survey
-                        if (a.name === 'Survey') return -1;
-                        if (b.name === 'Survey') return 1;
-
-                        // Book Chapters
-                        if (a.name === 'Book Chapters') return -1;
-                        if (b.name === 'Book Chapters') return 1;
-
-                        // Other Topics comes last
-                        if (a.name === 'Other Topics') return 1;
-                        if (b.name === 'Other Topics') return -1;
-
-                        // Otherwise sort by count (descending)
+                        if (a.name === otherTopicsTag) return 1;
+                        if (b.name === otherTopicsTag) return -1;
+                        const indexA = sortOrder.indexOf(a.name);
+                        const indexB = sortOrder.indexOf(b.name);
+                        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                        if (indexA !== -1) return -1;
+                        if (indexB !== -1) return 1;
                         return b.count - a.count;
                     });
                 },
                 get filteredPublications() {
                     let publications = this.selectedTag === 'All' ? this.allPublications : (this.selectedTag === '' ? this.featuredPublications : this.allPublications.filter(pub => pub.tag === this.selectedTag));
 
-                    // Apply search and year filters
                     publications = publications.filter(pub => {
                         const searchContent = `${pub.title} ${pub.authors} ${pub.venue}`.toLowerCase();
                         const matchesSearch = !this.searchQuery || searchContent.includes(this.searchQuery.toLowerCase());
@@ -1119,28 +1093,14 @@
                         return matchesSearch && matchesYear;
                     });
 
-                    // Sort publications according to the priority order
                     return publications.sort((a, b) => {
-                        // 1. Year (Descending)
-                        if (a.year !== b.year) {
-                            return b.year.localeCompare(a.year);
-                        }
-
-                        // 2. Published Status: Published papers first, then preprints
+                        if (a.year !== b.year) return b.year.localeCompare(a.year);
                         const aPublished = this.isPublished(a.venue);
                         const bPublished = this.isPublished(b.venue);
-                        if (aPublished !== bPublished) {
-                            return aPublished ? -1 : 1;
-                        }
-
-                        // 3. Venue Type Priority
+                        if (aPublished !== bPublished) return aPublished ? -1 : 1;
                         const aPriority = this.getVenueTypePriority(a.venue);
                         const bPriority = this.getVenueTypePriority(b.venue);
-                        if (aPriority !== bPriority) {
-                            return aPriority - bPriority;
-                        }
-
-                        // 4. Title (Alphabetical): As final tiebreaker
+                        if (aPriority !== bPriority) return aPriority - bPriority;
                         return a.title.localeCompare(b.title);
                     });
                 },
@@ -1155,26 +1115,16 @@
                         const trimmedAuthor = author.trim();
                         let formattedAuthor;
 
-                        // Special handling for the site owner
                         if (trimmedAuthor === 'Yinghao Zhu') {
                             formattedAuthor = `<strong class="author-highlight">${trimmedAuthor}</strong>`;
-                        }
-                        // Check for a link for other authors in the dictionary
-                        else if (this.authorLinks[trimmedAuthor]) {
+                        } else if (this.authorLinks[trimmedAuthor]) {
                             formattedAuthor = `<a href="${this.authorLinks[trimmedAuthor]}" target="_blank" rel="noopener noreferrer" class="author-link">${trimmedAuthor}</a>`;
-                        }
-                        // Default case for authors without links
-                        else {
+                        } else {
                             formattedAuthor = trimmedAuthor;
                         }
 
-                        // Append symbols for co-first and corresponding authors
-                        if (firstAuthors.includes(trimmedAuthor)) {
-                            formattedAuthor += '<sup class="text-text-gray font-bold">*</sup>';
-                        }
-                        if (correspondingAuthors.includes(trimmedAuthor)) {
-                            formattedAuthor += '<sup class="text-text-gray font-bold">†</sup>';
-                        }
+                        if (firstAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray font-bold">*</sup>';
+                        if (correspondingAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray font-bold">†</sup>';
 
                         return formattedAuthor;
                     }).join(', ');
@@ -1182,43 +1132,34 @@
 
                 getLatestYear(yearString) {
                     if (!yearString || typeof yearString !== 'string') return 0;
-                    const years = yearString.match(/\d{4}/g); // Find all 4-digit numbers
+                    const years = yearString.match(/\d{4}/g);
                     if (!years || years.length === 0) return 0;
                     return Math.max(...years.map(Number));
                 },
 
+                // Helper to format modal item content, reducing duplication
+                _formatServiceItemContent(item) {
+                    let subtext = item.organization || item.venue || '';
+                    let content = `${item.title}<br><small class='text-gray-500'>${subtext}</small>`;
+                    if (item.authors) {
+                        content += `<br><small class='text-gray-400 mt-1'>Team: ${item.authors}</small>`;
+                    }
+                    if (item.links && item.links.length > 0) {
+                        const linksHtml = item.links.map(link =>
+                            `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
+                        ).join(' ');
+                        content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
+                    }
+                    return content;
+                },
+
                 openServiceModal(title) {
                     let flatItems = [];
-                    if (title === 'Awards & Honors') {
-                        flatItems = [...this.awards].sort((a, b) => b.year.localeCompare(a.year))
-                            .map(item => {
-                                let content = `${item.title}<br><small class='text-gray-500'>${item.organization}</small>`;
-                                if (item.authors) {
-                                    content += `<br><small class='text-gray-400 mt-1'>Team: ${item.authors}</small>`;
-                                }
-                                if (item.links && item.links.length > 0) {
-                                    const linksHtml = item.links.map(link =>
-                                        `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
-                                    ).join(' ');
-                                    content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
-                                }
-                                return { date: item.year, content: content };
-                            });
-                    } else if (title === 'Invited Talks') {
-                        flatItems = [...this.talks].sort((a, b) => b.year.localeCompare(a.year))
-                             .map(item => {
-                                let content = `${item.title}<br><small class='text-gray-500'>${item.venue}</small>`;
-                                if (item.links && item.links.length > 0) {
-                                    const linksHtml = item.links.map(link =>
-                                        `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
-                                    ).join(' ');
-                                    content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
-                                }
-                                return { date: item.year, content: content };
-                            });
-                    } else if (title === 'Projects') {
-                         flatItems = [...this.projects].sort((a, b) => b.year.localeCompare(a.year))
-                            .map(item => ({ date: item.year, content: `${item.title} <br><small class='text-gray-500'>${item.authors}</small>` }));
+                    if (title === 'Awards & Honors' || title === 'Invited Talks') {
+                        const source = title === 'Awards & Honors' ? this.awards : this.talks;
+                        flatItems = [...source]
+                            .sort((a, b) => b.year.localeCompare(a.year))
+                            .map(item => ({ id: item.id, date: item.year, content: this._formatServiceItemContent(item) }));
                     } else {
                         const serviceData = this.services.find(s => s.title === title);
                         if (serviceData) {
@@ -1226,30 +1167,26 @@
                                 .sort((a, b) => {
                                     const latestYearA = this.getLatestYear(String(a.year));
                                     const latestYearB = this.getLatestYear(String(b.year));
-                                    // Primary sort: by latest year, descending
-                                    if (latestYearA !== latestYearB) {
-                                        return latestYearB - latestYearA;
-                                    }
-                                    // Secondary sort: by content (name), alphabetical
+                                    if (latestYearA !== latestYearB) return latestYearB - latestYearA;
                                     return a.content.localeCompare(b.content);
                                 })
-                                .map(item => ({ date: item.year, content: item.content }));
+                                .map(item => ({ id: item.id, date: item.year, content: item.content }));
                         }
                     }
                     this.selectedService = { title, items: flatItems };
                     this.showServiceModal = true;
                 },
+            };
 
-                init() {
-                    // Sort all publications by year and title
-                    this.allPublications.sort((a, b) => {
-                        if (!a.year && !b.year) return a.title.localeCompare(b.title);
-                        if (!a.year) return 1;
-                        if (!b.year) return -1;
-                        return b.year.localeCompare(a.year) || a.title.localeCompare(b.title);
-                    });
-                }
-            }
+            // Auto-assign unique IDs to all data arrays upon initialization.
+            autoAssignIds([
+                componentData.tabs, componentData.newsItems, componentData.quickLinks,
+                componentData.detailedInterests, componentData.allPublications,
+                componentData.projects, componentData.education, componentData.experience,
+                componentData.awards, componentData.talks, componentData.services
+            ]);
+
+            return componentData;
         }
     </script>
 </body>

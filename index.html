@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +13,6 @@
 
     <!-- Language and Region -->
     <meta name="language" content="EN,ZH">
-    <html lang="en">
     <link rel="alternate" hreflang="en" href="https://yhzhu99.github.io/">
     <link rel="alternate" hreflang="zh" href="https://yhzhu99.github.io/">
     <link rel="alternate" hreflang="x-default" href="https://yhzhu99.github.io/">
@@ -102,1685 +100,928 @@
     }
     </script>
 
-<style>
-    :root {
-        --accent-color: #3b82f6;
-        --accent-hover: #2563eb;
-        --background-primary: #f8fafc;
-        --background-secondary: #f1f5f9;
-        --surface-primary: rgba(255, 255, 255, 0.8);
-        --surface-secondary: rgba(241, 245, 249, 0.7);
-        --text-primary: #0f172a;
-        --text-secondary: #475569;
-        --text-tertiary: #94a3b8;
-        --border-subtle: rgba(148, 163, 184, 0.2);
-        --border-medium: rgba(148, 163, 184, 0.4);
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-        --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        --radius-sm: 6px;
-        --radius-md: 10px;
-        --radius-lg: 14px;
-        --nav-height: 55px;
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    * {
-        box-sizing: border-box;
-    }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    html {
-        scroll-behavior: smooth;
-        scroll-padding-top: calc(var(--nav-height) + 1rem);
-    }
-
-    body {
-        font-family: var(--font-system);
-        color: var(--text-primary);
-        background-color: var(--background-primary);
-        margin: 0;
-        padding: 0;
-        line-height: 1.55;
-        padding-top: var(--nav-height);
-        min-height: 100vh;
-    }
-
-    .nav-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: var(--nav-height);
-        background: var(--surface-primary);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-subtle);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
-        box-shadow: var(--shadow-sm);
-    }
-
-    .nav-links {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 0.2rem;
-        overflow-x: auto;
-    }
-
-    .nav-links li a {
-        display: block;
-        color: var(--text-secondary);
-        text-decoration: none;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        border-radius: var(--radius-sm);
-        transition: all 0.2s ease;
-        white-space: nowrap;
-    }
-
-    .nav-links li a:hover {
-        color: var(--accent-hover);
-        background: var(--surface-secondary);
-    }
-
-    .nav-links li a.active {
-        color: white;
-        background: var(--accent-color);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .container {
-        max-width: 1000px;
-        margin: 1.25rem auto;
-        padding: 0 1rem;
-    }
-
-    header {
-        background: white;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 1.25rem;
-        margin-bottom: 1.25rem;
-        box-shadow: var(--shadow-md);
-    }
-
-    .profile-section {
-        display: flex;
-        gap: 1.5rem;
-        align-items: flex-start;
-        margin-bottom: 1.25rem;
-    }
-
-    .profile-image {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        flex-shrink: 0;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
-        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-                    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    .profile-image:hover {
-        transform: scale(1.03) translateY(-8px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-    }
-
-    h1 {
-        font-size: 2.25rem;
-        font-weight: 700;
-        margin: 0 0 0.25rem 0;
-        letter-spacing: -0.025em;
-    }
-
-    ul, ol {
-        padding-left: 0;
-        list-style-type: none;
-    }
-
-    .contact-info p {
-        margin: 0.25rem 0;
-        color: var(--text-secondary);
-    }
-
-    .social-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-top: 0.75rem;
-    }
-
-    .social-links a {
-        color: var(--accent-color);
-        text-decoration: none;
-        font-weight: 500;
-        padding: 0.25rem 0.75rem;
-        background: var(--background-secondary);
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-subtle);
-        transition: all 0.2s ease;
-        font-size: 0.8rem;
-    }
-
-    .social-links a:hover {
-        background: var(--accent-color);
-        color: white;
-        border-color: var(--accent-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .about-section {
-        background: var(--background-primary);
-        border-radius: var(--radius-md);
-        padding: 1.25rem;
-        border: 1px solid var(--border-subtle);
-    }
-
-    h3 {
-        color: var(--text-primary);
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin: 0 0 0.75rem 0;
-    }
-
-    .bio {
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-    }
-
-    .interests-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .interests-list li {
-        margin-bottom: 0.5rem;
-        padding-left: 0.8rem;
-        position: relative;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-    }
-
-    .interests-list li::before {
-        content: "•";
-        color: var(--accent-color);
-        position: absolute;
-        left: 0;
-        top: 0.1em;
-        font-size: 1.2em;
-        line-height: 1;
-    }
-
-    .interests-list strong {
-        color: var(--text-primary);
-        font-weight: 600;
-    }
-
-    section {
-        background: white;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 1.25rem;
-        margin-bottom: 1.25rem;
-        box-shadow: var(--shadow-md);
-    }
-
-    h2 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin: 0 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--accent-color);
-        letter-spacing: -0.025em;
-    }
-
-    .publication-note {
-        font-size: 0.85rem;
-        color: var(--text-tertiary);
-        font-weight: 400;
-        margin-left: 0.5rem;
-        vertical-align: middle;
-    }
-
-    #education ul > li, #experience ul > li {
-        padding-bottom: 0.75rem;
-        margin-bottom: 0.75rem;
-        border-bottom: 1px solid var(--border-subtle);
-    }
-    #education ul > li:last-child, #experience ul > li:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-
-    .experience-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    .organization-primary {
-        font-weight: 600;
-        font-size: 1rem;
-    }
-    .organization-secondary {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-top: 0.1rem;
-    }
-    .time-period {
-        font-size: 0.85rem;
-        color: var(--text-tertiary);
-        white-space: nowrap;
-        flex-shrink: 0;
-        font-weight: 500;
-    }
-    .role-description {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-top: 0.4rem;
-    }
-
-    .publication-controls {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
-        padding: 0.75rem;
-        background-color: var(--background-primary);
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-subtle);
-    }
-
-    .publication-top-bar {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .search-wrapper {
-        position: relative;
-        flex-grow: 1;
-    }
-
-    .search-wrapper svg {
-        position: absolute;
-        left: 0.75rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1rem;
-        height: 1rem;
-        color: var(--text-tertiary);
-    }
-
-    #publication-search {
-        width: 100%;
-        padding: 0.5rem 0.75rem 0.5rem 2.25rem;
-        border: 1px solid var(--border-medium);
-        border-radius: var(--radius-sm);
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
-    }
-    #publication-search:focus {
-        outline: none;
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
-    .year-filter-wrapper {
-        flex-shrink: 0;
-    }
-
-    #year-filter {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border-medium);
-        border-radius: var(--radius-sm);
-        font-size: 0.9rem;
-        background-color: white;
-        min-width: 150px;
-        height: 100%;
-        cursor: pointer;
-    }
-
-    .tags-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        align-items: center;
-    }
-
-    .tags-container .filter-label {
-        font-weight: 500;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        margin-right: 0.5rem;
-    }
-
-    .tag-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.25rem 0.75rem;
-        border: 1px solid var(--border-medium);
-        background-color: white;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        cursor: pointer;
-        color: var(--text-secondary);
-        transition: all 0.2s ease;
-    }
-
-    .tag-btn:hover {
-        border-color: var(--accent-color);
-        color: var(--text-primary);
-    }
-
-    .tag-btn.active {
-        color: white;
-        background-color: var(--accent-color);
-        border-color: var(--accent-color);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .tag-btn .tag-color-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-    }
-
-    .tag-btn.active .tag-color-dot {
-        background-color: white !important;
-    }
-
-    .tag-btn .tag-count {
-        font-size: 0.75rem;
-        background-color: var(--background-secondary);
-        color: var(--text-secondary);
-        padding: 0.1rem 0.4rem;
-        border-radius: 9999px;
-        margin-left: 0.2rem;
-    }
-
-    .tag-btn.active .tag-count {
-        background-color: rgba(255,255,255,0.2);
-        color: white;
-    }
-
-    .publication-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--border-subtle);
-    }
-
-    #reset-filters-btn {
-        padding: 0.4rem 1rem;
-        border: 1px solid var(--border-medium);
-        background-color: white;
-        border-radius: var(--radius-sm);
-        font-size: 0.85rem;
-        font-weight: 500;
-        cursor: pointer;
-        color: var(--text-secondary);
-        transition: all 0.2s ease;
-    }
-    #reset-filters-btn:hover {
-        background-color: var(--background-secondary);
-        color: var(--text-primary);
-    }
-
-    #publication-count {
-        color: var(--text-tertiary);
-        font-size: 0.9rem;
-        margin: 0;
-    }
-
-    #pub-list, #projects ul, #awards ul, #talks ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    #pub-list > li, #projects ul > li, #awards ul > li, #talks ul > li {
-        border-bottom: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .publication {
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-        padding: 0.75rem;
-        margin-bottom: 0.5rem;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        transition: all 0.2s ease;
-        position: relative;
-    }
-
-    #publications .publication {
-        padding-left: 1.75rem;
-    }
-
-    #publications .publication::before {
-        content: '';
-        position: absolute;
-        left: 0.75rem;
-        top: 1rem;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: #6b7280;
-    }
-
-    #publications .publication[data-tag="LLM Agents for Healthcare"]::before {
-        background-color: #2563eb;
-    }
-    #publications .publication[data-tag="LLM for Healthcare"]::before {
-        background-color: #0ea5e9;
-    }
-    #publications .publication[data-tag="Healthcare Modeling"]::before {
-        background-color: #059669;
-    }
-    #publications .publication[data-tag="Healthcare Benchmark"]::before {
-        background-color: #65a30d;
-    }
-    #publications .publication[data-tag="Trustworthy AI"]::before {
-        background-color: #7c3aed;
-    }
-    #publications .publication[data-tag="Software Engineering"]::before {
-        background-color: #4f46e5;
-    }
-    #publications .publication[data-tag="Toolkits & Platforms"]::before {
-        background-color: #dc2626;
-    }
-    #publications .publication[data-tag="Survey"]::before {
-        background-color: #c2410c;
-    }
-    #publications .publication[data-tag="Book Chapters"]::before {
-        background-color: #9333ea;
-    }
-    #publications .publication[data-tag="Other Topics"]::before {
-        background-color: #6b7280;
-    }
-
-    .publication:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-        border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    .publication-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        font-size: 1rem;
-    }
-    .publication-authors {
-        color: var(--text-secondary);
-        font-size: 0.85rem;
-    }
-    .publication-authors strong {
-        font-weight: 700;
-        color: var(--text-primary);
-    }
-    .publication-venue {
-        font-style: italic;
-        color: var(--text-tertiary);
-        font-size: 0.85rem;
-    }
-    .publication-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.4rem;
-    }
-    .publication-links a {
-        background: white;
-        color: var(--accent-color);
-        padding: 0.2rem 0.6rem;
-        border-radius: var(--radius-sm);
-        font-size: 0.75rem;
-        font-weight: 500;
-        border: 1px solid var(--border-medium);
-    }
-    .publication-links a:hover {
-        background: var(--accent-color);
-        color: white;
-    }
-
-    #services h3:not(:first-of-type) {
-        border-top: 1px solid var(--border-subtle);
-        margin-top: 1rem;
-        padding-top: 1rem;
-    }
-
-    .collapsible-summary {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.75rem 1rem;
-        background: var(--background-primary);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        transition: all 0.3s ease;
-        font-weight: 500;
-    }
-    .collapsible-summary:hover {
-        background: var(--background-secondary);
-    }
-    .collapsible-content {
-        display: none;
-        padding: 1rem;
-        margin-top: -1px;
-        border: 1px solid var(--border-subtle);
-        border-top: none;
-        border-radius: 0 0 var(--radius-md) var(--radius-md);
-    }
-    .collapsible-content ul { list-style: none; padding: 0; margin: 0; }
-    .toggle-icon {
-        color: var(--text-tertiary);
-        transition: transform 0.3s ease;
-    }
-    .collapsible-summary.open .toggle-icon {
-        transform: rotate(180deg);
-    }
-
-    a {
-        color: var(--accent-color);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s ease;
-    }
-    a:hover {
-        color: var(--accent-hover);
-        text-decoration: underline;
-    }
-
-    footer {
-        text-align: center;
-        padding: 1.5rem 1rem;
-        color: var(--text-tertiary);
-        font-size: 0.875rem;
-        border-top: 1px solid var(--border-subtle);
-        margin-top: 2rem;
-    }
-
-    @media (max-width: 768px) {
-        .container {
-            margin: 1rem auto;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Academic Color Palette
+                        'primary-blue': '#1e40af',
+                        'primary-blue-light': '#3b82f6',
+                        'primary-blue-dark': '#1e3a8a',
+                        'primary-red': '#dc2626',
+                        'primary-red-light': '#ef4444',
+                        'text-gray': '#374151',
+                        'text-gray-light': '#6b7280',
+                        'text-gray-lighter': '#9ca3af',
+                        'bg-light': '#f8fafc',
+                        'bg-secondary': '#f1f5f9',
+                        'accent-blue': '#0ea5e9',
+                        'accent-gray': '#64748b'
+                    },
+                    fontFamily: {
+                        'academic': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.98)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
         }
-        .profile-section {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        h1 { font-size: 1.75rem; }
-        h2 { font-size: 1.5rem; }
-        section, header { padding: 1rem; margin-bottom: 1rem; }
-        .experience-item { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
-        .time-period { white-space: normal; }
+    </script>
 
-        .publication-footer {
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: center;
+    <style>
+        /* Custom Academic Design Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .academic-grid {
+            background-image:
+                linear-gradient(rgba(30, 64, 175, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 64, 175, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 64, 175, 0.08);
+        }
+        .academic-border {
+            border-left: 3px solid #1e40af;
+        }
+        .author-highlight {
+            font-weight: 600; /* semi-bold */
+            color: #1e3a8a; /* primary-blue-dark */
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px; /* Adjusted for 2px border */
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #f8fafc; /* bg-light */
+        }
+        .timeline-item-blue::before {
+            background: #1e40af;
+            box-shadow: 0 0 0 2px #1e40af;
+        }
+        .timeline-item-gray::before {
+            background: #64748b;
+            box-shadow: 0 0 0 2px #64748b;
+        }
+        /* Enhanced scrollbar styles */
+        .scrollable-container {
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db transparent;
+        }
+        .scrollable-container::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+        /* Hide scrollbars but keep functionality */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Consistent interaction effects */
+        .interactive-element {
+            transition: background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        .interactive-border:hover {
+            border-color: rgba(30, 64, 175, 0.3);
         }
 
-        .publication-footer button {
-            margin-bottom: 0.5rem;
+        /* Unified time tag style */
+        .time-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: #1e40af;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            flex-shrink: 0;
         }
-    }
-</style>
+
+        /* Unified item layout */
+        .unified-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.375rem 0;
+            border-bottom: 1px solid rgba(30, 64, 175, 0.05);
+        }
+
+        .unified-item:last-child {
+            border-bottom: none;
+        }
+
+        .unified-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Compact modal items */
+        .modal-unified-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(30, 64, 175, 0.05);
+        }
+
+        .modal-unified-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-unified-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Main container height */
+        .main-container {
+            height: calc(100vh - var(--header-height, 70px) - var(--footer-height, 50px));
+            min-height: 400px;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 1024px) {
+            .main-container {
+                height: calc(100vh - 65px - 45px);
+                min-height: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                height: calc(100vh - 60px - 40px);
+                min-height: 300px;
+            }
+        }
+
+        /* Set CSS custom properties for header and footer heights */
+        :root {
+            --header-height: 70px;
+            --footer-height: 50px;
+        }
+
+        @media (max-width: 1024px) {
+            :root {
+                --header-height: 65px;
+                --footer-height: 45px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --footer-height: 40px;
+            }
+        }
+
+        /* Service section separators */
+        .service-separator {
+            border-top: 1px solid rgba(30, 64, 175, 0.1);
+            margin: 1rem 0;
+        }
+    </style>
 </head>
 
-<body>
-    <nav class="nav-bar">
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#publications">Publications</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#awards">Awards</a></li>
-            <li><a href="#talks">Talks</a></li>
-            <li><a href="#services">Services</a></li>
-        </ul>
-    </nav>
+<body class="font-academic bg-bg-light text-text-gray academic-grid flex flex-col" x-data="academicWebsite()">
 
-    <div class="container">
-        <header id="about">
-             <div class="profile-section">
-                <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu Avatar" class="profile-image">
-                <div class="profile-info">
-                    <h1>Yinghao Zhu (朱英豪)</h1>
-                    <div class="contact-info">
-                        <p><strong>Email:</strong> yhzhu99 [at] gmail [dot] com</p>
-                    </div>
-                    <div class="social-links">
-                        <a href="https://github.com/yhzhu99">GitHub</a>
-                        <a href="https://scholar.google.com/citations?user=LYrsSoEAAAAJ">Google Scholar</a>
-                        <a href="https://www.researchgate.net/profile/Yinghao-Zhu-5">ResearchGate</a>
-                        <a href="https://openreview.net/profile?id=~Yinghao_Zhu1">OpenReview</a>
-                        <a href="https://orcid.org/0000-0002-2640-6477">ORCID</a>
-                        <a href="https://www.semanticscholar.org/author/Yinghao-Zhu/2098545">Semantic Scholar</a>
-                        <a href="https://arxiv.org/a/zhu_y_10.html">arXiv</a>
-                        <a href="https://www.worldcubeassociation.org/persons/2013ZHUY01">WCA</a>
+    <!-- Header Bar -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-primary-blue/10 flex-shrink-0">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity" @click="activeTab = 'about'">
+                    <div class="w-1 h-6 bg-primary-blue"></div>
+                    <h1 class="text-lg md:text-xl font-bold text-text-gray">Yinghao Zhu</h1>
+                    <span class="text-text-gray-light text-xl">朱英豪</span>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+                    <template x-for="tab in tabs" :key="tab.id">
+                         <button @click="activeTab = tab.id"
+                                :class="activeTab === tab.id ? 'text-primary-blue bg-primary-blue/10' : 'text-text-gray-light hover:text-primary-blue hover:bg-primary-blue/5'"
+                                class="px-3 py-2 rounded-md transition-all duration-200"
+                                x-text="tab.name">
+                        </button>
+                    </template>
+                </nav>
+
+                <!-- Mobile Navigation -->
+                <div class="md:hidden" x-data="{ showMobileNav: false }">
+                    <button @click="showMobileNav = !showMobileNav" class="p-2 rounded-md hover:bg-primary-blue/5 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="!showMobileNav" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="showMobileNav" d="M6 18L18 6M6 6l12 12" style="display: none;"></path>
+                        </svg>
+                    </button>
+                    <div x-show="showMobileNav"
+                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0"
+                         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2"
+                         @click.away="showMobileNav = false"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-primary-blue/10 py-2 z-50" style="display: none;">
+                        <template x-for="tab in tabs" :key="tab.id">
+                            <button @click="activeTab = tab.id; showMobileNav = false"
+                                   :class="activeTab === tab.id ? 'text-primary-blue bg-primary-blue/10' : 'text-text-gray hover:text-primary-blue hover:bg-primary-blue/5'"
+                                   class="w-full text-left px-4 py-2 text-sm transition-colors"
+                                   x-text="tab.name">
+                            </button>
+                        </template>
                     </div>
                 </div>
             </div>
-            <div class="about-section">
-                <h3>About Me</h3>
-                <p class="bio">
-                I am a PhD student at The University of Hong Kong, where I am supervised by <a href="https://yulequan.github.io/">Prof. Lequan Yu</a>. I also work closely with <a href="http://scholar.pku.edu.cn/malt/home">Prof. Liantao Ma</a> at Peking University. My research primarily focuses on <strong>AI for Healthcare</strong>.
-                </p>
-                <h3>Research Interests</h3>
-                <ul class="interests-list">
-                    <li><strong>Medical Large Language Models (LLMs):</strong> Developing LLM agents and multimodal LLMs for diverse medical applications.</li>
-                    <li><strong>Healthcare Modeling:</strong> Clinical predictive modeling using multimodal electronic health record (EHR) data.</li>
-                    <li><strong>Healthcare Benchmarks, Toolkits & Platforms:</strong> Creating robust benchmarks, open-source toolkits, and accessible platforms.</li>
-                    <li><strong>Trustworthy AI:</strong> Focusing on explainability, fairness, and robustness of AI models in critical healthcare scenarios.</li>
-                </ul>
-            </div>
-        </header>
+        </div>
+    </header>
 
-        <section id="education">
-            <h2>Education</h2>
-            <ul>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">The University of Hong Kong</span>
-                            <span class="organization-secondary">School of Computing and Data Science, Hong Kong SAR, China</span>
-                        </div>
-                        <div class="time-period">2025.07 - Present</div>
-                    </div>
-                    <div class="role-description">PhD Student, supervised by <a href="https://yulequan.github.io/">Prof. Lequan Yu</a></div>
-                </li>
-                 <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Beihang University</span>
-                            <span class="organization-secondary">School of Artificial Intelligence, Beijing, China</span>
-                        </div>
-                        <div class="time-period">2022.09 - 2025.01</div>
-                    </div>
-                    <div class="role-description">M.Eng. in Artificial Intelligence, supervised by <a href="https://scholar.google.com/citations?user=7i1dqbEAAAAJ&hl=en">Prof. Chengwei Pan</a></div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Politecnico di Milano</span>
-                            <span class="organization-secondary">Milan, Italy</span>
-                        </div>
-                        <div class="time-period">2024.02 - 2024.07</div>
-                    </div>
-                     <div class="role-description">Exchange in Computer Science and Engineering</div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Beihang University</span>
-                            <span class="organization-secondary">School of Software, Beijing, China</span>
-                        </div>
-                        <div class="time-period">2018.09 - 2022.06</div>
-                    </div>
-                     <div class="role-description">B.Eng. in Software Engineering</div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Shanghai High School</span>
-                            <span class="organization-secondary">Shanghai, China</span>
-                        </div>
-                        <div class="time-period">2015.09 - 2018.06</div>
-                    </div>
-                </li>
-            </ul>
-        </section>
+    <!-- Main Content -->
+    <main class="flex-1 overflow-hidden main-container">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 py-6 h-full">
 
-        <section id="experience">
-            <h2>Professional Experience</h2>
-            <ul>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Peking University</span>
-                            <span class="organization-secondary">School of Computer Science, Beijing, China</span>
+                <!-- Left Sidebar - Desktop Only -->
+                <aside class="hidden lg:flex lg:flex-col lg:col-span-1 gap-6 h-full overflow-hidden">
+                    <!-- Profile Card -->
+                    <div class="academic-card rounded-lg p-5 interactive-element flex-shrink-0">
+                        <div class="text-center">
+                            <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="w-24 h-24 rounded-full mx-auto mb-3 ring-3 ring-primary-blue/20 object-cover transition-transform duration-300 hover:scale-105">
+                            <h2 class="text-lg font-bold text-text-gray mb-1">Yinghao Zhu</h2>
+                            <p class="text-sm text-text-gray-light mb-2">朱英豪</p>
+                            <div class="flex items-center justify-center space-x-2 text-xs text-text-gray-light mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                                <a href="mailto:yhzhu99@gmail.com" class="hover:text-primary-blue transition-colors">yhzhu99@gmail.com</a>
+                            </div>
+                            <div class="text-xs text-text-gray-light space-y-0.5">
+                                <p class="font-semibold text-primary-blue">PhD Student</p>
+                                <p>The University of Hong Kong</p>
+                                <p class="text-xs opacity-75">School of Computing and Data Science</p>
+                            </div>
                         </div>
-                        <div class="time-period">2023.09 - Present</div>
                     </div>
-                    <div class="role-description">External Research Advisor, working with <a href="http://scholar.pku.edu.cn/malt/home">Prof. Liantao Ma</a></div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                             <span class="organization-primary">Stanford University</span>
-                            <span class="organization-secondary">Stanford Casual Science Center, Remote</span>
+                    <!-- Quick Links -->
+                    <div class="academic-card rounded-lg p-4 interactive-element flex-shrink-0">
+                        <h3 class="font-bold text-text-gray mb-3 pb-2 border-b border-primary-blue/20 text-sm">Quick Links</h3>
+                        <div class="grid grid-cols-2 gap-1.5 text-xs">
+                            <template x-for="link in quickLinks" :key="link.name">
+                                <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
+                            </template>
                         </div>
-                        <div class="time-period">2024.03 - 2024.12</div>
                     </div>
-                    <div class="role-description">Research Assistant, advised by <a href="https://yiqingxu.org">Prof. Yiqing Xu</a></div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">University of Zurich & University Hospital Zurich</span>
-                            <span class="organization-secondary">KrauthammerLab, Zurich, Switzerland</span>
+                    <!-- News -->
+                    <div class="academic-card rounded-lg p-4 interactive-element flex-1 flex flex-col min-h-0">
+                        <h3 class="font-bold text-text-gray mb-3 pb-2 border-b border-primary-blue/20 text-sm flex-shrink-0">Recent News</h3>
+                        <div class="flex-1 overflow-y-auto scrollable-container pr-1 space-y-2 min-h-0">
+                            <template x-for="item in newsItems.slice(0, 10)" :key="item.id">
+                                <div class="unified-item">
+                                    <div class="unified-item-content">
+                                        <p class="text-xs text-text-gray leading-relaxed" x-html="item.content"></p>
+                                    </div>
+                                    <span class="time-tag" x-text="item.date"></span>
+                                </div>
+                            </template>
                         </div>
-                        <div class="time-period">2024.04 - 2024.12</div>
+                        <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline mt-3 block interactive-element flex-shrink-0">View All →</button>
                     </div>
-                    <div class="role-description">Research Assistant, advised by <a href="https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en">Dr. Ahmed Allam</a> and <a href="http://www.krauthammerlab.ch">Prof. Michael Krauthammer</a></div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                            <span class="organization-primary">Children's Hospital of Fudan University</span>
-                            <span class="organization-secondary">Department of Radiology, Shanghai, China</span>
+                </aside>
+
+                <!-- Main Content Area -->
+                <div class="col-span-1 lg:col-span-3 flex flex-col overflow-hidden h-full">
+                    <div class="academic-card rounded-lg flex-1 overflow-hidden flex flex-col">
+
+                        <!-- About Me Tab -->
+                        <div x-show="activeTab === 'about'" class="animate-scale-in p-6 lg:p-8 overflow-y-auto scrollable-container flex flex-col h-full">
+                            <!-- Mobile Profile Section -->
+                            <div class="lg:hidden mb-6 flex-shrink-0">
+                                <div class="text-center mb-4">
+                                    <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="w-20 h-20 rounded-full mx-auto mb-3 ring-3 ring-primary-blue/20 object-cover">
+                                    <h2 class="text-xl font-bold text-text-gray mb-1">Yinghao Zhu</h2>
+                                    <p class="text-text-gray-light mb-2">朱英豪</p>
+                                    <div class="text-sm text-text-gray-light space-y-0.5">
+                                        <p class="font-semibold text-primary-blue">PhD Student</p>
+                                        <p>The University of Hong Kong</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 mb-4">
+                                    <template x-for="link in quickLinks" :key="link.name">
+                                        <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue/10 rounded text-center border border-primary-blue/15 text-xs transition-colors interactive-element" x-text="link.name"></a>
+                                    </template>
+                                </div>
+                                <div class="mb-6">
+                                    <h3 class="font-bold text-text-gray mb-3 text-sm">Recent News</h3>
+                                    <div class="space-y-2">
+                                        <template x-for="item in newsItems.slice(0, 3)" :key="item.id">
+                                            <div class="unified-item">
+                                                <div class="unified-item-content">
+                                                    <p class="text-xs text-text-gray" x-html="item.content"></p>
+                                                </div>
+                                                <span class="time-tag" x-text="item.date"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline mt-2 interactive-element">View All News →</button>
+                                </div>
+                            </div>
+
+                            <!-- Biography and Interests -->
+                            <div class="prose prose-sm max-w-none flex-shrink-0">
+                                <p class="text-text-gray leading-relaxed mb-6">
+                                    I am a PhD student at The University of Hong Kong, where I am supervised by <a href="https://yulequan.github.io/" class="text-primary-blue hover:underline transition-colors">Prof. Lequan Yu</a>. I also work closely with <a href="http://scholar.pku.edu.cn/malt/home" class="text-primary-blue hover:underline transition-colors">Prof. Liantao Ma</a> at Peking University. My research primarily focuses on <strong class="text-primary-blue font-semibold">AI for Healthcare</strong>.
+                                </p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                    <template x-for="area in detailedInterests" :key="area.title">
+                                        <div class="academic-border pl-4 py-3 bg-bg-light/50 rounded-r interactive-element hover:bg-bg-light">
+                                            <h5 class="font-semibold text-text-gray text-sm" x-text="area.title + ':'"></h5>
+                                            <p class="text-xs text-text-gray-light mt-1" x-text="area.description"></p>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Featured Publications Header - Responsive -->
+                                <div class="hidden md:flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-text-gray">Featured Publications</h4>
+                                    <button @click="activeTab = 'publications'; selectedTag = 'All'" class="text-sm text-primary-blue hover:underline interactive-element flex-shrink-0 ml-4">View All →</button>
+                                </div>
+                                <div class="hidden md:block mb-4 text-xs text-text-gray-light flex items-center space-x-4">
+                                    <span><sup class="text-text-gray font-bold">*</sup> Co-first author</span>
+                                    <span><sup class="text-text-gray font-bold">†</sup> Corresponding author</span>
+                                </div>
+                            </div>
+
+                            <!-- Featured Publications Section (Mobile-responsive) -->
+                            <div class="flex-1 overflow-y-auto scrollable-container min-h-0">
+                                <!-- Desktop/Tablet View: Show publication items -->
+                                <div class="hidden md:block space-y-3">
+                                    <template x-for="pub in featuredPublications" :key="pub.id">
+                                        <div class="border border-primary-blue/15 rounded-lg p-4 bg-white/50 interactive-element interactive-border transition-all duration-200">
+                                            <div class="flex items-start justify-between gap-4">
+                                                <div class="flex-1 min-w-0">
+                                                    <h5 class="font-semibold text-text-gray text-sm mb-2 leading-tight" x-text="pub.title"></h5>
+                                                    <p class="text-xs text-text-gray-light mb-2" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
+                                                    <p class="text-xs text-primary-blue italic mb-3" x-text="pub.venue"></p>
+                                                    <div class="flex flex-wrap gap-1.5">
+                                                        <template x-for="link in pub.links" :key="link.type">
+                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-shrink-0 flex-col items-end gap-1 text-right">
+                                                    <span class="time-tag" x-text="pub.year"></span>
+                                                    <span x-show="pub.tag" class="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium mt-1" x-text="pub.tag"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
-                        <div class="time-period">2022.10 - 2023.12</div>
-                    </div>
-                    <div class="role-description">Research Assistant, advised by <a href="https://ch.shmu.edu.cn/doctor/intro/id/375/pid/412.html">Prof. Zhongwei Qiao</a></div>
-                </li>
-                <li>
-                    <div class="experience-item">
-                        <div class="organization-info">
-                             <span class="organization-primary">Peking University</span>
-                            <span class="organization-secondary">National Engineering Research Center for Software Engineering, Beijing, China</span>
+
+                        <!-- Publications Tab -->
+                        <div x-show="activeTab === 'publications'" class="animate-scale-in flex flex-col flex-1 overflow-hidden" style="display: none;">
+                            <div class="p-6 lg:p-8 pb-4 border-b border-primary-blue/10 flex-shrink-0">
+                                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <input type="text" x-model="searchQuery" placeholder="Search publications..." class="w-full sm:w-96 px-3 py-2 border border-primary-blue/30 rounded-md text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200">
+                                        <select x-model="selectedYear" class="px-3 py-2 border border-primary-blue/30 rounded-md text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200">
+                                            <option value="">All Years</option>
+                                            <template x-for="year in availableYears" :key="year">
+                                                <option :value="year" x-text="year"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <div class="text-xs text-text-gray-light space-x-4">
+                                        <span><sup class="text-text-gray font-bold">*</sup> Co-first author</span>
+                                        <span><sup class="text-text-gray font-bold">†</sup> Corresponding author</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button @click="selectedTag = ''" :class="selectedTag === '' ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 interactive-element flex items-center">
+                                        <span>Featured</span>
+                                        <span class="ml-1 opacity-75" x-text="`(${featuredPublications.length})`"></span>
+                                    </button>
+                                    <button @click="selectedTag = 'All'" :class="selectedTag === 'All' ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 interactive-element flex items-center">
+                                        <span>All</span>
+                                        <span class="ml-1 opacity-75" x-text="`(${allPublications.length})`"></span>
+                                    </button>
+                                    <template x-for="tag in publicationTags" :key="tag.name">
+                                        <button @click="selectedTag = selectedTag === tag.name ? '' : tag.name" :class="selectedTag === tag.name ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 interactive-element flex items-center">
+                                            <span x-text="tag.name"></span>
+                                            <span class="ml-1 opacity-75" x-text="`(${tag.count})`"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="flex-1 overflow-y-auto scrollable-container p-6 lg:p-8 pt-4">
+                                <div class="space-y-3">
+                                    <template x-for="pub in filteredPublications" :key="pub.id">
+                                        <div class="border border-gray-200 rounded-lg p-4 bg-white/70 interactive-element interactive-border transition-all duration-200">
+                                            <div class="flex items-start justify-between gap-4">
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="font-semibold text-text-gray text-sm mb-2 leading-tight" x-text="pub.title"></h4>
+                                                    <p class="text-xs text-text-gray-light mb-1" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
+                                                    <p class="text-xs text-primary-blue italic mb-2" x-text="pub.venue"></p>
+                                                    <div class="flex flex-wrap gap-1.5">
+                                                        <template x-for="link in pub.links" :key="link.type">
+                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-shrink-0 flex-col items-end gap-1 text-right">
+                                                    <span class="time-tag" x-text="pub.year"></span>
+                                                    <span x-show="pub.tag" class="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium mt-1" x-text="pub.tag"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
-                        <div class="time-period">2021.05 - 2023.08</div>
-                    </div>
-                    <div class="role-description">Research Assistant, advised by <a href="https://faculty.pku.edu.cn/wangyasha/en/index.htm">Prof. Yasha Wang</a></div>
-                </li>
-            </ul>
-        </section>
 
-        <section id="publications">
-            <h2>Publications<span class="publication-note">(<sup>*</sup>: Equal contribution, <sup>†</sup>: Corresponding author)</span></h2>
+                        <!-- Experience Tab -->
+                        <div x-show="activeTab === 'experience'" class="animate-scale-in p-6 lg:p-8 overflow-y-auto scrollable-container flex-1" style="display: none;">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <div>
+                                    <h3 class="text-lg font-bold text-text-gray mb-4 pb-2 border-b-2 border-primary-blue">Education</h3>
+                                    <div class="relative pl-5 border-l-2 border-primary-blue/30 space-y-5">
+                                        <template x-for="edu in education" :key="edu.id">
+                                            <div class="relative timeline-item timeline-item-blue">
+                                                <div class="bg-white/80 p-4 rounded-lg border border-primary-blue/15 interactive-element hover:bg-bg-light">
+                                                    <div class="flex justify-between items-start mb-2">
+                                                        <div class="flex-1">
+                                                            <h4 class="font-semibold text-text-gray text-sm" x-text="edu.institution"></h4>
+                                                            <p class="text-xs text-primary-blue" x-text="edu.degree"></p>
+                                                            <p class="text-xs text-text-gray-light" x-text="edu.location"></p>
+                                                        </div>
+                                                        <span class="time-tag ml-2" x-text="edu.period"></span>
+                                                    </div>
+                                                    <p class="text-xs text-text-gray-light" x-html="edu.details"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-text-gray mb-4 pb-2 border-b-2 border-accent-gray">Professional Experience</h3>
+                                    <div class="relative pl-5 border-l-2 border-accent-gray/30 space-y-5">
+                                        <template x-for="exp in experience" :key="exp.id">
+                                            <div class="relative timeline-item timeline-item-gray">
+                                                <div class="bg-white/80 p-4 rounded-lg border border-accent-gray/15 interactive-element hover:bg-bg-light">
+                                                    <div class="flex justify-between items-start mb-2">
+                                                        <div class="flex-1">
+                                                            <h4 class="font-semibold text-text-gray text-sm" x-text="exp.organization"></h4>
+                                                            <p class="text-xs text-accent-gray" x-text="exp.position"></p>
+                                                            <p class="text-xs text-text-gray-light" x-text="exp.location"></p>
+                                                        </div>
+                                                        <span class="time-tag ml-2" x-text="exp.period"></span>
+                                                    </div>
+                                                    <p class="text-xs text-text-gray-light" x-html="exp.details"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="publication-controls">
-                <div class="publication-top-bar">
-                    <div class="search-wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
-                        <input type="text" id="publication-search" placeholder="Search publications...">
+                        <!-- Activities & Honors Tab -->
+                        <div x-show="activeTab === 'awards'" class="animate-scale-in p-6 lg:p-8 overflow-y-auto scrollable-container" style="display: none;">
+                             <!-- Top Part: Awards, Talks -->
+                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-4 border-b border-primary-blue/10">
+                                <div>
+                                    <div class="flex-shrink-0 flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-bold text-text-gray pb-1 border-b-2 border-primary-blue">Awards & Honors</h3>
+                                        <button @click="openServiceModal('Awards & Honors')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <template x-for="award in awards" :key="award.id">
+                                            <div class="unified-item hover:bg-primary-blue/5 transition-colors interactive-element rounded px-2">
+                                                <div class="unified-item-content">
+                                                    <h4 class="font-semibold text-text-gray text-xs mb-0.5" x-text="award.title"></h4>
+                                                    <p class="text-xs text-text-gray-light" x-text="award.organization"></p>
+                                                    <p class="text-xs text-text-gray-light/80 mt-1 truncate" x-show="award.authors" x-text="'Team: ' + award.authors"></p>
+                                                </div>
+                                                <span class="time-tag" x-text="award.year"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex-shrink-0 flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-bold text-text-gray pb-1 border-b-2 border-accent-gray">Invited Talks</h3>
+                                        <button @click="openServiceModal('Invited Talks')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <template x-for="talk in talks" :key="talk.id">
+                                            <div class="unified-item hover:bg-accent-gray/5 transition-colors interactive-element rounded px-2">
+                                                <div class="unified-item-content">
+                                                    <h4 class="font-semibold text-text-gray text-xs mb-0.5" x-text="talk.title"></h4>
+                                                    <p class="text-xs text-text-gray-light" x-text="talk.venue"></p>
+                                                </div>
+                                                <span class="time-tag" x-text="talk.year"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Projects Section -->
+                            <div class="pt-6">
+                                 <h3 class="text-lg font-bold text-text-gray mb-3 pb-1 border-b-2 border-primary-blue">Projects</h3>
+                                 <div class="space-y-2">
+                                     <template x-for="project in projects" :key="project.id">
+                                         <div class="border border-primary-blue/15 rounded-lg p-3 bg-white/50 interactive-element hover:border-primary-blue/40 transition-all duration-200">
+                                            <div class="flex items-start justify-between gap-3">
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="project.title"></h4>
+                                                    <p class="text-xs text-text-gray-light mb-1" x-text="project.authors"></p>
+                                                    <p class="text-xs text-primary-blue italic mb-2" x-show="project.venue" x-text="project.venue"></p>
+                                                    <div class="flex flex-wrap gap-1.5">
+                                                        <template x-for="link in project.links" :key="link.type">
+                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <span class="time-tag" x-text="project.year"></span>
+                                            </div>
+                                         </div>
+                                     </template>
+                                 </div>
+                            </div>
+                            <!-- Professional Services Section -->
+                            <div class="mt-6">
+                                <h3 class="flex-shrink-0 text-lg font-bold text-text-gray mb-4 pb-1 border-b-2 border-accent-blue">Professional Services</h3>
+                                <div class="space-y-4">
+                                    <template x-for="(service, index) in services" :key="service.title">
+                                        <div>
+                                            <!-- Add separator line between sections (except first one) -->
+                                            <div x-show="index > 0" class="service-separator"></div>
+                                            <div class="flex justify-between items-center mb-2">
+                                                <h4 class="font-semibold text-text-gray text-sm" x-text="service.title"></h4>
+                                                <button @click="openServiceModal(service.title)" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                                            </div>
+                                            <div class="flex flex-wrap gap-2">
+                                                <template x-for="item in service.items.slice(0, 8)" :key="item.content">
+                                                    <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item.content"></div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="year-filter-wrapper">
-                        <select id="year-filter">
-                            <option value="All">All Years</option>
-                            <!-- Years will be populated by JS -->
-                        </select>
-                    </div>
-                </div>
-                <div class="tags-container">
-                    <span class="filter-label">Filter by:</span>
-                    <!-- Tag buttons will be populated by JS -->
-                </div>
-                <div class="publication-footer">
-                <button id="reset-filters-btn">Reset Filters</button>
-                <p id="publication-count"></p>
-            </div>
-            </div>
-
-            <ol id="pub-list">
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2026">
-                        <span class="publication-title">SecureReviewer: Enhancing Large Language Models for Secure Code Review through Secure-aware Fine-tuning</span>
-                        <span class="publication-authors">Fang Liu, Simiao Liu, <strong>Yinghao Zhu</strong>, Xiaoli Lian, Li Zhang<sup>†</sup></span>
-                        <span class="publication-venue">IEEE/ACM International Conference on Software Engineering (ICSE), 2026</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2510.26457">Paper</a><a href="https://github.com/SIMIAO515/SecureReviewer">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM Agents for Healthcare" data-selected="true" data-year="2025">
-                        <span class="publication-title">HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Yifan Qi<sup>*</sup>, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma<sup>†</sup>, Lequan Yu<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2508.02621">Paper</a><a href="https://github.com/yhzhu99/HealthFlow">Code</a><a href="https://healthflow-agent.netlify.app/">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Benchmark" data-selected="true" data-year="2025">
-                        <span class="publication-title">MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Ziyi He<sup>*</sup>, Haoran Hu<sup>*</sup>, Xiaochen Zheng<sup>*</sup>, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma<sup>†</sup>, Lequan Yu<sup>†</sup></span>
-                        <span class="publication-venue">Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2505.12371">Paper</a><a href="https://github.com/yhzhu99/MedAgentBoard">Code</a><a href="https://medagentboard.netlify.app/">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Benchmark" data-selected="true" data-year="2025">
-                        <span class="publication-title">MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems</span>
-                        <span class="publication-authors">Lei Gu<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Haoran Sang<sup>*</sup>, Zixiang Wang<sup>*</sup>, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2510.10185">Paper</a><a href="https://github.com/yhzhu99/MedAgentAudit">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Benchmark" data-selected="true" data-year="2024">
-                        <span class="publication-title">ClinicRealm: Re-evaluating Large Language Models with Conventional Machine Learning for Non-Generative Clinical Prediction Tasks</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao<sup>*</sup>, Zixiang Wang<sup>*</sup>, Weibin Liao<sup>*</sup>, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan<sup>†</sup>, Ewen M. Harrison<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2024</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2407.18525">Paper</a><a href="https://github.com/yhzhu99/ehr-llm-benchmark">Code</a><a href="https://yhzhu99.github.io/ehr-llm-benchmark/">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Toolkits & Platforms" data-selected="true" data-year="2025">
-                        <span class="publication-title">AICare: An AI-Clinician Interaction System for Transparent and Actionable Clinical Decision Support</span>
-                        <span class="publication-authors">Junyi Gao, Zixiang Wang, Dehao Sui, Wen Tang, Yasha Wang, Ling Wang, Liantao Ma, <strong>Yinghao Zhu</strong></span>
-                        <span class="publication-venue">The Symposium on Artificial Intelligence in Learning Health Systems (SAIL), Best abstract nominee, 2025</span>
-                        <div class="publication-links"><a href="https://aboutme.vixerunt.org/assets/material/sail_aicare.pdf">Paper</a><a href="http://47.93.42.104/215">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2025">
-                        <span class="publication-title">Magical: Medical Lay Language Generation via Semantic Invariance and Layperson-tailored Adaptation</span>
-                        <span class="publication-authors">Weibin Liao<sup>*</sup>, Tianlong Wang<sup>*</sup>, <strong>Yinghao Zhu</strong>, Yasha Wang, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Conference on Neural Information Processing Systems (NeurIPS), 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2508.08730">Paper</a><a href="https://github.com/tianlwang/Magical">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Survey" data-year="2025">
-                        <span class="publication-title">Foundation models and intelligent decision-making: Progress, challenges, and perspectives</span>
-                        <span class="publication-authors">Jincai Huang, Yongjun Xu, Qi Wang, et al.</span>
-                        <span class="publication-venue">The Innovation, 2025</span>
-                        <div class="publication-links"><a href="https://www.cell.com/the-innovation/fulltext/S2666-6758(25)00151-1">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2025">
-                        <span class="publication-title">Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction</span>
-                        <span class="publication-authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3690624.3709166">Paper</a><a href="https://github.com/MrBlankness/PAI">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2025">
-                        <span class="publication-title">Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor</span>
-                        <span class="publication-authors">Xin Tan, Xiao Long, <strong>Yinghao Zhu</strong>, Lin Shi<sup>†</sup>, Xiaoli Lian, Li Zhang</span>
-                        <span class="publication-venue">ACM International Conference on the Foundations of Software Engineering (FSE), 2025</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3715767">Paper</a><a href="https://github.com/yhzhu99/OSSerCopilot">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM Agents for Healthcare" data-selected="true" data-year="2025">
-                        <span class="publication-title">ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
-                        <span class="publication-authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Huiya Zhao<sup>*</sup>, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang<sup>†</sup>, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">ACM International World Wide Web Conference (WWW), 2025</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3696410.3714877">Paper</a><a href="https://github.com/PKU-AICare/ColaCare">Code</a><a href="https://colacare.netlify.app">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Trustworthy AI" data-year="2025">
-                        <span class="publication-title">Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories</span>
-                        <span class="publication-authors">Tianlong Wang<sup>*</sup>, Xianfeng Jiao<sup>*</sup>, <strong>Yinghao Zhu</strong>, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">ACM International World Wide Web Conference (WWW), 2025</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3696410.3714640">Paper</a><a href="https://github.com/tianlwang/ACT">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Trustworthy AI" data-year="2025">
-                        <span class="publication-title">Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models</span>
-                        <span class="publication-authors">Xijie Huang<sup>*</sup>, Xinyuan Wang<sup>*</sup>, Hantao Zhang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan<sup>†</sup></span>
-                        <span class="publication-venue">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
-                        <div class="publication-links"><a href="https://ojs.aaai.org/index.php/AAAI/article/view/32396">Paper</a><a href="https://github.com/dirtycomputer/O2M_attack">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Survey" data-year="2025">
-                        <span class="publication-title">Project Imaging-X: A Survey of 1000+ Open-Access Medical Imaging Datasets for Foundation Model Development</span>
-                        <span class="publication-authors">Project Imaging-X Contributors</span>
-                        <span class="publication-venue">GitHub, 2025</span>
-                        <div class="publication-links"><a href="https://github.com/uni-medical/Project-Imaging-X/">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2025">
-                        <span class="publication-title">AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation</span>
-                        <span class="publication-authors">Jingkun An<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zongjian Li<sup>*</sup>, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan<sup>†</sup></span>
-                        <span class="publication-venue">Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025</span>
-                        <div class="publication-links"><a href="https://ojs.aaai.org/index.php/AAAI/article/view/32168">Paper</a><a href="https://github.com/Anjingkun/AGFSync">Code</a><a href="https://huggingface.co/datasets/JingkunAn/AGFSync">Dataset</a><a href="https://anjingkun.github.io/AGFSync/">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Toolkits & Platforms" data-year="2025">
-                        <span class="publication-title">Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients</span>
-                        <span class="publication-authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup>, Xiaoyun Zhang<sup>†</sup></span>
-                        <span class="publication-venue">STAR Protocols, 2025</span>
-                        <div class="publication-links"><a href="https://star-protocols.cell.com/protocols/4069">Paper</a><a href="https://doi.org/10.5281/zenodo.14498936">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2025">
-                        <span class="publication-title">Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients Stratified by Serum Albumin Levels</span>
-                        <span class="publication-authors">Yueying Wu<sup>*</sup>, Junyi Gao<sup>*</sup>, Wen Tang<sup>†</sup>, Chunyan Su, <strong>Yinghao Zhu</strong>, Tianlong Wang, Ling Wang<sup>†</sup>, Weibin Liao, Xu Chu, Yasha Wang<sup>†</sup>, Xinju Zhao, Tao Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Health Data Science, 2025</span>
-                        <div class="publication-links"><a href="https://spj.science.org/doi/pdf/10.34133/hds.0280">Paper</a><a href="https://github.com/Hundredl/ESRD-Exploring">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2025">
-                        <span class="publication-title">Evaluation of radiomics as an assistant tool for radiologists in the diagnosis of necrotizing enterocolitis</span>
-                        <span class="publication-authors">Chaogang Lu, Mingshu Yang, <strong>Yinghao Zhu</strong>, Yaqin Xia, Siqi Luo, Guang Yang, Mei Bai<sup>†</sup>, Zhongwei Qiao<sup>†</sup></span>
-                        <span class="publication-venue">Translational Pediatrics, 2025</span>
-                        <div class="publication-links"><a href="https://tp.amegroups.org/article/view/137557">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2025">
-                        <span class="publication-title">Correlation analysis between MRI-based radiomics features and clinical grading of neonatal hypoxic-ischemic encephalopathy</span>
-                        <span class="publication-authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang<sup>†</sup>, Zhongwei Qiao<sup>†</sup></span>
-                        <span class="publication-venue">Chinese Journal of Evidence-Based Prediatrics, 2025</span>
-                        <div class="publication-links"><a href="http://www.cjebp.cn/CN/abstract/abstract1807.shtml">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Survey" data-year="2025">
-                        <span class="publication-title">Empowering medical systematic reviews with large language models: methods, development directions, and applications</span>
-                        <span class="publication-authors">Yannan Huang, Haoran Sang, Yu Liu, Liantao Ma<sup>†</sup>, <strong>Yinghao Zhu</strong><sup>†</sup></span>
-                        <span class="publication-venue">Chinese Journal of Evidence-Based Prediatrics, 2025</span>
-                        <div class="publication-links"><a href="https://journal.gxmu.edu.cn/article/doi/10.16190/j.cnki.45-1211/r.2025.03.001">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2025">
-                        <span class="publication-title">EfficientEdit: Accelerating Code Editing via Edit-Oriented Speculative Decoding</span>
-                        <span class="publication-authors">Peiding Wang, Li Zhang, Fang Liu<sup>†</sup>, <strong>Yinghao Zhu</strong>, Wang Xu, Lin Shi<sup>†</sup>, Xiaoli Lian, Minxiao Li, Bo Shen, An Fu</span>
-                        <span class="publication-venue">IEEE/ACM International Conference on Automated Software Engineering (ASE), 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2506.02780">Paper</a><a href="https://github.com/zhu-zhu-ding/EfficientEdit">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM for Healthcare" data-year="2025">
-                        <span class="publication-title">Toward Better EHR Reasoning in LLMs: Reinforcement Learning with Expert Attention Guidance</span>
-                        <span class="publication-authors">Yue Fang<sup>*</sup>, Yuxin Guo<sup>*</sup>, Jiaran Gao<sup>*</sup>, Hongxin Ding<sup>*</sup>, Xinke Jiang, Weibin Liao, Yongxin Xu, <strong>Yinghao Zhu</strong>, Zhibang Yang, Liantao Ma<sup>†</sup>, Junfeng Zhao<sup>†</sup>, Yasha Wang<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2508.13579">Paper</a><a href="https://github.com/devilran6/EAG-RL">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM Agents for Healthcare" data-year="2025">
-                        <span class="publication-title">ConfAgents: A Conformal-Guided Multi-Agent Framework for Cost-Efficient Medical Diagnosis</span>
-                        <span class="publication-authors">Huiya Zhao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang<sup>*</sup>, Yasha Wang, Junyi Gao, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2508.04915">Paper</a><a href="https://github.com/PKU-AICare/ConfAgents">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM Agents for Healthcare" data-year="2025">
-                        <span class="publication-title">MedMMV: A Controllable Multimodal Multi-Agent Framework for Reliable and Verifiable Clinical Reasoning</span>
-                        <span class="publication-authors">Hongjun Liu, <strong>Yinghao Zhu</strong>, Yuhui Wang, Yitao Long, Zeyu Lai, Lequan Yu, Chen Zhao<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2509.24314">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2025">
-                        <span class="publication-title">Scaf-GRPO: Scaffolded Group Relative Policy Optimization for Enhancing LLM Reasoning</span>
-                        <span class="publication-authors">Xichen Zhang<sup>*</sup>, Sitong Wu<sup>*</sup>, <strong>Yinghao Zhu</strong>, Haoru Tan, Shaozuo Yu, Ziyi He, Jiaya Jia<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2510.19807">Paper</a><a href="https://github.com/dvlab-research/Scaf-GRPO">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2025">
-                        <span class="publication-title">SmartSwitch: Advancing LLM Reasoning by Overcoming Underthinking via Promoting Deeper Thought Exploration</span>
-                        <span class="publication-authors">Xichen Zhang<sup>*</sup>, Sitong Wu<sup>*</sup>, Haoru Tan, Shaozuo Yu, <strong>Yinghao Zhu</strong>, Ziyi He, Jiaya Jia<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2510.19767">Paper</a><a href="https://github.com/dvlab-research/SmartSwitch">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2025">
-                        <span class="publication-title">An Empirical Study on Failures in Automated Issue Solving</span>
-                        <span class="publication-authors">Simiao Liu, Fang Liu<sup>†</sup>, Liehao Li, Xin Tan, <strong>Yinghao Zhu</strong>, Xiaoli Lian, Li Zhang</span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2509.13941">Paper</a><a href="https://anonymous.4open.science/r/IssueSolvingEmpirical">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2025">
-                        <span class="publication-title">LLM-Driven Collaborative Model for Untangling Commits via Explicit and Implicit Dependency Reasoning</span>
-                        <span class="publication-authors">Bo Hou, Xin Tan<sup>†</sup>, Kai Zheng, Fang Liu, <strong>Yinghao Zhu</strong>, Li Zhang</span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2507.16395">Paper</a><a href="https://anonymous.4open.science/r/ColaUntangle-0109">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2025">
-                        <span class="publication-title">SuperGS: Consistent and Detailed 3D Super-Resolution Scene Reconstruction via Gaussian Splatting</span>
-                        <span class="publication-authors">Shiyun Xie, Zhiru Wang, <strong>Yinghao Zhu</strong>, Xu Wang, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
-                        <span class="publication-venue">Preprint, 2025</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2505.18649">Paper</a><a href="https://github.com/SYXieee/SuperGS">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM for Healthcare" data-selected="true" data-year="2024">
-                        <span class="publication-title">EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Changyu Ren<sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan<sup>†</sup></span>
-                        <span class="publication-venue">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3627673.3679582">Paper</a><a href="https://github.com/yhzhu99/EMERGE">Code</a><a href="https://www.youtube.com/watch?v=gqGX6tzkFtM">Video</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2024">
-                        <span class="publication-title">PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
-                        <span class="publication-venue">ACM International Conference on Information and Knowledge Management (CIKM), 2024</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3627673.3679521">Paper</a><a href="https://github.com/yhzhu99/PRISM">Code</a><a href="https://www.youtube.com/watch?v=_v0h-Izl2V0">Video</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Benchmark" data-selected="true" data-year="2024">
-                        <span class="publication-title">A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care</span>
-                        <span class="publication-authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Cell Patterns, 2024</span>
-                        <div class="publication-links"><a href="https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3">Paper</a><a href="https://github.com/yhzhu99/pyehr">Code</a><a href="https://pyehr.netlify.app">Website</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Toolkits & Platforms" data-year="2024">
-                        <span class="publication-title">Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models</span>
-                        <span class="publication-authors">Tianlong Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Wen Tang<sup>†</sup>, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
-                        <span class="publication-venue">STAR Protocols, 2024</span>
-                        <div class="publication-links"><a href="https://star-protocols.cell.com/protocols/3756">Paper</a><a href="https://zenodo.org/records/13342417">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2024">
-                        <span class="publication-title">Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features</span>
-                        <span class="publication-authors">Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, <strong>Yinghao Zhu</strong>, Laishuan Wang, Zhongwei Qiao<sup>†</sup></span>
-                        <span class="publication-venue">Pediatric Radiology, 2024</span>
-                        <div class="publication-links"><a href="https://link.springer.com/article/10.1007/s00247-024-06065-6">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM Agents for Healthcare" data-selected="true" data-year="2024">
-                        <span class="publication-title">EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow</span>
-                        <span class="publication-authors">Hao Wu<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024</span>
-                        <div class="publication-links"><a href="https://openreview.net/pdf?id=lvycHSrFgk">Paper</a><a href="https://github.com/PKU-AICare/EHRFlow">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Trustworthy AI" data-year="2024">
-                        <span class="publication-title">RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval</span>
-                        <span class="publication-authors">Zixiang Wang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma<sup>†</sup>, Ling Wang<sup>†</sup></span>
-                        <span class="publication-venue">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
-                        <div class="publication-links"><a href="https://openreview.net/pdf?id=jqo1vk63qE">Paper</a><a href="https://github.com/PKU-AICare/RetCare">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Toolkits & Platforms" data-year="2024">
-                        <span class="publication-title">DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction</span>
-                        <span class="publication-authors">Yuhang Wang, <strong>Yinghao Zhu</strong>, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao<sup>†</sup></span>
-                        <span class="publication-venue">Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024</span>
-                        <div class="publication-links"><a href="https://openreview.net/pdf?id=YzWC6huGQq">Paper</a><a href="https://github.com/v1xerunt/DeepEST">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2024">
-                        <span class="publication-title">PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction</span>
-                        <span class="publication-authors">Zhichao Yang<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Ziyue Niu, Yanru Huang, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
-                        <span class="publication-venue">International Conference on Industrial Artificial Intelligence (IAI), 2024</span>
-                        <div class="publication-links"><a href="https://ieeexplore.ieee.org/abstract/document/10730680/">Paper</a><a href="https://github.com/yzc0912/PIGWN">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Other Topics" data-year="2024">
-                        <span class="publication-title">SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning</span>
-                        <span class="publication-authors">Shiyun Xie, Zhiru Wang, Xu Wang, <strong>Yinghao Zhu</strong>, Chengwei Pan<sup>†</sup>, Xiwang Dong</span>
-                        <span class="publication-venue">Preprint, 2024</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2410.02571">Paper</a><a href="https://github.com/SYXieee/SuperGS">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="LLM for Healthcare" data-year="2024">
-                        <span class="publication-title">Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Zixiang Wang<sup>*</sup>, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma<sup>†</sup>, Chengwei Pan<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2024</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2402.01713">Paper</a><a href="https://github.com/yhzhu99/llm4healthcare">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2024">
-                        <span class="publication-title">LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation</span>
-                        <span class="publication-authors">Weibin Liao, <strong>Yinghao Zhu</strong>, Xinyuan Wang, Chengwei Pan, Yasha Wang<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2024</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2403.05246">Paper</a><a href="https://github.com/MrBlankness/LightM-UNet">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Software Engineering" data-year="2024">
-                        <span class="publication-title">How far are AI-powered programming assistants from meeting developers' needs?</span>
-                        <span class="publication-authors">Xin Tan, Xiao Long, Xianjun Ni, <strong>Yinghao Zhu</strong>, Jing Jiang, Li Zhang<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2024</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2404.12000">Paper</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2023">
-                        <span class="publication-title">Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients</span>
-                        <span class="publication-authors">Liantao Ma<sup>*</sup>, Chaohe Zhang<sup>*</sup>, Junyi Gao<sup>*</sup><sup>†</sup>, Xianfeng Jiao, Zhihao Yu, <strong>Yinghao Zhu</strong>, Tianlong Wang, Xinyu Ma, Yasha Wang<sup>†</sup>, Wen Tang<sup>†</sup>, Xinju Zhao, Wenjie Ruan, Tao Wang</span>
-                        <span class="publication-venue">Cell Patterns, Cover, 2023</span>
-                        <div class="publication-links"><a href="https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5">Paper</a><a href="https://github.com/Accountable-Machine-Intelligence/AICare">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Trustworthy AI" data-year="2023">
-                        <span class="publication-title">M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong><sup>*</sup>, Jingkun An<sup>*</sup>, Enshen Zhou, Lu An, Junyi Gao, Hao Li, Haoran Feng, Bo Hou, Wen Tang, Chengwei Pan<sup>†</sup>, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Beijing Health Data Science Summit 2023, Abstract, 2023</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2306.04118">Paper</a><a href="https://github.com/yhzhu99/M3Fair">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Benchmark" data-year="2023">
-                        <span class="publication-title">A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis</span>
-                        <span class="publication-authors">Junyi Gao<sup>*</sup>, <strong>Yinghao Zhu</strong><sup>*</sup>, Wenqing Wang<sup>*</sup>, Yasha Wang, Wen Tang, Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2209.07805">Paper</a><a href="https://github.com/yhzhu99/pyehr">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2023">
-                        <span class="publication-title">Exploration of the feasibility of using examination time order to split small sample size data for radiomics</span>
-                        <span class="publication-authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
-                        <span class="publication-venue">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2023">
-                        <span class="publication-title">Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA</span>
-                        <span class="publication-authors">Mingshu Yang, Zhongwei Qiao, <strong>Yinghao Zhu</strong>, Chaogang Lu, Yaqin Xia</span>
-                        <span class="publication-venue">The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2023">
-                        <span class="publication-title">Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets</span>
-                        <span class="publication-authors">Zhongji Zhang, Yuhang Wang, <strong>Yinghao Zhu</strong>, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang<sup>†</sup>, and Liantao Ma<sup>†</sup></span>
-                        <span class="publication-venue">Preprint, 2023</span>
-                        <div class="publication-links"><a href="https://arxiv.org/abs/2310.07799">Paper</a><a href="https://github.com/wang1yuhang/domain_invariant_network">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Healthcare Modeling" data-year="2022">
-                        <span class="publication-title">M3Care: Learning with Missing Modalities in Multimodal Healthcare Data</span>
-                        <span class="publication-authors">Chaohe Zhang<sup>*</sup>, Xu Chu<sup>*</sup>, Liantao Ma, <strong>Yinghao Zhu</strong>, Yasha Wang<sup>†</sup>, Jiangtao Wang, Junfeng Zhao</span>
-                        <span class="publication-venue">ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022</span>
-                        <div class="publication-links"><a href="https://dl.acm.org/doi/10.1145/3534678.3539388">Paper</a><a href="https://github.com/choczhang/M3Care">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Book Chapters" data-year="2023">
-                        <span class="publication-title">Python Data Analysis</span>
-                        <span class="publication-authors">Yunxiang Lyu, Zhipeng Wang, Lihua Xu, Zhaoyi Wang, <strong>Yinghao Zhu</strong>, Kun Yan, Shanzhao Qiu, Jiawei Tang, Kaiwen Feng, Wei Chen, Tianyi Chen, Zhendong Hong, Yunfei Yang, Jinman Xie, Zeliang Yao, Yangang Han, Yihang Wu</span>
-                        <span class="publication-venue">Tsinghua University Press, 2023</span>
-                        <div class="publication-links"><a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_09724901.html">Book</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Book Chapters" data-year="2023">
-                        <span class="publication-title">Big Data Visualization Techniques</span>
-                        <span class="publication-authors">Yunxiang Lyu, Zeliang Yao, Jili Xie, <strong>Yinghao Zhu</strong>, Shanzhao Qiu, Yangang Han, Zehuan Huang</span>
-                        <span class="publication-venue">Tsinghua University Press, 2023</span>
-                        <div class="publication-links"><a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_09321701.html">Book</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-tag="Book Chapters" data-year="2022">
-                        <span class="publication-title">Theory and Practice of Artificial Intelligence</span>
-                        <span class="publication-authors">Yunxiang Lyu, Luting Huang, Zezhong Liang, Wenzhi Yin, Xueting Han, <strong>Yinghao Zhu</strong>, Miaoran Chen</span>
-                        <span class="publication-venue">Tsinghua University Press, 2022</span>
-                        <div class="publication-links"><a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_09059601.html">Book</a></div>
-                    </div>
-                </li>
-            </ol>
-        </section>
-
-        <section id="projects">
-            <h2>Projects</h2>
-            <ul>
-                <li>
-                    <div class="publication" data-year="2024">
-                        <span class="publication-title">PyEHR: A Predictive Modeling Toolkit for Electronic Health Records</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Wenqing Wang, Junyi Gao, Liantao Ma</span>
-                        <span class="publication-venue">GitHub Project</span>
-                        <div class="publication-links"><a href="https://github.com/yhzhu99/pyehr">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2023">
-                        <span class="publication-title">Envisioning the Future Through AI: Perspectives on Global Landscapes and Lifestyles</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Ziyi Wang, Caixin Kang, Hao Li, Jingkun An, Enshen Zhou, Haoran Feng, Bo Hou, Long He, Xinlei Bao, Zihao Li, Chuang Wang, Xinyuan Wang</span>
-                        <span class="publication-venue">Computer Vision and Pattern Recognition (CVPR) Art Gallery, 2023</span>
-                        <div class="publication-links"><a href="https://www.youtube.com/watch?v=eoSW6a_hMsY">Video</a></div>
-                    </div>
-                </li>
-            </ul>
-        </section>
-
-        <section id="awards">
-            <h2>Awards</h2>
-            <ul>
-                <li>
-                    <div class="publication" data-year="2025">
-                        <span class="publication-title">Outstanding Graduate of Beijing</span>
-                        <span class="publication-venue">Beijing Municipal Education Commission, 2025</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2024">
-                        <span class="publication-title">Detecting Active Tuberculosis Bacilli</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Junyi Gao, Liantao Ma</span>
-                        <span class="publication-venue">Top 4 out of all teams, Nightingale Open Science and Wellgen Medical, 2024</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2023">
-                        <span class="publication-title">Bias Detection Tools for Clinical Decision Making Challenge</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Jingkun An, Enshen Zhou, Hao Li, Haoran Feng</span>
-                        <span class="publication-venue">Third Place Prize, NIH/NCATS, 2023</span>
-                        <div class="publication-links"><a href="https://github.com/Anjingkun/NIH-Bias-Detection">Code</a><a href="https://yhzhu99.github.io/BeFair">Project</a><a href="https://expeditionhacks.com/bias-detection-healthcare/">Video</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2023">
-                        <span class="publication-title">Alibaba Tianchi UNiLAB Algorithm Competition</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Zhihao Yu, Xianfeng Jiao</span>
-                        <span class="publication-venue">Encouragement Award, Top 11/230 & Top 10/324, 2023</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2023">
-                        <span class="publication-title">"Challenge Cup" Competition of Science Achievement in China</span>
-                        <span class="publication-venue">Special Prize (Top 1), China Association for Science and Technology, etc, 2023</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2022">
-                        <span class="publication-title">High Risk Breast Cancer Prediction Contest 1</span>
-                        <span class="publication-authors"><strong>Yinghao Zhu</strong>, Junyi Gao, Xinze Li, Yifan He, Wenqing Wang, Liantao Ma</span>
-                        <span class="publication-venue">Top 3 out of all teams, Nightingale Open Science, AHLI, and Providence St. Joseph Health, 2022</span>
-                        <div class="publication-links"><a href="https://github.com/yhzhu99/predict-breast-cancer-phase01">Code</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2022">
-                        <span class="publication-title">Outstanding Graduate of Beihang University</span>
-                        <span class="publication-venue">Beihang University, 2022</span>
-                    </div>
-                </li>
-                 <li>
-                    <div class="publication" data-year="2022">
-                        <span class="publication-title">"Feng Ru Cup" Competition of Academic and Technological Works</span>
-                        <span class="publication-venue">First Prize (Top 1%), Beihang University, 2021, 2022</span>
-                    </div>
-                </li>
-            </ul>
-        </section>
-
-        <section id="talks">
-            <h2>Talks</h2>
-             <ul>
-                <li>
-                    <div class="publication" data-year="2025">
-                        <span class="publication-title">Accelerating Medical Research with DeepSeek</span>
-                        <span class="publication-venue">Tibet Autonomous Region People's Hospital, 2025.06.14</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2025">
-                        <span class="publication-title">Traceable and Reliable PubMed Literature Retrieval Based on DeepSeek</span>
-                        <span class="publication-venue">Department of Obstetrics, Beijing University Third Hospital & Beijing Tiantan Hospital, 2025.04.18, 2025.04.20</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2025">
-                        <span class="publication-title">Building accessible and trustworthy clinical AI in the era of LLM</span>
-                        <span class="publication-venue">Department of Nephrology, Beijing University Third Hospital & Beijing University Cancer Hospital & Department of Obstetrics, Beijing University Third Hospital, 2025.02.19,20,21</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2024">
-                        <span class="publication-title">Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration</span>
-                        <span class="publication-venue">Seminar on Advancing Trustworthy and Accessible Healthcare Informatics at Peking University & Cell Press, 2024.10.31</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2024">
-                        <span class="publication-title">What Makes a Next-Generation AI-Powered Healthcare System?</span>
-                        <span class="publication-venue">University of Zurich & University Hospital Zurich, 2024.07.08</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2023">
-                        <span class="publication-title">Deep learning interpretable analysis of multivariate time-series electronic medical record data</span>
-                        <span class="publication-venue">HIT Webinar, 2023.01.06</span>
-                        <div class="publication-links"><a href="https://www.bilibili.com/video/BV1YA411U7yw">Video</a></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="publication" data-year="2022">
-                        <span class="publication-title">Invited talk for the High Risk Breast Cancer Prediction Challenge</span>
-                        <span class="publication-venue">Machine Learning for Health (ML4H), 2022.11.28</span>
-                        <div class="publication-links"><a href="https://ml4health.github.io/2022">Video</a></div>
-                    </div>
-                </li>
-            </ul>
-        </section>
-
-        <section id="services">
-            <h2>Services</h2>
-            <h3>Reviewer</h3>
-            <div class="collapsible">
-                <div class="collapsible-summary">
-                    <span class="summary-text">NeurIPS, ICLR, ICML, KDD, WWW, AAAI, AMIA, etc.</span>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="collapsible-content">
-                    <ul>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">CHI Conference</span></div><div class="time-period">2026</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">AAAI Conference</span></div><div class="time-period">2026</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">NeurIPS Main Track</span></div><div class="time-period">2024, 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">NeurIPS Datasets and Benchmarks Track</span></div><div class="time-period">2023, 2024, 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">NeurIPS ER & SEA Workshop</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">NeurIPS TSALM & OWA & FM4Science Workshop</span></div><div class="time-period">2024</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICML Conference</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICML FMSD & MAS Workshop</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICLR Conference</span></div><div class="time-period">2025, 2026</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ACMMM Conference</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">CVPR SynData4CV Workshop</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">KDD Research Track</span></div><div class="time-period">2024, 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">KDD AIDSH Workshop</span></div><div class="time-period">2024</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">TheWebConf (WWW) Conference</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">AISTATS Conference</span></div><div class="time-period">2025, 2026</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">CHIL Conference</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">IJCNN Conference</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICCV CVAMD & MMRAgI Workshop</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICASSP Conference</span></div><div class="time-period">2025, 2026</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ML4H Conference</span></div><div class="time-period">2024</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">AMIA Annual Symposium</span></div><div class="time-period">2023, 2024, 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">AMIA Clinical Informatics Conference</span></div><div class="time-period">2024, 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">AMIA Informatics Summit</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">BMC Artificial Intelligence</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ACM Transactions on Knowledge Discovery from Data (TKDD)</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">PeerJ Computer Science</span></div><div class="time-period">2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Journal of Data-centric Machine Learning Research (DMLR)</span></div><div class="time-period">2023</div></div></li>
-                    </ul>
                 </div>
             </div>
+        </div>
+    </main>
 
-            <h3>Operational Committee</h3>
-            <div class="collapsible">
-                <div class="collapsible-summary">
-                    <span class="summary-text">BIBM 2025 Workshop on Advancing Data for Better Health</span>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="collapsible-content">
-                    <ul>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">BIBM 2025 Workshop on Advancing Data for Better Health:
-Reliable LLM Application in People-Centric Healthcare</span></div><div class="time-period">2025.12.15</div></div></li>
-                    </ul>
-                </div>
+    <!-- Footer -->
+    <footer class="bg-white/95 border-t border-primary-blue/10 flex-shrink-0">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-text-gray-light">
+                <p>© 2025 Yinghao Zhu (朱英豪). All rights reserved.</p>
+                <p>Last Updated: November 2, 2025</p>
             </div>
-
-            <h3>Volunteer</h3>
-            <div class="collapsible">
-                <div class="collapsible-summary">
-                    <span class="summary-text">ICLR 2025 Workshop on AI for Children</span>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="collapsible-content">
-                    <ul>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">ICLR 2025 Workshop on AI for Children</span></div><div class="time-period">2025.04.27</div></div></li>
-                    </ul>
-                </div>
-            </div>
-
-            <h3>Teaching Assistant</h3>
-            <div class="collapsible">
-                <div class="collapsible-summary">
-                    <span class="summary-text">Machine Learning, Algorithms, OS, Discrete Maths, etc.</span>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="collapsible-content">
-                    <ul>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Statistical Machine Learning</span></div><div class="time-period">Fall 2025</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Fundamentals of Programming and Computer Science</span></div><div class="time-period">Spring 2023</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Design and Analysis of Algorithms</span></div><div class="time-period">Spring 2022, Autumn 2022</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Operating System</span></div><div class="time-period">Autumn 2021</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Network Storage</span></div><div class="time-period">Autumn 2021</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">System Programming</span></div><div class="time-period">Spring 2021</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Object-oriented Programming</span></div><div class="time-period">Spring 2021</div></div></li>
-                        <li><div class="experience-item"><div class="organization-info"><span class="organization-primary">Discrete Mathematics</span></div><div class="time-period">Spring 2020, Autumn 2020, Spring 2021</div></div></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <footer>
-        <p>© 2025 Yinghao Zhu, Last Updated: November 2, 2025</p>
+        </div>
     </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+    <!-- Modals -->
+    <div x-show="showNewsModal || showServiceModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" x-transition.opacity.duration.300ms style="display: none;">
+        <!-- News Modal -->
+        <div x-show="showNewsModal" @click.outside="showNewsModal = false" @keydown.escape.window="showNewsModal = false" class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-lg font-bold text-text-gray">All News</h3>
+                <button @click="showNewsModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-3 scrollable-container">
+                <template x-for="item in newsItems" :key="item.id">
+                    <div class="modal-unified-item border-l-4 border-primary-blue pl-4 py-2">
+                        <div class="modal-unified-item-content">
+                            <p class="text-sm text-text-gray" x-html="item.content"></p>
+                        </div>
+                        <span class="time-tag" x-text="item.date"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <!-- Service Modal -->
+        <div x-show="showServiceModal" @click.outside="showServiceModal = false" @keydown.escape.window="showServiceModal = false" class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-lg font-bold text-text-gray" x-text="selectedService?.title"></h3>
+                <button @click="showServiceModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-3 scrollable-container">
+                <template x-for="(item, index) in selectedService?.items || []" :key="index">
+                    <div class="modal-unified-item border-l-4 border-primary-blue pl-4 py-2">
+                        <div class="modal-unified-item-content">
+                            <p class="text-sm text-text-gray" x-html="item.content"></p>
+                        </div>
+                        <span class="time-tag" x-text="item.date"></span>
+                    </div>
+                </template>
+                <div x-show="!selectedService?.items?.length" class="text-sm text-text-gray-light">No items to display.</div>
+            </div>
+        </div>
+    </div>
 
-    // --- 1. SETUP & ELEMENT SELECTION ---
-    const searchInput = document.getElementById('publication-search');
-    const yearFilter = document.getElementById('year-filter');
-    const tagsContainer = document.querySelector('.tags-container');
-    const pubList = document.getElementById('pub-list');
-    const allPublications = Array.from(pubList.querySelectorAll('li'));
-    const pubCountDisplay = document.getElementById('publication-count');
-    const resetBtn = document.getElementById('reset-filters-btn');
 
-    // Color mapping for tags to match the requested style
-    const tagColors = {
-        'Featured': '#f97316', // Orange
-        'All': '#475569', // Slate
-        'LLM Agents for Healthcare': '#2563eb', // Strong Blue
-        'LLM for Healthcare': '#0ea5e9', // Sky Blue
-        'Healthcare Modeling': '#059669', // Emerald Green
-        'Healthcare Benchmark': '#65a30d', // Lime Green
-        'Trustworthy AI': '#7c3aed', // Deep Violet
-        'Software Engineering': '#4f46e5', // Strong Indigo
-        'Toolkits & Platforms': '#dc2626', // Red
-        'Survey': '#c2410c', // Orange-Red
-        'Book Chapters': '#9333ea', // Purple
-        'Other Topics': '#6b7280', // Gray
-    };
+    <script>
+        function academicWebsite() {
+            return {
+                // UI State
+                activeTab: 'about',
+                showNewsModal: false,
+                showServiceModal: false,
+                selectedService: null,
 
-    // --- 2. INITIALIZATION ---
-    function initialize() {
-        if (allPublications.length === 0) return;
+                // Filter State
+                searchQuery: '',
+                selectedYear: '',
+                selectedTag: '', // Default to 'Featured'
 
-        const tagCounts = { 'All': allPublications.length };
-        const featuredCount = allPublications.filter(li => li.querySelector('.publication[data-selected="true"]')).length;
-        if(featuredCount > 0) tagCounts['Featured'] = featuredCount;
+                tabs: [
+                    { id: 'about', name: 'About' },
+                    { id: 'publications', name: 'Publications' },
+                    { id: 'experience', name: 'Experience' },
+                    { id: 'awards', name: 'Activities & Honors' }
+                ],
 
-        const years = new Set();
+                newsItems: [
+                    { id: 3, date: 'Sep. 2025', content: 'Our multi-agent benchmark, MedAgentBoard, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
+                    { id: 4, date: 'Aug. 2025', content: 'Our autonomous agent for healthcare, HealthFlow, was released as a preprint.' },
+                    { id: 6, date: 'Jan. 2025', content: 'Our agent collaboration paper, ColaCare, was accepted to <strong class="font-semibold text-primary-blue">WWW 2025</strong>.' },
+                ],
 
-        allPublications.forEach(li => {
-            const pub = li.querySelector('.publication');
-            if (pub) {
-                const tag = pub.dataset.tag;
-                const year = pub.dataset.year;
-                if (tag) {
-                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                quickLinks: [
+                    { name: 'Scholar', url: 'https://scholar.google.com/citations?user=LYrsSoEAAAAJ' },
+                    { name: 'GitHub', url: 'https://github.com/yhzhu99' },
+                    { name: 'ResearchGate', url: 'https://www.researchgate.net/profile/Yinghao-Zhu-5' },
+                    { name: 'ORCID', url: 'https://orcid.org/0000-0002-2640-6477' },
+                    { name: 'OpenReview', url: 'https://openreview.net/profile?id=~Yinghao_Zhu1' },
+                    { name: 'arXiv', url: 'https://arxiv.org/a/zhu_y_10.html' },
+                    { name: 'Semantic Scholar', url: 'https://www.semanticscholar.org/author/Yinghao-Zhu/2098545' },
+                    { name: 'WCA', url: 'https://www.worldcubeassociation.org/persons/2013ZHUY01' }
+                ],
+
+                detailedInterests: [
+                    { title: 'Medical Large Language Models (LLMs)', description: 'Developing LLM agents and multimodal LLMs for diverse medical applications.' },
+                    { title: 'Healthcare Modeling', description: 'Clinical predictive modeling using multimodal electronic health record (EHR) data.' },
+                    { title: 'Healthcare Benchmarks, Toolkits & Platforms', description: 'Creating robust benchmarks, open-source toolkits, and accessible platforms.' },
+                    { title: 'Trustworthy AI', description: 'Focusing on explainability, fairness, and robustness of AI models in critical healthcare scenarios.' }
+                ],
+
+                // All publications with featured property
+                allPublications: [
+                    { id: 1, featured: false, title: "SecureReviewer: Enhancing Large Language Models for Secure Code Review through Secure-aware Fine-tuning", authors: "Fang Liu, Simiao Liu, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "IEEE/ACM International Conference on Software Engineering (ICSE), 2026", year: "2026", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.26457" }, { type: "Code", url: "https://github.com/SIMIAO515/SecureReviewer" }] },
+                    { id: 2, featured: true, title: "HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research", authors: "Yinghao Zhu, Yifan Qi, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Yifan Qi", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.02621" }, { type: "Code", url: "https://github.com/yhzhu99/HealthFlow" }, { type: "Website", url: "https://healthflow-agent.netlify.app/" }] },
+                    { id: 3, featured: true, title: "MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks", authors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma, Lequan Yu", firstAuthors: "Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng", correspondingAuthors: "Liantao Ma, Lequan Yu", venue: "Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.12371" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentBoard" }, { type: "Website", url: "https://medagentboard.netlify.app/" }] },
+                    { id: 4, featured: true, title: "MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems", authors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu, Liantao Ma", firstAuthors: "Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang", correspondingAuthors: "Lequan Yu, Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.10185" }, { type: "Code", url: "https://github.com/yhzhu99/MedAgentAudit" }] },
+                    { id: 5, featured: true, title: "ClinicRealm: Re-evaluating Large Language Models with Conventional Machine Learning for Non-Generative Clinical Prediction Tasks", authors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao", correspondingAuthors: "Chengwei Pan, Ewen M. Harrison, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2407.18525" }, { type: "Code", url: "https://github.com/yhzhu99/ehr-llm-benchmark" }, { type: "Website", url: "https://yhzhu99.github.io/ehr-llm-benchmark/" }] },
+                    { id: 6, featured: true, title: "AICare: An AI-Clinician Interaction System for Transparent and Actionable Clinical Decision Support", authors: "Junyi Gao, Zixiang Wang, Dehao Sui, Wen Tang, Yasha Wang, Ling Wang, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "", venue: "The Symposium on Artificial Intelligence in Learning Health Systems (SAIL), Best abstract nominee, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://aboutme.vixerunt.org/assets/material/sail_aicare.pdf" }, { type: "Website", url: "http://47.93.42.104/215" }] },
+                    { id: 7, featured: false, title: "Magical: Medical Lay Language Generation via Semantic Invariance and Layperson-tailored Adaptation", authors: "Weibin Liao, Tianlong Wang, Yinghao Zhu, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Weibin Liao, Tianlong Wang", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Conference on Neural Information Processing Systems (NeurIPS), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.08730" }, { type: "Code", url: "https://github.com/tianlwang/Magical" }] },
+                    { id: 8, featured: false, title: "Foundation models and intelligent decision-making: Progress, challenges, and perspectives", authors: "Jincai Huang, Yongjun Xu, Qi Wang, et al.", firstAuthors: "", correspondingAuthors: "", venue: "The Innovation, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://www.cell.com/the-innovation/fulltext/S2666-6758(25)00151-1" }] },
+                    { id: 9, featured: false, title: "Learnable Prompt as Pseudo-Imputation: Rethinking the Necessity of Traditional EHR Data Imputation in Downstream Clinical Prediction", authors: "Weibin Liao, Yinghao Zhu, Zhongji Zhang, Yuhang Wang, Zixiang Wang, Xu Chu, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Liantao Ma", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3690624.3709166" }, { type: "Code", url: "https://github.com/MrBlankness/PAI" }] },
+                    { id: 10, featured: false, title: "Revolutionizing Newcomers' Onboarding Process in OSS Communities: The Future AI Mentor", authors: "Xin Tan, Xiao Long, Yinghao Zhu, Lin Shi, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Lin Shi", venue: "ACM International Conference on the Foundations of Software Engineering (FSE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3715767" }, { type: "Code", url: "https://github.com/yhzhu99/OSSerCopilot" }] },
+                    { id: 11, featured: true, title: "ColaCare: Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", authors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Zixiang Wang, Yinghao Zhu, Huiya Zhao", correspondingAuthors: "Yasha Wang, Junyi Gao, Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714877" }, { type: "Code", url: "https://github.com/PKU-AICare/ColaCare" }, { type: "Website", url: "https://colacare.netlify.app" }] },
+                    { id: 12, featured: false, title: "Adaptive Activation Steering: A Tuning-Free LLM Truthfulness Improvement Method for Diverse Hallucinations Categories", authors: "Tianlong Wang, Xianfeng Jiao, Yinghao Zhu, Zhongzhi Chen, Yifan He, Xu Chu, Junyi Gao, Yasha Wang, Liantao Ma", firstAuthors: "Tianlong Wang, Xianfeng Jiao", correspondingAuthors: "Liantao Ma", venue: "ACM International World Wide Web Conference (WWW), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3696410.3714640" }, { type: "Code", url: "https://github.com/tianlwang/ACT" }] },
+                    { id: 13, featured: false, title: "Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal Large Language Models", authors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu, Jiawen Xi, Jingkun An, Hao Wang, Hao Liang, Chengwei Pan", firstAuthors: "Xijie Huang, Xinyuan Wang, Hantao Zhang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32396" }, { type: "Code", url: "https://github.com/dirtycomputer/O2M_attack" }] },
+                    { id: 14, featured: false, title: "Project Imaging-X: A Survey of 1000+ Open-Access Medical Imaging Datasets for Foundation Model Development", authors: "Project Imaging-X Contributors", firstAuthors: "", correspondingAuthors: "", venue: "GitHub, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://github.com/uni-medical/Project-Imaging-X/" }] },
+                    { id: 15, featured: false, title: "AGFSync: Leveraging AI-Generated Feedback for Preference Optimization in Text-to-Image Generation", authors: "Jingkun An, Yinghao Zhu, Zongjian Li, Enshen Zhou, Haoran Feng, Xijie Huang, Bohua Chen, Yemin Shi, Chengwei Pan", firstAuthors: "Jingkun An, Yinghao Zhu, Zongjian Li", correspondingAuthors: "Chengwei Pan", venue: "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI), 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://ojs.aaai.org/index.php/AAAI/article/view/32168" }, { type: "Code", url: "https://github.com/Anjingkun/AGFSync" }, { type: "Dataset", url: "https://huggingface.co/datasets/JingkunAn/AGFSync" }, { type: "Website", url: "https://anjingkun.github.io/AGFSync/" }] },
+                    { id: 16, featured: false, title: "Protocol for Processing Multivariate Time-series Electronic Health Records of COVID-19 Patients", authors: "Zixiang Wang, Yinghao Zhu, Dehao Sui, Tianlong Wang, Yuntao Zhang, Yasha Wang, Chengwei Pan, Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma, Ling Wang, Xiaoyun Zhang", venue: "STAR Protocols, 2025", year: "2025", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/4069" }, { type: "Code", url: "https://doi.org/10.5281/zenodo.14498936" }] },
+                    { id: 17, featured: false, title: "Exploring the Relationship Between Dietary Intake and Clinical Outcomes in Peritoneal Dialysis Patients Stratified by Serum Albumin Levels", authors: "Yueying Wu, Junyi Gao, Wen Tang, Chunyan Su, Yinghao Zhu, Tianlong Wang, Ling Wang, Weibin Liao, Xu Chu, Yasha Wang, Xinju Zhao, Tao Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Yueying Wu, Junyi Gao", correspondingAuthors: "Wen Tang, Ling Wang, Yasha Wang, Liantao Ma", venue: "Health Data Science, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://spj.science.org/doi/pdf/10.34133/hds.0280" }, { type: "Code", url: "https://github.com/Hundredl/ESRD-Exploring" }] },
+                    { id: 18, featured: false, title: "Evaluation of radiomics as an assistant tool for radiologists in the diagnosis of necrotizing enterocolitis", authors: "Chaogang Lu, Mingshu Yang, Yinghao Zhu, Yaqin Xia, Siqi Luo, Guang Yang, Mei Bai, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Mei Bai, Zhongwei Qiao", venue: "Translational Pediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://tp.amegroups.org/article/view/137557" }] },
+                    { id: 19, featured: false, title: "Correlation analysis between MRI-based radiomics features and clinical grading of neonatal hypoxic-ischemic encephalopathy", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Laishuan Wang, Zhongwei Qiao", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "http://www.cjebp.cn/CN/abstract/abstract1807.shtml" }] },
+                    { id: 20, featured: false, title: "Empowering medical systematic reviews with large language models: methods, development directions, and applications", authors: "Yannan Huang, Haoran Sang, Yu Liu, Liantao Ma, Yinghao Zhu", firstAuthors: "", correspondingAuthors: "Liantao Ma, Yinghao Zhu", venue: "Chinese Journal of Evidence-Based Prediatrics, 2025", year: "2025", tag: "Survey", links: [{ type: "Paper", url: "https://journal.gxmu.edu.cn/article/doi/10.16190/j.cnki.45-1211/r.2025.03.001" }] },
+                    { id: 21, featured: false, title: "EfficientEdit: Accelerating Code Editing via Edit-Oriented Speculative Decoding", authors: "Peiding Wang, Li Zhang, Fang Liu, Yinghao Zhu, Wang Xu, Lin Shi, Xiaoli Lian, Minxiao Li, Bo Shen, An Fu", firstAuthors: "", correspondingAuthors: "Fang Liu, Lin Shi", venue: "IEEE/ACM International Conference on Automated Software Engineering (ASE), 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2506.02780" }, { type: "Code", url: "https://github.com/zhu-zhu-ding/EfficientEdit" }] },
+                    { id: 22, featured: false, title: "Toward Better EHR Reasoning in LLMs: Reinforcement Learning with Expert Attention Guidance", authors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding, Xinke Jiang, Weibin Liao, Yongxin Xu, Yinghao Zhu, Zhibang Yang, Liantao Ma, Junfeng Zhao, Yasha Wang", firstAuthors: "Yue Fang, Yuxin Guo, Jiaran Gao, Hongxin Ding", correspondingAuthors: "Liantao Ma, Junfeng Zhao, Yasha Wang", venue: "Preprint, 2025", year: "2025", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.13579" }, { type: "Code", url: "https://github.com/devilran6/EAG-RL" }] },
+                    { id: 23, featured: false, title: "ConfAgents: A Conformal-Guided Multi-Agent Framework for Cost-Efficient Medical Diagnosis", authors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang, Yasha Wang, Junyi Gao, Liantao Ma", firstAuthors: "Huiya Zhao, Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2508.04915" }, { type: "Code", url: "https://github.com/PKU-AICare/ConfAgents" }] },
+                    { id: 24, featured: false, title: "MedMMV: A Controllable Multimodal Multi-Agent Framework for Reliable and Verifiable Clinical Reasoning", authors: "Hongjun Liu, Yinghao Zhu, Yuhui Wang, Yitao Long, Zeyu Lai, Lequan Yu, Chen Zhao", firstAuthors: "", correspondingAuthors: "Chen Zhao", venue: "Preprint, 2025", year: "2025", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.24314" }] },
+                    { id: 25, featured: false, title: "Scaf-GRPO: Scaffolded Group Relative Policy Optimization for Enhancing LLM Reasoning", authors: "Xichen Zhang, Sitong Wu, Yinghao Zhu, Haoru Tan, Shaozuo Yu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19807" }, { type: "Code", url: "https://github.com/dvlab-research/Scaf-GRPO" }] },
+                    { id: 26, featured: false, title: "SmartSwitch: Advancing LLM Reasoning by Overcoming Underthinking via Promoting Deeper Thought Exploration", authors: "Xichen Zhang, Sitong Wu, Haoru Tan, Shaozuo Yu, Yinghao Zhu, Ziyi He, Jiaya Jia", firstAuthors: "Xichen Zhang, Sitong Wu", correspondingAuthors: "Jiaya Jia", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2510.19767" }, { type: "Code", url: "https://github.com/dvlab-research/SmartSwitch" }] },
+                    { id: 27, featured: false, title: "An Empirical Study on Failures in Automated Issue Solving", authors: "Simiao Liu, Fang Liu, Liehao Li, Xin Tan, Yinghao Zhu, Xiaoli Lian, Li Zhang", firstAuthors: "", correspondingAuthors: "Fang Liu", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2509.13941" }, { type: "Code", url: "https://anonymous.4open.science/r/IssueSolvingEmpirical" }] },
+                    { id: 28, featured: false, title: "LLM-Driven Collaborative Model for Untangling Commits via Explicit and Implicit Dependency Reasoning", authors: "Bo Hou, Xin Tan, Kai Zheng, Fang Liu, Yinghao Zhu, Li Zhang", firstAuthors: "", correspondingAuthors: "Xin Tan", venue: "Preprint, 2025", year: "2025", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2507.16395" }, { type: "Code", url: "https://anonymous.4open.science/r/ColaUntangle-0109" }] },
+                    { id: 29, featured: false, title: "SuperGS: Consistent and Detailed 3D Super-Resolution Scene Reconstruction via Gaussian Splatting", authors: "Shiyun Xie, Zhiru Wang, Yinghao Zhu, Xu Wang, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2025", year: "2025", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2505.18649" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
+                    { id: 30, featured: true, title: "EMERGE: Enhancing Multimodal Electronic Health Records Predictive Modeling with Retrieval-Augmented Generation", authors: "Yinghao Zhu, Changyu Ren, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Changyu Ren", correspondingAuthors: "Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679582" }, { type: "Code", url: "https://github.com/yhzhu99/EMERGE" }, { type: "Video", url: "https://www.youtube.com/watch?v=gqGX6tzkFtM" }] },
+                    { id: 31, featured: false, title: "PRISM: Mitigating EHR Data Sparsity via Learning from Missing Feature Calibrated Prototype Patient Representations", authors: "Yinghao Zhu, Zixiang Wang, Long He, Shiyun Xie, Xiaochen Zheng, Liantao Ma, Chengwei Pan", firstAuthors: "", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "ACM International Conference on Information and Knowledge Management (CIKM), 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3627673.3679521" }, { type: "Code", url: "https://github.com/yhzhu99/PRISM" }, { type: "Video", url: "https://www.youtube.com/watch?v=_v0h-Izl2V0" }] },
+                    { id: 32, featured: true, title: "A Comprehensive Benchmark For COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen M. Harrison, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "Cell Patterns, 2024", year: "2024", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }, { type: "Website", url: "https://pyehr.netlify.app" }] },
+                    { id: 33, featured: false, title: "Protocol to process follow-up electronic medical records of peritoneal dialysis patients to train AI models", authors: "Tianlong Wang, Yinghao Zhu, Zixiang Wang, Wen Tang, Xinju Zhao, Tao Wang, Yasha Wang, Junyi Gao, Liantao Ma, Ling Wang", firstAuthors: "Tianlong Wang, Yinghao Zhu", correspondingAuthors: "Wen Tang, Junyi Gao, Liantao Ma, Ling Wang", venue: "STAR Protocols, 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://star-protocols.cell.com/protocols/3756" }, { type: "Code", url: "https://zenodo.org/records/13342417" }] },
+                    { id: 34, featured: false, title: "Prediction of feeding difficulties in neonates with hypoxic-ischemic encephalopathy using magnetic resonance imaging-derived radiomics features", authors: "Yaqin Xia, Mingshu Yang, Tianyang Qian, Jiayu Zhou, Mei Bai, Siqi Luo, Chaogang Lu, Yinghao Zhu, Laishuan Wang, Zhongwei Qiao", firstAuthors: "", correspondingAuthors: "Zhongwei Qiao", venue: "Pediatric Radiology, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://link.springer.com/article/10.1007/s00247-024-06065-6" }] },
+                    { id: 35, featured: true, title: "EHRFlow: A Large Language Model-Driven Iterative Multi-Agent Electronic Health Record Data Analysis Workflow", authors: "Hao Wu, Yinghao Zhu, Zixiang Wang, Xiaochen Zheng, Ling Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen M. Harrison, Junyi Gao, Liantao Ma", firstAuthors: "Hao Wu, Yinghao Zhu", correspondingAuthors: "Junyi Gao, Liantao Ma", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), Oral, 2024", year: "2024", tag: "LLM Agents for Healthcare", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=lvycHSrFgk" }, { type: "Code", url: "https://github.com/PKU-AICare/EHRFlow" }] },
+                    { id: 36, featured: false, title: "RetCare: Towards Interpretable Clinical Decision Making through LLM-Driven Medical Knowledge Retrieval", authors: "Zixiang Wang, Yinghao Zhu, Junyi Gao, Xiaochen Zheng, Yuhui Zeng, Yifan He, Bowen Jiang, Wen Tang, Ewen M. Harrison, Chengwei Pan, Liantao Ma, Ling Wang", firstAuthors: "Zixiang Wang, Yinghao Zhu", correspondingAuthors: "Liantao Ma, Ling Wang", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=jqo1vk63qE" }, { type: "Code", url: "https://github.com/PKU-AICare/RetCare" }] },
+                    { id: 37, featured: false, title: "DeepEST: A Python Library for Spatio-Temporal Epidemiology Prediction", authors: "Yuhang Wang, Yinghao Zhu, Lifang Liang, Yasha Wang, Ewen M. Harrison, Liantao Ma, Junyi Gao", firstAuthors: "", correspondingAuthors: "Junyi Gao", venue: "Artificial Intelligence and Data Science for Healthcare: Bridging Data-Centric AI and People-Centric Healthcare (KDD 2024 AIDSH Workshop), 2024", year: "2024", tag: "Toolkits & Platforms", links: [{ type: "Paper", url: "https://openreview.net/pdf?id=YzWC6huGQq" }, { type: "Code", url: "https://github.com/v1xerunt/DeepEST" }] },
+                    { id: 38, featured: false, title: "PIGWN: Physics-Informed Graph WaveNet for Airport Flight Traffic Flow Prediction", authors: "Zhichao Yang, Yinghao Zhu, Ziyue Niu, Yanru Huang, Chengwei Pan, Xiwang Dong", firstAuthors: "Zhichao Yang, Yinghao Zhu", correspondingAuthors: "Chengwei Pan", venue: "International Conference on Industrial Artificial Intelligence (IAI), 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://ieeexplore.ieee.org/abstract/document/10730680/" }, { type: "Code", url: "https://github.com/yzc0912/PIGWN" }] },
+                    { id: 39, featured: false, title: "SuperGS: Super-Resolution 3D Gaussian Splatting Enhanced by Variational Residual Features and Uncertainty-Augmented Learning", authors: "Shiyun Xie, Zhiru Wang, Xu Wang, Yinghao Zhu, Chengwei Pan, Xiwang Dong", firstAuthors: "", correspondingAuthors: "Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "Other Topics", links: [{ type: "Paper", url: "https://arxiv.org/abs/2410.02571" }, { type: "Code", url: "https://github.com/SYXieee/SuperGS" }] },
+                    { id: 40, featured: false, title: "Prompting Large Language Models for Zero-Shot Clinical Prediction with Structured Longitudinal Electronic Health Record Data", authors: "Yinghao Zhu, Zixiang Wang, Junyi Gao, Yuning Tong, Jingkun An, Weibin Liao, Ewen M. Harrison, Liantao Ma, Chengwei Pan", firstAuthors: "Yinghao Zhu, Zixiang Wang", correspondingAuthors: "Liantao Ma, Chengwei Pan", venue: "Preprint, 2024", year: "2024", tag: "LLM for Healthcare", links: [{ type: "Paper", url: "https://arxiv.org/abs/2402.01713" }, { type: "Code", url: "https://github.com/yhzhu99/llm4healthcare" }] },
+                    { id: 41, featured: false, title: "LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation", authors: "Weibin Liao, Yinghao Zhu, Xinyuan Wang, Chengwei Pan, Yasha Wang, Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2024", year: "2024", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2403.05246" }, { type: "Code", url: "https://github.com/MrBlankness/LightM-UNet" }] },
+                    { id: 42, featured: false, title: "How far are AI-powered programming assistants from meeting developers' needs?", authors: "Xin Tan, Xiao Long, Xianjun Ni, Yinghao Zhu, Jing Jiang, Li Zhang", firstAuthors: "", correspondingAuthors: "Li Zhang", venue: "Preprint, 2024", year: "2024", tag: "Software Engineering", links: [{ type: "Paper", url: "https://arxiv.org/abs/2404.12000" }] },
+                    { id: 43, featured: false, title: "Mortality Prediction with Adaptive Feature Importance Recalibration for Peritoneal Dialysis Patients", authors: "Liantao Ma, Chaohe Zhang, Junyi Gao, Xianfeng Jiao, Zhihao Yu, Yinghao Zhu, Tianlong Wang, Xinyu Ma, Yasha Wang, Wen Tang, Xinju Zhao, Wenjie Ruan, Tao Wang", firstAuthors: "Liantao Ma, Chaohe Zhang, Junyi Gao", correspondingAuthors: "Junyi Gao, Yasha Wang, Wen Tang", venue: "Cell Patterns, Cover, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://www.cell.com/patterns/fulltext/S2666-3899(23)00294-5" }, { type: "Code", url: "https://github.com/Accountable-Machine-Intelligence/AICare" }] },
+                    { id: 44, featured: false, title: "M3Fair: Mitigating Bias in Healthcare Data through Multi-Level and Multi-Sensitive-Attribute Reweighting Method", authors: "Yinghao Zhu, Jingkun An, Enshen Zhou, Lu An, Junyi Gao, Hao Li, Haoran Feng, Bo Hou, Wen Tang, Chengwei Pan, Liantao Ma", firstAuthors: "Yinghao Zhu, Jingkun An", correspondingAuthors: "Chengwei Pan, Liantao Ma", venue: "Beijing Health Data Science Summit 2023, Abstract, 2023", year: "2023", tag: "Trustworthy AI", links: [{ type: "Paper", url: "https://arxiv.org/abs/2306.04118" }, { type: "Code", url: "https://github.com/yhzhu99/M3Fair" }] },
+                    { id: 45, featured: false, title: "A Comprehensive Benchmark for COVID-19 Predictive Modeling Using Electronic Health Records in Intensive Care: Choosing the Best Model for COVID-19 Prognosis", authors: "Junyi Gao, Yinghao Zhu, Wenqing Wang, Yasha Wang, Wen Tang, Liantao Ma", firstAuthors: "Junyi Gao, Yinghao Zhu, Wenqing Wang", correspondingAuthors: "Liantao Ma", venue: "American Medical Informatics Association (AMIA) Informatics Summit, Podium Abstract Track, Oral, 2023", year: "2023", tag: "Healthcare Benchmark", links: [{ type: "Paper", url: "https://arxiv.org/abs/2209.07805" }, { type: "Code", url: "https://github.com/yhzhu99/pyehr" }] },
+                    { id: 46, featured: false, title: "Exploration of the feasibility of using examination time order to split small sample size data for radiomics", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
+                    { id: 47, featured: false, title: "Assessing the value of the radiomics model based on MRI of the wrist joint in predicting the use of biologics in JIA", authors: "Mingshu Yang, Zhongwei Qiao, Yinghao Zhu, Chaogang Lu, Yaqin Xia", firstAuthors: "", correspondingAuthors: "", venue: "The Asian and Oceanic Society for Paediatric Radiology (AOSPR), Oral, 2023", year: "2023", tag: "Healthcare Modeling", links: [] },
+                    { id: 48, featured: false, title: "Domain-invariant Clinical Representation Learning by Bridging Data Distribution Shift across EMR Datasets", authors: "Zhongji Zhang, Yuhang Wang, Yinghao Zhu, Xinyu Ma, Tianlong Wang, Chaohe Zhang, Yasha Wang, and Liantao Ma", firstAuthors: "", correspondingAuthors: "Yasha Wang, Liantao Ma", venue: "Preprint, 2023", year: "2023", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://arxiv.org/abs/2310.07799" }, { type: "Code", url: "https://github.com/wang1yuhang/domain_invariant_network" }] },
+                    { id: 49, featured: false, title: "M3Care: Learning with Missing Modalities in Multimodal Healthcare Data", authors: "Chaohe Zhang, Xu Chu, Liantao Ma, Yinghao Zhu, Yasha Wang, Jiangtao Wang, Junfeng Zhao", firstAuthors: "Chaohe Zhang, Xu Chu", correspondingAuthors: "Yasha Wang", venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 2022", year: "2022", tag: "Healthcare Modeling", links: [{ type: "Paper", url: "https://dl.acm.org/doi/10.1145/3534678.3539388" }, { type: "Code", url: "https://github.com/choczhang/M3Care" }] },
+                    { id: 50, featured: false, title: "Python Data Analysis", authors: "Yunxiang Lyu, Zhipeng Wang, Lihua Xu, Zhaoyi Wang, Yinghao Zhu, Kun Yan, Shanzhao Qiu, Jiawei Tang, Kaiwen Feng, Wei Chen, Tianyi Chen, Zhendong Hong, Yunfei Yang, Jinman Xie, Zeliang Yao, Yangang Han, Yihang Wu", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/bookscenter/book_09724901.html" }] },
+                    { id: 51, featured: false, title: "Big Data Visualization Techniques", authors: "Yunxiang Lyu, Zeliang Yao, Jili Xie, Yinghao Zhu, Shanzhao Qiu, Yangang Han, Zehuan Huang", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2023", year: "2023", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09321701.html" }] },
+                    { id: 52, featured: false, title: "Theory and Practice of Artificial Intelligence", authors: "Yunxiang Lyu, Luting Huang, Zezhong Liang, Wenzhi Yin, Xueting Han, Yinghao Zhu, Miaoran Chen", firstAuthors: "", correspondingAuthors: "", venue: "Tsinghua University Press, 2022", year: "2022", tag: "Book Chapters", links: [{ type: "Book", url: "http://www.tup.tsinghua.edu.cn/booksCenter/book_09059601.html" }] }
+                ],
+
+                projects: [
+                    { id: 1, year: '2024', title: 'PyEHR: A Predictive Modeling Toolkit for Electronic Health Records', authors: 'Yinghao Zhu, Wenqing Wang, Junyi Gao, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/pyehr'}] },
+                    { id: 2, year: '2023', title: 'Envisioning the Future Through AI: Perspectives on Global Landscapes and Lifestyles', authors: 'Yinghao Zhu, Ziyi Wang, Caixin Kang, Hao Li, Jingkun An, Enshen Zhou, Haoran Feng, Bo Hou, Long He, Xinlei Bao, Zihao Li, Chuang Wang, Xinyuan Wang', venue: 'Computer Vision and Pattern Recognition (CVPR) Art Gallery, 2023', links: [{ type: 'Video', url: 'https://www.youtube.com/watch?v=eoSW6a_hMsY'}] }
+                ],
+
+                education: [
+                    { id: 1, institution: "The University of Hong Kong", degree: "PhD Student", location: "School of Computing and Data Science, Hong Kong SAR, China", period: "2025.07 - Present", details: "Supervised by <a href='https://yulequan.github.io/' class='text-primary-blue hover:underline'>Prof. Lequan Yu</a>" },
+                    { id: 2, institution: "Beihang University", degree: "M.Eng. in Artificial Intelligence", location: "School of Artificial Intelligence, Beijing, China", period: "2022.09 - 2025.01", details: "Supervised by <a href='https://scholar.google.com/citations?user=7i1dqbEAAAAJ&hl=en' class='text-primary-blue hover:underline'>Prof. Chengwei Pan</a>" },
+                    { id: 3, institution: "Politecnico di Milano", degree: "Exchange in Computer Science and Engineering", location: "Milan, Italy", period: "2024.02 - 2024.07", details: "Exchange Program" },
+                    { id: 4, institution: "Beihang University", degree: "B.Eng. in Software Engineering", location: "School of Software, Beijing, China", period: "2018.09 - 2022.06", details: "" },
+                    { id: 5, institution: "Shanghai High School", degree: "", location: "Shanghai, China", period: "2015.09 - 2018.06", details: "" }
+                ],
+                experience: [
+                    { id: 1, organization: "Peking University", position: "External Research Advisor", location: "School of Computer Science, Beijing, China", period: "2023.09 - Present", details: "Working with <a href='http://scholar.pku.edu.cn/malt/home' class='text-primary-blue hover:underline'>Prof. Liantao Ma</a>" },
+                    { id: 2, organization: "Stanford University", position: "Research Assistant", location: "Stanford Casual Science Center, Remote", period: "2024.03 - 2024.12", details: "Advised by <a href='https://yiqingxu.org' class='text-primary-blue hover:underline'>Prof. Yiqing Xu</a>" },
+                    { id: 3, organization: "University of Zurich & University Hospital Zurich", position: "Research Assistant", location: "KrauthammerLab, Zurich, Switzerland", period: "2024.04 - 2024.12", details: "Advised by <a href='https://scholar.google.com/citations?user=xcuCdJUAAAAJ&hl=en' class='text-primary-blue hover:underline'>Dr. Ahmed Allam</a> and <a href='http://www.krauthammerlab.ch' class='text-primary-blue hover:underline'>Prof. Michael Krauthammer</a>" },
+                    { id: 4, organization: "Children's Hospital of Fudan University", position: "Research Assistant", location: "Department of Radiology, Shanghai, China", period: "2022.10 - 2023.12", details: "Advised by <a href='https://ch.shmu.edu.cn/doctor/intro/id/375/pid/412.html' class='text-primary-blue hover:underline'>Prof. Zhongwei Qiao</a>" },
+                    { id: 5, organization: "Peking University", position: "Research Assistant", location: "National Engineering Research Center for Software Engineering, Beijing, China", period: "2021.05 - 2023.08", details: "Advised by <a href='https://faculty.pku.edu.cn/wangyasha/en/index.htm' class='text-primary-blue hover:underline'>Prof. Yasha Wang</a>" }
+                ],
+                awards: [
+                    { id: 1, title: "Outstanding Graduate of Beijing", organization: "Beijing Municipal Education Commission", year: "2025" },
+                    { id: 2, title: "Detecting Active Tuberculosis Bacilli", organization: "Top 4 out of all teams, Nightingale Open Science and Wellgen Medical", year: "2024", authors: 'Yinghao Zhu, Junyi Gao, Liantao Ma' },
+                    { id: 3, title: "Bias Detection Tools for Clinical Decision Making Challenge", organization: "Third Place Prize, NIH/NCATS", year: "2023", authors: 'Yinghao Zhu, Jingkun An, Enshen Zhou, Hao Li, Haoran Feng', links: [{ type: 'Code', url: 'https://github.com/Anjingkun/NIH-Bias-Detection' }, { type: 'Project', url: 'https://yhzhu99.github.io/BeFair' }, { type: 'Video', url: 'https://expeditionhacks.com/bias-detection-healthcare/' }] },
+                    { id: 4, title: "Alibaba Tianchi UNiLAB Algorithm Competition", organization: "Encouragement Award, Top 11/230 & Top 10/324", year: "2023", authors: 'Yinghao Zhu, Zhihao Yu, Xianfeng Jiao' },
+                    { id: 5, title: "\"Challenge Cup\" Competition of Science Achievement in China", organization: "Special Prize (Top 1), China Association for Science and Technology, etc", year: "2023" },
+                    { id: 6, title: "High Risk Breast Cancer Prediction Contest 1", organization: "Top 3 out of all teams, Nightingale Open Science, AHLI, and Providence St. Joseph Health", year: "2022", authors: 'Yinghao Zhu, Junyi Gao, Xinze Li, Yifan He, Wenqing Wang, Liantao Ma', links: [{ type: 'Code', url: 'https://github.com/yhzhu99/predict-breast-cancer-phase01' }] },
+                    { id: 7, title: "Outstanding Graduate of Beihang University", organization: "Beihang University", year: "2022" },
+                    { id: 8, title: "\"Feng Ru Cup\" Competition of Academic and Technological Works", organization: "First Prize (Top 1%), Beihang University", year: "2021, 2022" }
+                ],
+                talks: [
+                    { id: 1, year: "2025", title: "Accelerating Medical Research with DeepSeek", venue: "Tibet Autonomous Region People's Hospital, 2025.06.14" },
+                    { id: 2, year: "2025", title: "Traceable and Reliable PubMed Literature Retrieval Based on DeepSeek", venue: "Department of Obstetrics, Beijing University Third Hospital & Beijing Tiantan Hospital, 2025.04.18, 2025.04.20" },
+                    { id: 3, year: "2025", title: "Building accessible and trustworthy clinical AI in the era of LLM", venue: "Department of Nephrology, Beijing University Third Hospital & Beijing University Cancer Hospital & Department of Obstetrics, Beijing University Third Hospital, 2025.02.19,20,21" },
+                    { id: 4, year: "2024", title: "Enhancing Electronic Health Record Modeling through Large Language Model-Driven Multi-Agent Collaboration", venue: "Seminar on Advancing Trustworthy and Accessible Healthcare Informatics at Peking University & Cell Press, 2024.10.31" },
+                    { id: 5, year: "2024", title: "What Makes a Next-Generation AI-Powered Healthcare System?", venue: "University of Zurich & University Hospital Zurich, 2024.07.08" },
+                    { id: 6, year: "2023", title: "Deep learning interpretable analysis of multivariate time-series electronic medical record data", venue: "HIT Webinar, 2023.01.06", links: [{ type: 'Video', url: 'https://www.bilibili.com/video/BV1YA411U7yw' }] },
+                    { id: 7, year: "2022", title: "Invited talk for the High Risk Breast Cancer Prediction Challenge", venue: "Machine Learning for Health (ML4H), 2022.11.28", links: [{ type: 'Video', url: 'https://ml4health.github.io/2022' }] }
+                ],
+                services: [
+                    { title: "Reviewer", items: [{ year: "2026", content: "CHI Conference" }, { year: "2026", content: "AAAI Conference" }, { year: "2025, 2026", content: "ICLR Conference" }, { year: "2025, 2026", content: "AISTATS Conference" }, { year: "2025, 2026", content: "ICASSP Conference" }, { year: "2025", content: "NeurIPS ER & SEA Workshop" }, { year: "2025", content: "ICML Conference" }, { year: "2025", content: "ICML FMSD & MAS Workshop" }, { year: "2025", content: "ACMMM Conference" }, { year: "2025", content: "CVPR SynData4CV Workshop" }, { year: "2025", content: "TheWebConf (WWW) Conference" }, { year: "2025", content: "CHIL Conference" }, { year: "2025", content: "IJCNN Conference" }, { year: "2025", content: "ICCV CVAMD & MMRAgI Workshop" }, { year: "2025", content: "AMIA Informatics Summit" }, { year: "2025", content: "BMC Artificial Intelligence" }, { year: "2025", content: "ACM Transactions on Knowledge Discovery from Data (TKDD)" }, { year: "2025", content: "PeerJ Computer Science" }, { year: "2024, 2025", content: "NeurIPS Main Track" }, { year: "2024, 2025", content: "KDD Research Track" }, { year: "2024, 2025", content: "AMIA Clinical Informatics Conference" }, { year: "2024", content: "NeurIPS TSALM & OWA & FM4Science Workshop" }, { year: "2024", content: "KDD AIDSH Workshop" }, { year: "2024", content: "ML4H Conference" }, { year: "2023, 2024, 2025", content: "NeurIPS Datasets and Benchmarks Track" }, { year: "2023, 2024, 2025", content: "AMIA Annual Symposium" }, { year: "2023", content: "Journal of Data-centric Machine Learning Research (DMLR)" }] },
+                    { title: "Operational Committee", items: [{ year: "2025.12.15", content: "BIBM 2025 Workshop on Advancing Data for Better Health" }] },
+                    { title: "Volunteer", items: [{ year: "2025.04.27", content: "ICLR 2025 Workshop on AI for Children" }] },
+                    { title: "Teaching Assistant", items: [{ year: "Fall 2025", content: "Statistical Machine Learning" }, { year: "Spring 2023", content: "Fundamentals of Programming and Computer Science" }, { year: "Spring, Fall 2022", content: "Design and Analysis of Algorithms" }, { year: "Fall 2021", content: "Operating System" }, { year: "Fall 2021", content: "Network Storage" }, { year: "Spring 2021", content: "System Programming" }, { year: "Spring 2021", content: "Object-oriented Programming" }, { year: "Spring, Fall 2020, Spring 2021", content: "Discrete Mathematics" }] }
+                ],
+
+                // Computed properties
+                get featuredPublications() {
+                    return this.allPublications.filter(pub => pub.featured);
+                },
+                get availableYears() {
+                    const years = [...new Set(this.allPublications.map(p => p.year).filter(year => year))];
+                    return years.sort((a, b) => b.localeCompare(a));
+                },
+                get publicationTags() {
+                    const tagCounts = {};
+                    this.allPublications.forEach(pub => {
+                        if (pub.tag) tagCounts[pub.tag] = (tagCounts[pub.tag] || 0) + 1;
+                    });
+                    return Object.entries(tagCounts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+                },
+                get filteredPublications() {
+                    let publications = this.selectedTag === 'All' ? this.allPublications : (this.selectedTag === '' ? this.featuredPublications : this.allPublications.filter(pub => pub.tag === this.selectedTag));
+                    return publications.filter(pub => {
+                        const searchContent = `${pub.title} ${pub.authors} ${pub.venue}`.toLowerCase();
+                        const matchesSearch = !this.searchQuery || searchContent.includes(this.searchQuery.toLowerCase());
+                        const matchesYear = !this.selectedYear || pub.year === this.selectedYear;
+                        return matchesSearch && matchesYear;
+                    });
+                },
+
+                formatAuthors(authorString, firstAuthorsStr = '', correspondingAuthorsStr = '') {
+                    if (!authorString) return '';
+                    const authors = authorString.split(/,\s*/);
+                    const firstAuthors = firstAuthorsStr ? firstAuthorsStr.split(',').map(s => s.trim()) : [];
+                    const correspondingAuthors = correspondingAuthorsStr ? correspondingAuthorsStr.split(',').map(s => s.trim()) : [];
+                    return authors.map(author => {
+                        let formattedAuthor = author.trim();
+                        if (formattedAuthor.includes('Yinghao Zhu')) {
+                            formattedAuthor = `<strong class="author-highlight">${formattedAuthor}</strong>`;
+                        }
+                        // * for co-first author, † for corresponding author (unified gray color)
+                        if (firstAuthors.includes(author.trim())) {
+                            formattedAuthor += '<sup class="text-text-gray font-bold">*</sup>';
+                        }
+                        if (correspondingAuthors.includes(author.trim())) {
+                            formattedAuthor += '<sup class="text-text-gray font-bold">†</sup>';
+                        }
+                        return formattedAuthor;
+                    }).join(', ');
+                },
+
+                openServiceModal(title) {
+                    let flatItems = [];
+                    if (title === 'Awards & Honors') {
+                        flatItems = [...this.awards].sort((a, b) => b.year.localeCompare(a.year))
+                            .map(item => {
+                                let content = `${item.title}<br><small class='text-gray-500'>${item.organization}</small>`;
+                                if (item.authors) {
+                                    content += `<br><small class='text-gray-400 mt-1'>Team: ${item.authors}</small>`;
+                                }
+                                if (item.links && item.links.length > 0) {
+                                    const linksHtml = item.links.map(link =>
+                                        `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
+                                    ).join(' ');
+                                    content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
+                                }
+                                return { date: item.year, content: content };
+                            });
+                    } else if (title === 'Invited Talks') {
+                        flatItems = [...this.talks].sort((a, b) => b.year.localeCompare(a.year))
+                             .map(item => {
+                                let content = `${item.title}<br><small class='text-gray-500'>${item.venue}</small>`;
+                                if (item.links && item.links.length > 0) {
+                                    const linksHtml = item.links.map(link =>
+                                        `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
+                                    ).join(' ');
+                                    content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
+                                }
+                                return { date: item.year, content: content };
+                            });
+                    } else if (title === 'Projects') {
+                         flatItems = [...this.projects].sort((a, b) => b.year.localeCompare(a.year))
+                            .map(item => ({ date: item.year, content: `${item.title} <br><small class='text-gray-500'>${item.authors}</small>` }));
+                    } else {
+                        const serviceData = this.services.find(s => s.title === title);
+                        if (serviceData) {
+                            flatItems = [...serviceData.items].sort((a, b) => {
+                                const yearA = String(a.year); const yearB = String(b.year);
+                                if (yearA.includes('Journal')) return 1; if (yearB.includes('Journal')) return -1;
+                                return (yearB.match(/\d+/g) || [0])[0] - (yearA.match(/\d+/g) || [0])[0];
+                            }).map(item => ({ date: item.year, content: item.content }));
+                        }
+                    }
+                    this.selectedService = { title, items: flatItems };
+                    this.showServiceModal = true;
+                },
+
+                init() {
+                    // Sort all publications by year and title
+                    this.allPublications.sort((a, b) => {
+                        if (!a.year && !b.year) return a.title.localeCompare(b.title);
+                        if (!a.year) return 1;
+                        if (!b.year) return -1;
+                        return b.year.localeCompare(a.year) || a.title.localeCompare(b.title);
+                    });
                 }
-                if (year) {
-                    years.add(year);
-                }
             }
-        });
-
-        // Populate Year Filter
-        const sortedYears = Array.from(years).sort((a, b) => b - a);
-        sortedYears.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        });
-
-        // Create Tag Buttons
-        const sortedTags = ['Featured', 'All', ...Object.keys(tagCounts).filter(t => t !== 'All' && t !== 'Featured').sort()];
-
-        sortedTags.forEach(tag => {
-            if (tagCounts[tag]) {
-                const count = tagCounts[tag];
-                const color = tagColors[tag] || '#6b7280';
-                const button = document.createElement('button');
-                button.className = 'tag-btn';
-                button.dataset.tag = tag;
-                button.innerHTML = `
-                    <span class="tag-color-dot" style="background-color: ${color};"></span>
-                    ${tag}
-                    <span class="tag-count">${count}</span>
-                `;
-                tagsContainer.appendChild(button);
-            }
-        });
-
-        // Set initial active state to "Featured" if it exists, otherwise "All"
-        const initialActiveTag = featuredCount > 0 ? 'Featured' : 'All';
-        tagsContainer.querySelector(`[data-tag="${initialActiveTag}"]`).classList.add('active');
-
-        updateView();
-    }
-
-    // --- 3. CORE FILTERING LOGIC ---
-    function updateView() {
-        const query = searchInput.value.toLowerCase().trim();
-        const year = yearFilter.value;
-        const activeTagBtn = tagsContainer.querySelector('.tag-btn.active');
-        const activeTag = activeTagBtn ? activeTagBtn.dataset.tag : 'All';
-
-        let visibleCount = 0;
-
-        allPublications.forEach(li => {
-            const pub = li.querySelector('.publication');
-            if (!pub) return;
-
-            const pubText = pub.textContent.toLowerCase();
-            const pubYear = pub.dataset.year;
-            const pubTag = pub.dataset.tag;
-            const isFeatured = pub.dataset.selected === 'true';
-
-            // Check conditions
-            const searchMatch = query === '' || pubText.includes(query);
-            const yearMatch = year === 'All' || pubYear === year;
-
-            let tagMatch = false;
-            if (activeTag === 'All') {
-                tagMatch = true;
-            } else if (activeTag === 'Featured') {
-                tagMatch = isFeatured;
-            } else {
-                tagMatch = pubTag === activeTag;
-            }
-
-            // Show or hide
-            if (searchMatch && yearMatch && tagMatch) {
-                li.style.display = '';
-                visibleCount++;
-            } else {
-                li.style.display = 'none';
-            }
-        });
-
-        // Update count display
-        let countText = `Showing ${visibleCount} of ${allPublications.length} publications`;
-        if (activeTag !== 'All') {
-            countText += ` (${activeTag})`;
         }
-        if(query) {
-             countText += ` matching "${query}"`;
-        }
-        pubCountDisplay.textContent = countText;
-    }
-
-    // --- 4. EVENT LISTENERS ---
-    tagsContainer.addEventListener('click', e => {
-        const targetBtn = e.target.closest('.tag-btn');
-        if (targetBtn) {
-            tagsContainer.querySelector('.tag-btn.active')?.classList.remove('active');
-            targetBtn.classList.add('active');
-            updateView();
-        }
-    });
-
-    searchInput.addEventListener('input', updateView);
-    yearFilter.addEventListener('change', updateView);
-
-    resetBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        yearFilter.value = 'All';
-        tagsContainer.querySelector('.tag-btn.active')?.classList.remove('active');
-        // Reset to "Featured"
-        tagsContainer.querySelector('[data-tag="Featured"]').classList.add('active');
-        updateView();
-    });
-
-    // --- EXTERNAL LINKS & COLLAPSIBLE SECTIONS (from original script) ---
-    document.querySelectorAll('a').forEach(link => {
-        if (link.href && link.hostname !== window.location.hostname && !link.href.startsWith('#') && !link.href.startsWith('javascript:')) {
-            link.setAttribute('target', '_blank');
-            link.setAttribute('rel', 'noopener noreferrer');
-        }
-    });
-
-    document.querySelectorAll('.collapsible-summary').forEach(summary => {
-        summary.addEventListener('click', function() {
-            const content = this.nextElementSibling;
-            const isOpen = content.style.display === 'block';
-            this.classList.toggle('open', !isOpen);
-            content.style.display = isOpen ? 'none' : 'block';
-        });
-    });
-
-    // --- NAVIGATION ACTIVE STATE (from original script) ---
-    const sections = document.querySelectorAll('section[id], header[id]');
-    const navLinks = document.querySelectorAll('.nav-links li a');
-    const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'));
-
-    function updateActiveNavState() {
-        let currentSectionId = '';
-        const scrollOffset = window.pageYOffset + navHeight + 30;
-
-        sections.forEach(section => {
-            if (section.offsetTop <= scrollOffset && (section.offsetTop + section.offsetHeight) > scrollOffset) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${currentSectionId}`);
-        });
-    }
-
-    window.addEventListener('scroll', updateActiveNavState, { passive: true });
-
-    // --- KICK IT OFF! ---
-    initialize();
-    updateActiveNavState(); // Set initial active nav link
-});
-</script>
-
+    </script>
 </body>
 </html>

@@ -81,7 +81,7 @@
                         'primary-blue-dark': '#004080',
                         'primary-red': '#dc2626',
                         'primary-red-light': '#ef4444',
-                        'text-gray': 'black',
+                        'text-gray': '#111827',
                         'text-gray-light': '#4b5563',
                         'text-gray-lighter': '#9ca3af',
                         'bg-light': '#f8fafc',
@@ -469,8 +469,8 @@
                                     <button @click="activeTab = 'publications'; selectedTag = 'All'" class="text-sm text-primary-blue hover:underline interactive-element flex-shrink-0 ml-4">View All →</button>
                                 </div>
                                 <div class="featured-publications-section hidden md:block mb-3 text-xs text-text-gray-light flex items-center space-x-4">
-                                    <span><sup class="text-text-gray font-bold">*</sup> Co-first author</span>
-                                    <span><sup class="text-text-gray font-bold">†</sup> Corresponding author</span>
+                                    <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
+                                    <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
                                 </div>
                             </div>
 
@@ -483,7 +483,7 @@
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h5 class="font-semibold text-text-gray text-sm mb-0.5 leading-tight" x-text="pub.title"></h5>
-                                                    <p class="text-xs text-text-gray-light mb-0.5" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
+                                                    <p class="text-xs text-text-gray mb-0.5" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
@@ -541,8 +541,8 @@
                                             </select>
                                         </div>
                                         <div class="text-xs text-text-gray-light space-x-3 lg:space-x-4 hidden sm:block">
-                                            <span><sup class="text-text-gray font-bold">*</sup> Co-first author</span>
-                                            <span><sup class="text-text-gray font-bold">†</sup> Corresponding author</span>
+                                            <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
+                                            <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-wrap gap-1.5">
@@ -563,8 +563,8 @@
                                     </div>
                                     <!-- Mobile legend -->
                                     <div class="text-xs text-text-gray-light space-x-3 mt-3 sm:hidden">
-                                        <span><sup class="text-text-gray font-bold">*</sup> Co-first author</span>
-                                        <span><sup class="text-text-gray font-bold">†</sup> Corresponding author</span>
+                                        <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
+                                        <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
                                     </div>
                                 </div>
                             </div>
@@ -575,7 +575,7 @@
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h4 class="font-semibold text-text-gray text-sm mb-0.5 leading-tight" x-text="pub.title"></h4>
-                                                    <p class="text-xs text-text-gray-light mb-0.5" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
+                                                    <p class="text-xs text-text-gray mb-0.5" x-html="formatAuthors(pub.authors, pub.firstAuthors, pub.correspondingAuthors)"></p>
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
@@ -689,7 +689,7 @@
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h4 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="project.title"></h4>
-                                                    <p class="text-xs text-text-gray-light mb-1" x-html="formatAuthors(project.authors)"></p>
+                                                    <p class="text-xs text-text-gray mb-1" x-html="formatAuthors(project.authors)"></p>
                                                     <p class="text-xs text-primary-blue italic mb-2" x-show="project.venue" x-text="project.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in project.links" :key="link.type">
@@ -1092,8 +1092,8 @@
                             formattedAuthor = trimmedAuthor;
                         }
 
-                        if (firstAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray font-bold">*</sup>';
-                        if (correspondingAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray font-bold">†</sup>';
+                        if (firstAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray-light font-bold">*</sup>';
+                        if (correspondingAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray-light font-bold">†</sup>';
 
                         return formattedAuthor;
                     }).join(', ');

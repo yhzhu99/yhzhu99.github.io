@@ -1132,7 +1132,7 @@
 
                 openServiceModal(title) {
                     let flatItems = [];
-                    if (title === 'Awards & Honors' || title === 'Invited Talks') {
+                    if (title === 'Awards & Honors' || title === 'Talks & Interviews') {
                         const source = title === 'Awards & Honors' ? this.awards : this.talks;
                         flatItems = [...source]
                             .sort((a, b) => b.year.localeCompare(a.year))

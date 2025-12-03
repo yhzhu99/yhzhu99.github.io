@@ -665,7 +665,7 @@
                                 <div>
                                     <div class="flex-shrink-0 flex items-center justify-between mb-2">
                                         <h3 class="text-lg font-bold text-text-gray pb-1 border-b-2 border-accent-gray">Invited Talks</h3>
-                                        <button @click="openServiceModal('Invited Talks')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                                        <button @click="openServiceModal('Talks and Interviews')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
                                     </div>
                                     <div class="space-y-1">
                                         <template x-for="talk in talks" :key="talk.id">
@@ -743,7 +743,7 @@
         <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
             <div class="flex flex-col md:flex-row justify-between items-center text-xs text-text-gray-light">
                 <p>© 2025 Yinghao Zhu (朱英豪). All rights reserved.</p>
-                <p>Last Updated: November 9, 2025</p>
+                <p>Last Updated: December 4, 2025</p>
             </div>
         </div>
     </footer>
@@ -879,6 +879,7 @@
                 },
 
                 newsItems: [
+                    { date: 'Dec. 2025', content: 'Our work was featured in <strong class="font-semibold text-primary-blue">IEEE Spectrum</strong>: "AI\'s Wrong Answers Are Bad. Its Wrong Reasoning Is Worse".' },
                     { date: 'Nov. 2025', content: 'Our paper, "Toward Better EHR Reasoning in LLMs", was accepted to <strong class="font-semibold text-primary-blue">AAAI 2026, Oral</strong>.' },
                     { date: 'Sep. 2025', content: 'Our multi-agent benchmark, MedAgentBoard, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
                     { date: 'Aug. 2025', content: 'Our autonomous agent for healthcare, HealthFlow, was released as a preprint.' },
@@ -980,6 +981,7 @@
                     { organization: "Peking University", position: "Research Assistant", location: "National Engineering Research Center for Software Engineering, Beijing, China", period: "2021.05 - 2023.08", details: "Advised by <a href='https://faculty.pku.edu.cn/wangyasha/en/index.htm' class='text-primary-blue hover:underline'>Prof. Yasha Wang</a>" }
                 ],
                 awards: [
+                    { title: "Avenir-HKU Web3.0 Quantitative Trading Challenge", organization: "1st Runner-up (12,000 USD Prize)", year: "2025", authors: 'Wenlong Wu, Ziyi He, Yinghao Zhu', links: [{ type: 'Website', url: 'https://www.avenir.hk/trading-challenge' }] },
                     { title: "Outstanding Graduate of Beijing", organization: "Beijing Municipal Education Commission", year: "2025" },
                     { title: "Detecting Active Tuberculosis Bacilli", organization: "Top 4 out of all teams, Nightingale Open Science and Wellgen Medical", year: "2024", authors: 'Yinghao Zhu, Junyi Gao, Liantao Ma' },
                     { title: "Bias Detection Tools for Clinical Decision Making Challenge", organization: "Third Place Prize, NIH/NCATS", year: "2023", authors: 'Yinghao Zhu, Jingkun An, Enshen Zhou, Hao Li, Haoran Feng', links: [{ type: 'Code', url: 'https://github.com/Anjingkun/NIH-Bias-Detection' }, { type: 'Project', url: 'https://yhzhu99.github.io/BeFair' }, { type: 'Video', url: 'https://expeditionhacks.com/bias-detection-healthcare/' }] },
@@ -990,6 +992,7 @@
                     { title: "\"Feng Ru Cup\" Competition of Academic and Technological Works", organization: "First Prize (Top 1%), Beihang University", year: "2021, 2022" }
                 ],
                 talks: [
+                    { year: "2025", title: "Interview for an IEEE Spectrum article on failure modes in medical multi-agent systems", venue: "IEEE Spectrum, 2025.11.12", links: [{ type: 'Article', url: 'https://spectrum.ieee.org/ai-reasoning-failures' }]},
                     { year: "2025", title: "Accelerating Medical Research with DeepSeek", venue: "Tibet Autonomous Region People's Hospital, 2025.06.14" },
                     { year: "2025", title: "Traceable and Reliable PubMed Literature Retrieval Based on DeepSeek", venue: "Department of Obstetrics, Beijing University Third Hospital & Beijing Tiantan Hospital, 2025.04.18, 2025.04.20" },
                     { year: "2025", title: "Building accessible and trustworthy clinical AI in the era of LLM", venue: "Department of Nephrology, Beijing University Third Hospital & Beijing University Cancer Hospital & Department of Obstetrics, Beijing University Third Hospital, 2025.02.19,20,21" },
@@ -999,7 +1002,7 @@
                     { year: "2022", title: "Invited talk for the High Risk Breast Cancer Prediction Challenge", venue: "Machine Learning for Health (ML4H), 2022.11.28", links: [{ type: 'Video', url: 'https://ml4health.github.io/2022' }] }
                 ],
                 services: [
-                    { title: "Reviewer", items: [{ year: "2026", content: "CHI Conference" }, { year: "2026", content: "AAAI Conference" }, { year: "2026", content: "MIDL Conference" }, { year: "2025, 2026", content: "ICLR Conference" }, { year: "2025, 2026", content: "AISTATS Conference" }, { year: "2025, 2026", content: "ICASSP Conference" }, { year: "2025", content: "NeurIPS ER & SEA Workshop" }, { year: "2025", content: "ICML Conference" }, { year: "2025", content: "ICML FMSD & MAS Workshop" }, { year: "2025", content: "ACMMM Conference" }, { year: "2025", content: "CVPR SynData4CV Workshop" }, { year: "2025", content: "TheWebConf (WWW) Conference" }, { year: "2025", content: "CHIL Conference" }, { year: "2025", content: "IJCNN Conference" }, { year: "2025", content: "ICCV CVAMD & MMRAgI Workshop" }, { year: "2025", content: "AMIA Informatics Summit" }, { year: "2025", content: "BMC Artificial Intelligence" }, { year: "2025", content: "ACM Transactions on Knowledge Discovery from Data (TKDD)" }, { year: "2025", content: "PeerJ Computer Science" }, { year: "2024, 2025", content: "NeurIPS Main Track" }, { year: "2024, 2025", content: "KDD Research Track" }, { year: "2024, 2025", content: "AMIA Clinical Informatics Conference" }, { year: "2024", content: "NeurIPS TSALM & OWA & FM4Science Workshop" }, { year: "2024", content: "KDD AIDSH Workshop" }, { year: "2024", content: "ML4H Conference" }, { year: "2023, 2024, 2025", content: "NeurIPS Datasets and Benchmarks Track" }, { year: "2023, 2024, 2025", content: "AMIA Annual Symposium" }, { year: "2023", content: "Journal of Data-centric Machine Learning Research (DMLR)" }] },
+                    { title: "Reviewer", items: [{ year: "2026", content: "CHI Conference" }, { year: "2026", content: "AAAI Conference" }, { year: "2026", content: "MIDL Conference" }, { year: "2025, 2026", content: "ICLR Conference" }, { year: "2025, 2026", content: "AISTATS Conference" }, { year: "2025, 2026", content: "ICASSP Conference" }, { year: "2025", content: "NeurIPS ER & SEA Workshop" }, { year: "2025", content: "ICML Conference" }, { year: "2025", content: "ICML FMSD & MAS Workshop" }, { year: "2025", content: "ACMMM Conference" }, { year: "2025", content: "CVPR SynData4CV Workshop" }, { year: "2025", content: "TheWebConf (WWW) Conference" }, { year: "2025", content: "CHIL Conference" }, { year: "2025", content: "IJCNN Conference" }, { year: "2025", content: "ICCV CVAMD & MMRAgI Workshop" }, { year: "2025", content: "AMIA Informatics Summit" }, { year: "2025", content: "BMC Artificial Intelligence" }, { year: "2025", content: "ACM Transactions on Knowledge Discovery from Data (TKDD)" }, { year: "2025", content: "PeerJ Computer Science" }, { year: "2024, 2025", content: "NeurIPS Main Track" }, { year: "2024, 2025", content: "KDD Research Track" }, { year: "2024, 2025", content: "AMIA Clinical Informatics Conference" }, { year: "2024", content: "NeurIPS TSALM & OWA & FM4Science Workshop" }, { year: "2024", content: "KDD AIDSH Workshop" }, { year: "2024", content: "ML4H Conference" }, { year: "2023, 2024, 2025", content: "NeurIPS Datasets and Benchmarks Track" }, { year: "2026", content: "AMIA Amplify Informatics Conference" }, { year: "2023, 2024, 2025", content: "AMIA Annual Symposium" }, { year: "2023", content: "Journal of Data-centric Machine Learning Research (DMLR)" }] },
                     { title: "Operational Committee", items: [{ year: "2025.12.15", content: "BIBM 2025 Workshop on Advancing Data for Better Health" }] },
                     { title: "Volunteer", items: [{ year: "2025.04.27", content: "ICLR 2025 Workshop on AI for Children" }] },
                     { title: "Teaching Assistant", items: [{ year: "Fall 2025", content: "Statistical Machine Learning" }, { year: "Spring 2023", content: "Fundamentals of Programming and Computer Science" }, { year: "Spring, Fall 2022", content: "Design and Analysis of Algorithms" }, { year: "Fall 2021", content: "Operating System" }, { year: "Fall 2021", content: "Network Storage" }, { year: "Spring 2021", content: "System Programming" }, { year: "Spring, Fall 2020, Spring 2021", content: "Discrete Mathematics" }] }

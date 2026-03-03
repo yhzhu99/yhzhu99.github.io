@@ -284,7 +284,7 @@
 
         @media (max-height: 700px) {
             :root {
-                --header-height: px;
+                --header-height: 45px;
                 --footer-height: 25px;
             }
         }
@@ -392,7 +392,9 @@
                     </div>
                     <!-- Quick Links -->
                     <div class="academic-card rounded-lg p-3 interactive-element flex-shrink-0">
-                        <h3 class="font-bold text-text-gray mb-2 pb-2 border-b border-primary-blue/20 text-sm">Quick Links</h3>
+                        <div class="mb-2 pb-2 border-b border-primary-blue/20">
+                            <h3 class="font-bold text-text-gray text-sm">Quick Links</h3>
+                        </div>
                         <div class="grid grid-cols-2 gap-1 text-xs">
                             <template x-for="link in quickLinks" :key="link.id">
                                 <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
@@ -401,7 +403,10 @@
                     </div>
                     <!-- News -->
                     <div class="academic-card rounded-lg p-3 interactive-element flex-1 flex flex-col min-h-0">
-                        <h3 class="font-bold text-text-gray mb-2 pb-2 border-b border-primary-blue/20 text-sm flex-shrink-0">Recent News</h3>
+                        <div class="flex items-center justify-between mb-2 pb-2 border-b border-primary-blue/20 flex-shrink-0">
+                            <h3 class="font-bold text-text-gray text-sm">Recent News</h3>
+                            <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                        </div>
                         <div class="flex-1 overflow-y-auto scrollable-container pr-1 space-y-1 min-h-0">
                             <template x-for="item in newsItems.slice(0, 10)" :key="item.id">
                                 <div class="unified-item">
@@ -412,7 +417,6 @@
                                 </div>
                             </template>
                         </div>
-                        <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline mt-3 block interactive-element flex-shrink-0">View All →</button>
                     </div>
                 </aside>
 
@@ -439,7 +443,10 @@
                                     </template>
                                 </div>
                                 <div class="mb-6">
-                                    <h3 class="font-bold text-text-gray mb-3 text-sm">Recent News</h3>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="font-bold text-text-gray text-sm">Recent News</h3>
+                                        <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
+                                    </div>
                                     <div class="space-y-1">
                                         <template x-for="item in newsItems.slice(0, 3)" :key="item.id">
                                             <div class="unified-item">
@@ -450,7 +457,6 @@
                                             </div>
                                         </template>
                                     </div>
-                                    <button @click="showNewsModal = true" class="text-xs text-primary-blue hover:underline mt-2 interactive-element">View All News →</button>
                                 </div>
                             </div>
 
@@ -472,9 +478,9 @@
                                 <!-- Featured Publications Header - Responsive -->
                                 <div class="featured-publications-section hidden md:flex items-center justify-between mb-1">
                                     <h4 class="text-lg font-bold text-text-gray">Featured Publications</h4>
-                                    <button @click="activeTab = 'publications'; selectedTag = 'All'" class="text-sm text-primary-blue hover:underline interactive-element flex-shrink-0 ml-4">View All →</button>
+                                    <button @click="activeTab = 'publications'; selectedTag = 'All'" class="text-xs text-primary-blue hover:underline interactive-element flex-shrink-0 ml-4">View All</button>
                                 </div>
-                                <div class="featured-publications-section hidden md:block mb-3 text-xs text-text-gray-light flex items-center space-x-4">
+                                <div class="featured-publications-section hidden md:flex mb-3 text-xs text-text-gray-light items-center space-x-4">
                                     <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
                                     <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
                                 </div>

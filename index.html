@@ -126,6 +126,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
         }
         .academic-grid {
@@ -273,6 +274,7 @@
         /* Main container height - responsive based on viewport height */
         .main-container {
             height: calc(100vh - var(--header-height, 50px));
+            height: calc(100dvh - var(--header-height, 50px));
             min-height: 400px;
         }
 
@@ -295,7 +297,7 @@
         }
 
         /* Responsive design for compact viewports (e.g., mobile, portrait tablets, short windows) */
-        @media (max-width: 1023px) or (max-height: 599px) {
+        @media (max-width: 1023px), (max-height: 599px) {
             /* Hide Featured Publications on About page for small/short screens */
             .featured-publications-section {
                 display: none !important;

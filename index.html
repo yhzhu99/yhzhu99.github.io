@@ -175,18 +175,12 @@
             box-shadow: 0 0 0 2px #64748b;
         }
         /* Hide internal scrollbars while keeping scroll behavior */
-        .scrollable-container {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .scrollable-container::-webkit-scrollbar {
-            display: none;
-        }
-        /* Hide scrollbars but keep functionality */
+        .scrollable-container,
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        .scrollable-container::-webkit-scrollbar,
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }

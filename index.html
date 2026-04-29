@@ -327,7 +327,7 @@
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm flex-shrink-0 transition-all duration-300">
         <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity" @click="activeTab = 'about'">
+                <div class="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-blue/30 rounded-sm" role="button" tabindex="0" aria-label="Show About section" @click="activeTab = 'about'" @keydown.enter.prevent="activeTab = 'about'" @keydown.space.prevent="activeTab = 'about'">
                     <div class="w-1 h-6 bg-primary-blue"></div>
                     <h1 class="text-lg md:text-xl font-bold text-text-gray">Yinghao Zhu</h1>
                     <span class="text-text-gray-light text-xl">朱英豪</span>
@@ -337,9 +337,10 @@
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center gap-1 text-sm font-medium bg-gray-100/50 p-1 rounded-full border border-gray-200/50">
                     <template x-for="tab in tabs" :key="tab.id">
-                         <button @click="activeTab = tab.id"
+                         <button type="button" @click="activeTab = tab.id"
                                 :class="activeTab === tab.id ? 'bg-white text-primary-blue shadow-sm ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'"
                                 class="px-4 py-1.5 rounded-full transition-all duration-300 ease-out"
+                                :aria-current="activeTab === tab.id ? 'page' : null"
                                 x-text="tab.name">
                         </button>
                     </template>
@@ -347,21 +348,22 @@
 
                 <!-- Mobile Navigation -->
                 <div class="md:hidden" x-data="{ showMobileNav: false }">
-                    <button @click="showMobileNav = !showMobileNav" class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition-colors">
+                    <button type="button" @click="showMobileNav = !showMobileNav" class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition-colors" aria-label="Toggle navigation menu" aria-controls="mobile-navigation" :aria-expanded="showMobileNav.toString()">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="!showMobileNav" d="M4 6h16M4 12h16M4 18h16"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="showMobileNav" d="M6 18L18 6M6 6l12 12" style="display: none;"></path>
                         </svg>
                     </button>
-                    <div x-show="showMobileNav"
+                    <div id="mobile-navigation" x-show="showMobileNav"
                          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0"
                          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2"
                          @click.away="showMobileNav = false"
                          class="absolute right-4 top-16 w-48 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-100 py-2 z-50" style="display: none;">
                         <template x-for="tab in tabs" :key="tab.id">
-                            <button @click="activeTab = tab.id; showMobileNav = false"
+                            <button type="button" @click="activeTab = tab.id; showMobileNav = false"
                                    :class="activeTab === tab.id ? 'text-primary-blue bg-primary-blue/5 font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
                                    class="w-full text-left px-4 py-2.5 text-sm transition-colors first:rounded-t-xl last:rounded-b-xl"
+                                   :aria-current="activeTab === tab.id ? 'page' : null"
                                    x-text="tab.name">
                             </button>
                         </template>
@@ -402,7 +404,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-1 text-xs">
                             <template x-for="link in quickLinks" :key="link.id">
-                                <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
+                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
                             </template>
                         </div>
                     </div>
@@ -444,7 +446,7 @@
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mb-4">
                                     <template x-for="link in quickLinks" :key="link.id">
-                                        <a :href="link.url" target="_blank" class="p-2 bg-bg-light hover:bg-primary-blue/10 rounded text-center border border-primary-blue/15 text-xs transition-colors interactive-element" x-text="link.name"></a>
+                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-bg-light hover:bg-primary-blue/10 rounded text-center border border-primary-blue/15 text-xs transition-colors interactive-element" x-text="link.name"></a>
                                     </template>
                                 </div>
                                 <div class="mb-6">
@@ -504,7 +506,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -596,7 +598,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -709,7 +711,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-2" x-show="project.venue" x-text="project.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in project.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -884,13 +886,13 @@
                 },
 
                 newsItems: [
-                    { date: '2026.03', content: 'Our paper, "<a href="https://arxiv.org/abs/2407.18525" target="_blank" class="text-primary-blue hover:underline">ClinicRealm</a>", was accepted to <strong class="font-semibold text-primary-blue">npj Digital Medicine</strong>.' },
-                    { date: '2026.01', content: 'Our paper, "<a href="https://arxiv.org/abs/2602.00726" target="_blank" class="text-primary-blue hover:underline">Augmenting Clinical Decision-Making with an Interactive and Interpretable AI Copilot</a>", was accepted to <strong class="font-semibold text-primary-blue">CHI 2026</strong>.' },
-                    { date: '2025.12', content: 'Our work was featured in <a href="https://spectrum.ieee.org/ai-reasoning-failures" target="_blank" class="font-semibold text-primary-blue hover:underline">IEEE Spectrum</a>: "AI\'s Wrong Answers Are Bad. Its Wrong Reasoning Is Worse".' },
-                    { date: '2025.11', content: 'Our paper, "<a href="https://arxiv.org/abs/2508.13579" target="_blank" class="text-primary-blue hover:underline">Toward Better EHR Reasoning in LLMs</a>", was accepted to <strong class="font-semibold text-primary-blue">AAAI 2026, Oral</strong>.' },
-                    { date: '2025.09', content: 'Our multi-agent benchmark, <a href="https://arxiv.org/abs/2505.12371" target="_blank" class="text-primary-blue hover:underline">MedAgentBoard</a>, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
-                    { date: '2025.07', content: '<a href="https://xiaobeihealth.pku.edu.cn/xiaoya/" target="_blank" class="text-primary-blue hover:underline">小雅医生 (AICare)</a> was featured on the <a href="https://mp.weixin.qq.com/s/l34ELxfwkB_QDv_HxfaemA" target="_blank" class="font-semibold text-primary-blue hover:underline">Peking University official WeChat account</a> as part of the Xplore "clinical medicine + X" AI platform launch.' },
-                    { date: '2025.01', content: 'Our agent collaboration paper, <a href="https://dl.acm.org/doi/10.1145/3696410.3714877" target="_blank" class="text-primary-blue hover:underline">ColaCare</a>, was accepted to <strong class="font-semibold text-primary-blue">WWW 2025</strong>.' },
+                    { date: '2026.03', content: 'Our paper, "<a href="https://arxiv.org/abs/2407.18525" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">ClinicRealm</a>", was accepted to <strong class="font-semibold text-primary-blue">npj Digital Medicine</strong>.' },
+                    { date: '2026.01', content: 'Our paper, "<a href="https://arxiv.org/abs/2602.00726" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">Augmenting Clinical Decision-Making with an Interactive and Interpretable AI Copilot</a>", was accepted to <strong class="font-semibold text-primary-blue">CHI 2026</strong>.' },
+                    { date: '2025.12', content: 'Our work was featured in <a href="https://spectrum.ieee.org/ai-reasoning-failures" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary-blue hover:underline">IEEE Spectrum</a>: "AI\'s Wrong Answers Are Bad. Its Wrong Reasoning Is Worse".' },
+                    { date: '2025.11', content: 'Our paper, "<a href="https://arxiv.org/abs/2508.13579" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">Toward Better EHR Reasoning in LLMs</a>", was accepted to <strong class="font-semibold text-primary-blue">AAAI 2026, Oral</strong>.' },
+                    { date: '2025.09', content: 'Our multi-agent benchmark, <a href="https://arxiv.org/abs/2505.12371" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">MedAgentBoard</a>, was accepted to the <strong class="font-semibold text-primary-blue">NeurIPS 2025 Datasets and Benchmarks Track</strong>.' },
+                    { date: '2025.07', content: '<a href="https://xiaobeihealth.pku.edu.cn/xiaoya/" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">小雅医生 (AICare)</a> was featured on the <a href="https://mp.weixin.qq.com/s/l34ELxfwkB_QDv_HxfaemA" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary-blue hover:underline">Peking University official WeChat account</a> as part of the Xplore "clinical medicine + X" AI platform launch.' },
+                    { date: '2025.01', content: 'Our agent collaboration paper, <a href="https://dl.acm.org/doi/10.1145/3696410.3714877" target="_blank" rel="noopener noreferrer" class="text-primary-blue hover:underline">ColaCare</a>, was accepted to <strong class="font-semibold text-primary-blue">WWW 2025</strong>.' },
                 ],
 
                 quickLinks: [
@@ -1143,7 +1145,7 @@
                     }
                     if (item.links && item.links.length > 0) {
                         const linksHtml = item.links.map(link =>
-                            `<a href="${link.url}" target="_blank" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
+                            `<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="inline-block px-2 py-0.5 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200">${link.type}</a>`
                         ).join(' ');
                         content += `<div class="mt-2 flex flex-wrap gap-1.5">${linksHtml}</div>`;
                     }

@@ -173,24 +173,13 @@
             background: #64748b;
             box-shadow: 0 0 0 2px #64748b;
         }
-        /* Enhanced scrollbar styles */
+        /* Hide internal scrollbars while keeping scroll behavior */
         .scrollable-container {
-            scrollbar-width: thin;
-            scrollbar-color: #d1d5db transparent;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .scrollable-container::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .scrollable-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .scrollable-container::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 3px;
-        }
-        .scrollable-container::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+            display: none;
         }
         /* Hide scrollbars but keep functionality */
         .no-scrollbar {

@@ -1110,6 +1110,7 @@
                     const authors = authorString.split(/,\s*/);
                     const firstAuthors = firstAuthorsStr ? firstAuthorsStr.split(',').map(s => s.trim()) : [];
                     const correspondingAuthors = correspondingAuthorsStr ? correspondingAuthorsStr.split(',').map(s => s.trim()) : [];
+                    const hasCoFirstAuthors = firstAuthors.length > 1;
 
                     return authors.map(author => {
                         const trimmedAuthor = author.trim();
@@ -1123,7 +1124,7 @@
                             formattedAuthor = trimmedAuthor;
                         }
 
-                        if (firstAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray-light font-bold">*</sup>';
+                        if (hasCoFirstAuthors && firstAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray-light font-bold">*</sup>';
                         if (correspondingAuthors.includes(trimmedAuthor)) formattedAuthor += '<sup class="text-text-gray-light font-bold">†</sup>';
 
                         return formattedAuthor;

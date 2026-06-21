@@ -13,9 +13,7 @@ const DATA = {
   affiliation: PROFILE.affiliation || "The University of Hong Kong",
   school: PROFILE.school || "School of Computing and Data Science",
   email: PROFILE.email || "yhzhu99@gmail.com",
-  photo:
-    PROFILE.photo ||
-    "https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png",
+  photo: PROFILE.photo || "/assets/profile-photo.jpg",
   bio: PROFILE.bio || "",
   interests: PROFILE.interests || [],
   workspace: PROFILE.workspace || {},

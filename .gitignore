@@ -1,6 +1,8 @@
 node_modules/
 dist/
 assets/
+!public/assets/
+!public/assets/**
 test-results/
 .tmp-check/
 assets/workspace.jpg

@@ -34,25 +34,25 @@ defineProps<{
         <div
           class="interactive-element rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
         >
-          <div class="mb-2 flex items-start justify-between gap-3">
-            <div class="min-w-0 flex-1">
-              <h4 class="text-sm font-semibold text-text-gray">
+          <div>
+            <div class="flex items-start justify-between gap-3">
+              <h4 class="min-w-0 flex-1 text-sm font-semibold text-text-gray">
                 {{
                   kind === "education" ? item.institution : item.organization
                 }}
               </h4>
-              <p class="text-xs text-primary-blue">
-                {{ kind === "education" ? item.degree : item.position }}
-              </p>
-              <p class="text-xs text-text-gray-light">
-                {{ item.location }}
-              </p>
+              <span class="time-tag">{{ item.period }}</span>
             </div>
-            <span class="time-tag">{{ item.period }}</span>
+            <p class="mt-0.5 text-xs text-primary-blue">
+              {{ kind === "education" ? item.degree : item.position }}
+            </p>
+            <p class="text-xs text-text-gray-light">
+              {{ item.location }}
+            </p>
           </div>
           <p
             v-if="item.details"
-            class="text-xs text-text-gray-light"
+            class="mt-1 text-xs text-text-gray-light"
             v-html="item.details"
           />
         </div>

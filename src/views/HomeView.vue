@@ -88,9 +88,13 @@ const showMobileNav = ref(false);
 const showNewsModal = ref(false);
 const selectedService = ref<ServiceModalState | null>(null);
 const desktopNav = ref<HTMLElement | null>(null);
+const filterPanelContent = ref<HTMLElement | null>(null);
+const filterAnimating = ref(false);
 const navIndicatorStyle = ref("");
 const navIndicatorReady = ref(false);
 let resizeObserver: ResizeObserver | null = null;
+let filterAnimationFrame = 0;
+let filterAnimationTimeout = 0;
 
 const featuredPublications = computed(() =>
   publications.filter((publication) => publication.featured),
@@ -161,6 +165,18 @@ const filteredPublications = computed(() => {
   });
 });
 
+const activePublicationFilterLabel = computed(() => {
+  if (selectedTag.value === "") {
+    return "Featured";
+  }
+
+  if (selectedTag.value === "All") {
+    return "All";
+  }
+
+  return selectedTag.value;
+});
+
 function selectTab(tabId: TabId) {
   activeTab.value = tabId;
   showMobileNav.value = false;
@@ -168,7 +184,44 @@ function selectTab(tabId: TabId) {
 }
 
 function selectPublicationTag(tag: string) {
-  selectedTag.value = selectedTag.value === tag ? "" : tag;
+  selectedTag.value = selectedTag.value === tag ? "All" : tag;
+}
+
+function setFilterExpanded(expanded: boolean) {
+  if (filterExpanded.value === expanded) {
+    return;
+  }
+
+  const panel = filterPanelContent.value;
+
+  if (!panel) {
+    filterExpanded.value = expanded;
+    return;
+  }
+
+  const startHeight = panel.offsetHeight;
+  panel.style.height = `${startHeight}px`;
+  panel.style.overflow = "hidden";
+  filterAnimating.value = true;
+  filterExpanded.value = expanded;
+
+  nextTick(() => {
+    const targetHeight =
+      panel.firstElementChild?.getBoundingClientRect().height ??
+      panel.scrollHeight;
+    cancelAnimationFrame(filterAnimationFrame);
+    window.clearTimeout(filterAnimationTimeout);
+
+    filterAnimationFrame = requestAnimationFrame(() => {
+      panel.style.height = `${targetHeight}px`;
+    });
+
+    filterAnimationTimeout = window.setTimeout(() => {
+      panel.style.height = "";
+      panel.style.overflow = "";
+      filterAnimating.value = false;
+    }, 280);
+  });
 }
 
 function openAllPublications() {
@@ -299,6 +352,8 @@ onBeforeUnmount(() => {
   window.removeEventListener("keydown", handleKeydown);
   window.removeEventListener("resize", updateNavIndicator);
   resizeObserver?.disconnect();
+  cancelAnimationFrame(filterAnimationFrame);
+  window.clearTimeout(filterAnimationTimeout);
 });
 
 watch(activeTab, () => {
@@ -330,6 +385,14 @@ watch(activeTab, () => {
             >
               Yinghao Zhu
             </span>
+            <span class="hidden text-xl text-text-gray-light sm:inline"
+              >朱英豪</span
+            >
+            <img
+              src="/assets/hku-logo.jpg"
+              alt="HKU Logo"
+              class="h-9 w-auto opacity-80 transition-opacity hover:opacity-100"
+            />
           </button>
 
           <nav
@@ -431,39 +494,46 @@ watch(activeTab, () => {
               class="academic-card interactive-element flex-shrink-0 rounded-lg p-4"
             >
               <div class="space-y-3">
-                <div>
-                  <h2 class="text-lg font-bold tracking-tight text-text-gray">
-                    {{ profile.name }}
-                  </h2>
-                  <a
-                    :href="`mailto:${profile.email}`"
-                    class="mt-1.5 flex items-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue"
-                  >
-                    <svg
-                      class="h-3.5 w-3.5 flex-shrink-0"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <h2 class="text-lg font-bold tracking-tight text-text-gray">
+                      {{ profile.name }}
+                    </h2>
+                    <a
+                      :href="`mailto:${profile.email}`"
+                      class="profile-contact mt-1.5 flex items-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue"
                     >
-                      <path
-                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
-                      />
-                      <path
-                        d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
-                      />
-                    </svg>
-                    <span>{{ profile.email }}</span>
-                  </a>
-                  <p class="mt-1 text-xs font-medium text-text-gray-light">
-                    {{ profile.affiliation }}
-                  </p>
+                      <svg
+                        class="h-3.5 w-3.5 flex-shrink-0"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
+                        />
+                        <path
+                          d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
+                        />
+                      </svg>
+                      <span>{{ profile.email }}</span>
+                    </a>
+                    <p class="mt-1 text-xs font-medium text-text-gray-light">
+                      {{ profile.affiliation }}
+                    </p>
+                  </div>
+                  <img
+                    :src="profile.photo"
+                    :alt="profile.name"
+                    class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover"
+                  />
                 </div>
                 <RouterLink
                   to="/world"
                   class="interactive-element flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
-                  aria-label="Open 3D world"
+                  aria-label="Open 3D workspace"
                 >
-                  <span>3D World</span>
+                  <span>3D Workspace</span>
                   <svg
                     class="h-3.5 w-3.5"
                     viewBox="0 0 24 24"
@@ -539,37 +609,48 @@ watch(activeTab, () => {
                 <div
                   class="mb-4 rounded-lg border border-slate-200 bg-white p-4"
                 >
-                  <h2 class="text-xl font-bold tracking-tight text-text-gray">
-                    {{ profile.name }}
-                  </h2>
-                  <a
-                    :href="`mailto:${profile.email}`"
-                    class="mt-2 flex items-center gap-2 text-sm text-text-gray-light transition-colors hover:text-primary-blue"
-                  >
-                    <svg
-                      class="h-4 w-4 flex-shrink-0"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
-                      />
-                      <path
-                        d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
-                      />
-                    </svg>
-                    <span>{{ profile.email }}</span>
-                  </a>
-                  <p class="mt-1 text-sm font-medium text-text-gray-light">
-                    {{ profile.affiliation }}
-                  </p>
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                      <h2
+                        class="text-xl font-bold tracking-tight text-text-gray"
+                      >
+                        {{ profile.name }}
+                      </h2>
+                      <a
+                        :href="`mailto:${profile.email}`"
+                        class="profile-contact mt-2 flex items-center gap-2 text-sm text-text-gray-light transition-colors hover:text-primary-blue"
+                      >
+                        <svg
+                          class="h-4 w-4 flex-shrink-0"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
+                          />
+                          <path
+                            d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
+                          />
+                        </svg>
+                        <span>{{ profile.email }}</span>
+                      </a>
+                      <p class="mt-1 text-sm font-medium text-text-gray-light">
+                        {{ profile.affiliation }}
+                      </p>
+                    </div>
+                    <img
+                      :src="profile.photo"
+                      :alt="profile.name"
+                      class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover"
+                    />
+                  </div>
                   <RouterLink
                     to="/world"
                     class="interactive-element mt-3 flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
-                    aria-label="Open 3D world"
+                    aria-label="Open 3D workspace"
                   >
-                    <span>3D World</span>
+                    <span>3D Workspace</span>
                     <svg
                       class="h-4 w-4"
                       viewBox="0 0 24 24"
@@ -618,7 +699,7 @@ watch(activeTab, () => {
 
               <div class="prose prose-sm max-w-none flex-shrink-0">
                 <p
-                  class="bio mb-4 leading-[1.55] text-text-gray"
+                  class="bio mb-4 leading-[1.5] text-text-gray"
                   v-html="profile.bio"
                 />
                 <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -701,134 +782,188 @@ watch(activeTab, () => {
                   <div
                     class="filter-panel rounded-lg border border-slate-200/80 bg-slate-50/70 p-3"
                   >
-                    <div class="flex flex-wrap items-start gap-3">
-                      <div
-                        class="grid min-w-[min(100%,28rem)] flex-1 grid-cols-1 gap-2 sm:grid-cols-[minmax(12rem,1fr)_auto]"
-                      >
-                        <input
-                          v-model="searchQuery"
-                          type="text"
-                          placeholder="Search publications..."
-                          class="filter-control min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
-                        />
-                        <select
-                          v-model="selectedYear"
-                          class="filter-control rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
-                        >
-                          <option value="">All Years</option>
-                          <option
-                            v-for="year in availableYears"
-                            :key="year"
-                            :value="year"
-                          >
-                            {{ year }}
-                          </option>
-                        </select>
-                      </div>
-                      <div
-                        class="hidden shrink-0 pt-2 text-xs text-text-gray-light sm:flex sm:items-center sm:gap-4"
-                      >
-                        <span
-                          ><sup class="font-bold">*</sup> Co-first author</span
-                        >
-                        <span
-                          ><sup class="font-bold">†</sup> Corresponding
-                          author</span
-                        >
-                      </div>
-                    </div>
-
                     <div
-                      v-show="filterExpanded"
-                      class="mt-3 flex flex-wrap gap-1.5"
+                      ref="filterPanelContent"
+                      class="filter-panel-content"
+                      :class="{
+                        'filter-panel-content-animating': filterAnimating,
+                      }"
                     >
-                      <button
-                        type="button"
-                        class="publication-filter-tab"
-                        :class="
-                          selectedTag === ''
-                            ? 'bg-primary-blue text-white'
-                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
-                        "
-                        @click="selectedTag = ''"
-                      >
-                        Featured
-                        <span class="publication-filter-tab-count"
-                          >({{ featuredPublications.length }})</span
-                        >
-                      </button>
-                      <button
-                        type="button"
-                        class="publication-filter-tab"
-                        :class="
-                          selectedTag === 'All'
-                            ? 'bg-primary-blue text-white'
-                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
-                        "
-                        @click="selectedTag = 'All'"
-                      >
-                        All
-                        <span class="publication-filter-tab-count"
-                          >({{ publications.length }})</span
-                        >
-                      </button>
-                      <button
-                        v-for="tag in publicationTags"
-                        :key="tag.name"
-                        type="button"
-                        class="publication-filter-tab"
-                        :class="
-                          selectedTag === tag.name
-                            ? 'bg-primary-blue text-white'
-                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
-                        "
-                        @click="selectPublicationTag(tag.name)"
-                      >
-                        {{ tag.name }}
-                        <span class="publication-filter-tab-count"
-                          >({{ tag.count }})</span
-                        >
-                      </button>
-                    </div>
-
-                    <div class="mt-2 flex items-center justify-between gap-3">
                       <div
-                        class="text-xs text-text-gray-light sm:hidden"
-                        :class="{ invisible: !filterExpanded }"
+                        v-if="!filterExpanded"
+                        key="filter-collapsed"
+                        class="filter-panel-state flex flex-wrap items-center gap-2"
                       >
+                        <span class="filter-summary-chip-primary">
+                          {{ activePublicationFilterLabel }}
+                        </span>
+                        <span v-if="selectedYear" class="filter-summary-chip">
+                          {{ selectedYear }}
+                        </span>
                         <span
-                          ><sup class="font-bold">*</sup> Co-first author</span
+                          v-if="searchQuery"
+                          class="filter-summary-chip max-w-[18rem] truncate"
                         >
-                        <span
-                          ><sup class="font-bold">†</sup> Corresponding
-                          author</span
+                          {{ searchQuery }}
+                        </span>
+                        <button
+                          type="button"
+                          class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-primary-blue/15 bg-white px-3 py-1.5 text-xs font-medium text-text-gray-light shadow-soft hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                          aria-expanded="false"
+                          @click="setFilterExpanded(true)"
                         >
-                      </div>
-                      <button
-                        type="button"
-                        class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:text-primary-blue-dark"
-                        :aria-expanded="filterExpanded"
-                        @click="filterExpanded = !filterExpanded"
-                      >
-                        <span>{{
-                          filterExpanded ? "Hide filters" : "Show filters"
-                        }}</span>
-                        <svg
-                          class="h-3.5 w-3.5 transition-transform"
-                          :class="{ 'rotate-180': filterExpanded }"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          <path
+                          <svg
+                            class="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
+                            aria-hidden="true"
+                          >
+                            <path d="M4 21v-7" />
+                            <path d="M4 10V3" />
+                            <path d="M12 21v-9" />
+                            <path d="M12 8V3" />
+                            <path d="M20 21v-5" />
+                            <path d="M20 12V3" />
+                            <path d="M2 14h4" />
+                            <path d="M10 8h4" />
+                            <path d="M18 16h4" />
+                          </svg>
+                          <span>Filters</span>
+                        </button>
+                      </div>
+
+                      <div
+                        v-else
+                        key="filter-expanded"
+                        class="filter-panel-state"
+                      >
+                        <div class="flex flex-wrap items-start gap-3">
+                          <div
+                            class="grid min-w-[min(100%,28rem)] flex-1 grid-cols-1 gap-2 sm:grid-cols-[minmax(12rem,1fr)_auto]"
+                          >
+                            <input
+                              v-model="searchQuery"
+                              type="text"
+                              placeholder="Search publications..."
+                              class="filter-control min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                            />
+                            <select
+                              v-model="selectedYear"
+                              class="filter-control rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                            >
+                              <option value="">All Years</option>
+                              <option
+                                v-for="year in availableYears"
+                                :key="year"
+                                :value="year"
+                              >
+                                {{ year }}
+                              </option>
+                            </select>
+                          </div>
+                          <div
+                            class="hidden shrink-0 pt-2 text-xs text-text-gray-light sm:flex sm:items-center sm:gap-4"
+                          >
+                            <span
+                              ><sup class="font-bold">*</sup> Co-first
+                              author</span
+                            >
+                            <span
+                              ><sup class="font-bold">†</sup> Corresponding
+                              author</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                          <button
+                            type="button"
+                            class="publication-filter-tab"
+                            :class="
+                              selectedTag === ''
+                                ? 'bg-primary-blue text-white'
+                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                            "
+                            @click="selectedTag = ''"
+                          >
+                            Featured
+                            <span class="publication-filter-tab-count"
+                              >({{ featuredPublications.length }})</span
+                            >
+                          </button>
+                          <button
+                            type="button"
+                            class="publication-filter-tab"
+                            :class="
+                              selectedTag === 'All'
+                                ? 'bg-primary-blue text-white'
+                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                            "
+                            @click="selectedTag = 'All'"
+                          >
+                            All
+                            <span class="publication-filter-tab-count"
+                              >({{ publications.length }})</span
+                            >
+                          </button>
+                          <button
+                            v-for="tag in publicationTags"
+                            :key="tag.name"
+                            type="button"
+                            class="publication-filter-tab"
+                            :class="
+                              selectedTag === tag.name
+                                ? 'bg-primary-blue text-white'
+                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                            "
+                            @click="selectPublicationTag(tag.name)"
+                          >
+                            {{ tag.name }}
+                            <span class="publication-filter-tab-count"
+                              >({{ tag.count }})</span
+                            >
+                          </button>
+                          <button
+                            type="button"
+                            class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                            aria-expanded="true"
+                            @click="setFilterExpanded(false)"
+                          >
+                            <svg
+                              class="h-3.5 w-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                            <span>Hide</span>
+                          </button>
+                        </div>
+
+                        <div
+                          class="mt-2 text-xs text-text-gray-light sm:hidden"
+                        >
+                          <span
+                            ><sup class="font-bold">*</sup> Co-first
+                            author</span
+                          >
+                          <span
+                            ><sup class="font-bold">†</sup> Corresponding
+                            author</span
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -181,11 +181,11 @@ export function mountWorldScene() {
   const rightReturn = addBox(
     0.12,
     2.8,
-    2.0,
+    0.75,
     std(0xe6dfcf, { roughness: 0.98 }),
     3.55,
     1.4,
-    2.1,
+    -2.55,
     ROOM,
   );
   leftReturn.receiveShadow = true;
@@ -217,27 +217,31 @@ export function mountWorldScene() {
   addBox(0.05, 0.12, 4.2, skirtingMat, -3.45, 0.06, -0.65, ROOM);
   addBox(0.05, 0.12, 4.2, skirtingMat, 3.45, 0.06, -0.65, ROOM);
 
-  /* ---- Window on back wall (warm sky glow) ---- */
-  addBox(2.35, 1.35, 0.08, std(0xffffff), 1.75, 1.92, -3.0, ROOM);
+  /* ---- Right-front whiteboard on back wall ---- */
+  addBox(2.15, 1.16, 0.08, std(0xffffff), 1.35, 1.86, -3.0, ROOM);
+  const wallWhiteboardTex = makeWhiteboardTexture();
   const winGlass = new THREE.Mesh(
     new THREE.PlaneGeometry(2.15, 1.15),
-    new THREE.MeshBasicMaterial({
-      color: 0xbfe1ff,
-      transparent: true,
-      opacity: 0.9,
+    new THREE.MeshStandardMaterial({
+      map: wallWhiteboardTex,
+      roughness: 0.4,
+      metalness: 0.02,
+      emissive: 0xffffff,
+      emissiveMap: wallWhiteboardTex,
+      emissiveIntensity: 0.06,
     }),
   );
-  winGlass.position.set(1.75, 1.92, -3.08);
+  winGlass.position.set(1.35, 1.86, -2.925);
   ROOM.add(winGlass);
   const winGlow = new THREE.Mesh(
     new THREE.PlaneGeometry(3.1, 2.0),
     new THREE.MeshBasicMaterial({
-      color: 0xcce8ff,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.24,
+      opacity: 0.1,
     }),
   );
-  winGlow.position.set(1.75, 1.92, -3.1);
+  winGlow.position.set(1.35, 1.86, -3.1);
   ROOM.add(winGlow);
 
   const winLight = new THREE.PointLight(0xd6ecff, 0.8, 8, 2);
@@ -314,75 +318,6 @@ export function mountWorldScene() {
     );
   });
 
-  /* ---- Right-front stairwell glimpse at the edge of the workspace ---- */
-  const stairGroup = new THREE.Group();
-  stairGroup.position.set(2.48, 0.018, 1.28);
-  stairGroup.rotation.y = -0.16;
-  ROOM.add(stairGroup);
-
-  const stairOpening = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.04, 1.24),
-    new THREE.MeshBasicMaterial({ color: 0x2f3a42 }),
-  );
-  stairOpening.rotation.x = -Math.PI / 2;
-  stairOpening.position.y = 0.003;
-  stairGroup.add(stairOpening);
-
-  const stepMats = [
-    std(0xd5c5a7, { roughness: 0.7 }),
-    std(0xcdbb9b, { roughness: 0.72 }),
-    std(0xc2af8f, { roughness: 0.74 }),
-  ];
-  for (let i = 0; i < 6; i++) {
-    const step = addBox(
-      0.86,
-      0.035,
-      0.15,
-      stepMats[i % stepMats.length],
-      0,
-      0.04 - i * 0.004,
-      -0.43 + i * 0.16,
-      stairGroup,
-    );
-    step.castShadow = true;
-    step.receiveShadow = true;
-  }
-  addBox(
-    0.05,
-    0.34,
-    1.12,
-    std(0xb9aa90, { roughness: 0.75 }),
-    -0.55,
-    0.12,
-    0.02,
-    stairGroup,
-  );
-  addBox(
-    0.05,
-    0.34,
-    1.12,
-    std(0xb9aa90, { roughness: 0.75 }),
-    0.55,
-    0.12,
-    0.02,
-    stairGroup,
-  );
-  const railMat = std(0x9f8b6f, { roughness: 0.5, metalness: 0.12 });
-  cylinderBetween(
-    [-0.48, 0.36, -0.52],
-    [-0.48, 0.22, 0.52],
-    0.012,
-    railMat,
-    stairGroup,
-  );
-  cylinderBetween(
-    [0.48, 0.36, -0.52],
-    [0.48, 0.22, 0.52],
-    0.012,
-    railMat,
-    stairGroup,
-  );
-
   /* ============================ DESK ============================ */
   const DESK = new THREE.Group();
   DESK.position.set(0, 0, -1.55);
@@ -399,7 +334,23 @@ export function mountWorldScene() {
   addBox(0.06, 0.78, 0.06, deskLegMat, 1.45, 0.39, 0.55, DESK);
 
   /* ---- Monitor riser / stand shelf ---- */
-  addBox(2.2, 0.05, 0.5, std(0xd7cab2), 0, 0.815, -0.35, DESK);
+  const monitorRiserMat = std(0xd4c6ad, { roughness: 0.6, metalness: 0.04 });
+  const monitorRiser = addBox(
+    2.18,
+    0.08,
+    0.36,
+    monitorRiserMat,
+    0,
+    1.02,
+    -0.39,
+    DESK,
+  );
+  monitorRiser.castShadow = true;
+  monitorRiser.receiveShadow = true;
+  [-0.92, 0.92].forEach((x) => {
+    const leg = addBox(0.1, 0.32, 0.26, monitorRiserMat, x, 0.86, -0.39, DESK);
+    leg.castShadow = true;
+  });
 
   /* ---- Desktop tower under desk ---- */
   const tower = addBox(
@@ -722,16 +673,16 @@ export function mountWorldScene() {
     g.add(screen);
 
     const standNeck = new THREE.Mesh(
-      new THREE.BoxGeometry(0.07, 0.34, 0.07),
+      new THREE.BoxGeometry(0.06, 0.16, 0.05),
       bezelMat,
     );
-    standNeck.position.set(0, 0.05, 0);
+    standNeck.position.set(0, -0.05, -0.055);
     g.add(standNeck);
     const standBase = new THREE.Mesh(
       new THREE.BoxGeometry(0.42, 0.03, 0.26),
       bezelMat,
     );
-    standBase.position.set(0, -0.12, 0.02);
+    standBase.position.set(0, -0.15, -0.055);
     standBase.castShadow = true;
     g.add(standBase);
 
@@ -742,42 +693,134 @@ export function mountWorldScene() {
 
   const monitorA = buildMonitor(aboutTex, -0.62, { emissive: 0.8 });
   const monitorB = buildMonitor(pubTex, 0.62, { emissive: 0.85 });
+  monitorA.group.position.y += 0.265;
+  monitorB.group.position.y += 0.265;
   monitorA.group.rotation.y = 0.16;
   monitorB.group.rotation.y = -0.16;
   DESK.add(monitorA.group);
   DESK.add(monitorB.group);
 
-  /* ============================ KEYBOARD / MOUSE ============================ */
-  const kb = addBox(
-    0.92,
-    0.03,
-    0.32,
-    std(0xe8e4da, { roughness: 0.62 }),
-    0,
-    0.83,
-    0.18,
-    DESK,
-  );
-  kb.castShadow = true;
-  const kbMat = std(0xf7f4ec);
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 14; c++) {
+  /* ============================ LAPTOP / MOUSE ============================ */
+  function makeLaptopTexture() {
+    const c = document.createElement("canvas");
+    c.width = 960;
+    c.height = 600;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "#e2e8f0";
+    ctx.fillRect(0, 0, c.width, 46);
+    ["#ff5f57", "#febc2e", "#28c840"].forEach((color, i) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(28 + i * 28, 23, 8, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = "#0f172a";
+    ctx.font = '700 34px "Inter", sans-serif';
+    ctx.fillText("Yinghao Zhu", 64, 132);
+    ctx.fillStyle = "#005bac";
+    ctx.font = '700 46px "Inter", sans-serif';
+    ctx.fillText("AI for Healthcare", 64, 206);
+    ctx.fillStyle = "#475569";
+    ctx.font = '24px "JetBrains Mono", monospace';
+    [
+      "medical LLMs",
+      "agentic workflows",
+      "clinical decision support",
+      "benchmarks and toolkits",
+    ].forEach((line, i) => {
+      ctx.fillText(`> ${line}`, 72, 292 + i * 46);
+    });
+    ctx.fillStyle = "#16a34a";
+    ctx.fillRect(64, 228, 360, 8);
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return tex;
+  }
+
+  const laptopMat = std(0xe9e8e3, { roughness: 0.38, metalness: 0.3 });
+  const hingeMat = std(0x6b7280, { roughness: 0.42, metalness: 0.28 });
+  const laptopBase = addBox(0.68, 0.03, 0.38, laptopMat, 0, 0.84, 0.18, DESK);
+  laptopBase.castShadow = true;
+  const laptopKeyMat = std(0xd8d3c8, { roughness: 0.52, metalness: 0.08 });
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 9; c++) {
       addBox(
-        0.052,
-        0.012,
-        0.052,
-        kbMat,
-        -0.42 + c * 0.06,
-        0.851,
-        0.08 + r * 0.065,
+        0.038,
+        0.004,
+        0.025,
+        laptopKeyMat,
+        -0.18 + c * 0.045,
+        0.858,
+        0.07 + r * 0.035,
         DESK,
       );
     }
   }
+  addBox(0.26, 0.004, 0.028, laptopKeyMat, 0, 0.858, 0.178, DESK);
+  addBox(
+    0.15,
+    0.004,
+    0.085,
+    std(0xd0c8bb, { roughness: 0.5, metalness: 0.08 }),
+    0,
+    0.862,
+    0.248,
+    DESK,
+  );
+  cylinderBetween(
+    [-0.35, 0.862, -0.02],
+    [0.35, 0.862, -0.02],
+    0.01,
+    hingeMat,
+    DESK,
+  );
+
+  const laptopScreenGroup = new THREE.Group();
+  laptopScreenGroup.position.set(0, 0.862, -0.02);
+  laptopScreenGroup.rotation.x = -0.24;
+  DESK.add(laptopScreenGroup);
+
+  const laptopLid = new THREE.Mesh(
+    new THREE.BoxGeometry(0.68, 0.42, 0.016),
+    laptopMat,
+  );
+  laptopLid.position.set(0, 0.215, 0);
+  laptopLid.castShadow = true;
+  laptopScreenGroup.add(laptopLid);
+
+  const laptopInnerBezel = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.64, 0.39),
+    new THREE.MeshStandardMaterial({
+      color: 0x111827,
+      roughness: 0.45,
+      metalness: 0.04,
+    }),
+  );
+  laptopInnerBezel.position.set(0, 0.215, 0.011);
+  laptopScreenGroup.add(laptopInnerBezel);
+
+  const laptopScreenTex = makeLaptopTexture();
+  const laptopScreen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.6, 0.35),
+    new THREE.MeshStandardMaterial({
+      map: laptopScreenTex,
+      roughness: 0.35,
+      emissive: 0xffffff,
+      emissiveMap: laptopScreenTex,
+      emissiveIntensity: 0.72,
+    }),
+  );
+  laptopScreen.position.set(0, 0.215, 0.012);
+  laptopScreenGroup.add(laptopScreen);
+
   const mouse = addBox(
-    0.1,
+    0.12,
     0.035,
-    0.17,
+    0.18,
     std(0xf1eee6, { roughness: 0.5 }),
     0.62,
     0.838,
@@ -885,12 +928,12 @@ export function mountWorldScene() {
       emissive: 0xfff176,
       emissiveIntensity: 0.05,
     }),
-    1.0,
+    1.12,
     0.84,
-    -0.15,
+    0.28,
     DESK,
   );
-  sticky.rotation.y = -0.25;
+  sticky.rotation.y = 0.18;
 
   /* Trophy (awards) */
   const trophyGroup = new THREE.Group();
@@ -948,28 +991,6 @@ export function mountWorldScene() {
   trophyGroup.position.set(1.22, 0.82, -0.42);
   trophyGroup.rotation.y = -0.28;
   DESK.add(trophyGroup);
-
-  /* Name card / business card holder (education/experience) */
-  addBox(
-    0.22,
-    0.04,
-    0.14,
-    std(0xcbbf9f, { metalness: 0.08, roughness: 0.52 }),
-    -1.32,
-    0.835,
-    0.35,
-    DESK,
-  );
-  addBox(
-    0.2,
-    0.004,
-    0.12,
-    std(0xf4f4f4, { roughness: 0.6 }),
-    -1.32,
-    0.857,
-    0.35,
-    DESK,
-  );
 
   /* ============================ BOOKSHELVES / SIDE CUBBIES ============================ */
   const shelfFrameMat = std(0xc6a978, { roughness: 0.68, metalness: 0.02 });
@@ -1165,7 +1186,7 @@ export function mountWorldScene() {
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = '84px "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive';
+    ctx.font = '54px "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive';
     ctx.lineJoin = "round";
     ctx.strokeStyle = "rgba(0, 65, 125, 0.18)";
     ctx.lineWidth = 7;
@@ -1186,54 +1207,6 @@ export function mountWorldScene() {
     tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     return tex;
   }
-
-  const whiteboard = new THREE.Group();
-  whiteboard.position.set(2.38, 0, -2.22);
-  whiteboard.rotation.y = -0.72;
-  scene.add(whiteboard);
-
-  const whiteboardFrameMat = std(0xd7d1c5, {
-    roughness: 0.42,
-    metalness: 0.18,
-  });
-  const whiteboardFrame = new THREE.Mesh(
-    new THREE.BoxGeometry(1.36, 0.88, 0.045),
-    whiteboardFrameMat,
-  );
-  whiteboardFrame.position.y = 1.55;
-  whiteboardFrame.castShadow = true;
-  whiteboard.add(whiteboardFrame);
-
-  const whiteboardTex = makeWhiteboardTexture();
-  const whiteboardSurface = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.25, 0.76),
-    new THREE.MeshStandardMaterial({
-      map: whiteboardTex,
-      roughness: 0.42,
-      metalness: 0.02,
-      emissive: 0xffffff,
-      emissiveMap: whiteboardTex,
-      emissiveIntensity: 0.08,
-    }),
-  );
-  whiteboardSurface.position.set(0, 1.55, 0.026);
-  whiteboard.add(whiteboardSurface);
-
-  [-0.52, 0.52].forEach((x) => {
-    const leg = addBox(
-      0.035,
-      1.16,
-      0.035,
-      whiteboardFrameMat,
-      x,
-      0.58,
-      -0.02,
-      whiteboard,
-    );
-    leg.castShadow = true;
-  });
-  addBox(1.18, 0.035, 0.04, whiteboardFrameMat, 0, 1.1, -0.02, whiteboard);
-  addBox(1.0, 0.035, 0.08, whiteboardFrameMat, 0, 0.05, 0.06, whiteboard);
 
   /* ============================ PLANT ============================ */
   const plant = new THREE.Group();
@@ -1397,32 +1370,48 @@ export function mountWorldScene() {
 
   cylinderBetween(
     [-0.18, 1.02, -0.1],
-    [-0.42, 0.86, -0.63],
+    [-0.28, 0.9, -0.61],
     0.032,
     shirtMat,
     person,
   );
   cylinderBetween(
     [0.18, 1.02, -0.1],
-    [0.4, 0.86, -0.63],
+    [0.52, 0.88, -0.6],
     0.032,
     shirtMat,
     person,
   );
   cylinderBetween(
-    [-0.42, 0.86, -0.63],
-    [-0.5, 0.8, -0.78],
+    [-0.28, 0.9, -0.61],
+    [-0.1, 0.905, -0.74],
     0.025,
     skinMat,
     person,
   );
+  const leftHand = new THREE.Mesh(
+    new THREE.SphereGeometry(0.045, 14, 10),
+    skinMat,
+  );
+  leftHand.scale.set(1.2, 0.24, 0.72);
+  leftHand.position.set(-0.1, 0.91, -0.74);
+  leftHand.rotation.set(0.04, -0.25, 0.1);
+  person.add(leftHand);
   cylinderBetween(
-    [0.4, 0.86, -0.63],
-    [0.49, 0.8, -0.78],
+    [0.52, 0.88, -0.6],
+    [0.58, 0.905, -0.82],
     0.025,
     skinMat,
     person,
   );
+  const rightHand = new THREE.Mesh(
+    new THREE.SphereGeometry(0.045, 14, 10),
+    skinMat,
+  );
+  rightHand.scale.set(1.2, 0.34, 0.82);
+  rightHand.position.set(0.59, 0.905, -0.82);
+  rightHand.rotation.set(0.1, 0.22, -0.16);
+  person.add(rightHand);
   cylinderBetween(
     [-0.11, 0.52, -0.02],
     [-0.28, 0.25, -0.43],
@@ -1735,7 +1724,7 @@ export function mountWorldScene() {
       const wca = DATA.links.find((l) => l.name === "WCA");
       panelKicker.textContent = "Desk Object";
       panelTitle.textContent = "Speedcubing Cubes";
-      return `<p class="about-bio" style="margin-top:0;">Yinghao can solve the 3x3 cube in about 6 seconds and the 2x2 cube in about 2 seconds. His World Cube Association (WCA) profile records his official speedcubing results.</p>
+      return `<p class="about-bio" style="margin-top:0;">Yinghao can solve the 3x3 cube in 6 seconds and the 2x2 cube in 1 second. His World Cube Association (WCA) profile records his official speedcubing results.</p>
         ${wca ? `<div class="links-grid" style="margin-top:12px;"><a class="lk" href="${wca.url}" target="_blank" rel="noopener">${LINK_ICONS[wca.name] || ""}<span class="nm">World Cube Association (WCA) Profile</span></a></div>` : ""}`;
     }
     return "";

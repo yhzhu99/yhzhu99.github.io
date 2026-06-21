@@ -195,39 +195,6 @@
   height: 15px;
 }
 
-#hint {
-  position: fixed;
-  z-index: 40;
-  bottom: 18px;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  padding: 9px 18px;
-  color: var(--ink-soft);
-  font-family: "JetBrains Mono", monospace;
-  font-size: 12px;
-  white-space: nowrap;
-  pointer-events: none;
-  transform: translateX(-50%);
-  backdrop-filter: blur(10px);
-}
-
-#hint b {
-  margin-right: 4px;
-  color: var(--ink);
-  font-weight: 600;
-}
-
-#hint .sep {
-  width: 1px;
-  height: 12px;
-  background: rgba(15, 23, 42, 0.16);
-}
-
 #hotspots {
   position: fixed;
   z-index: 30;
@@ -748,11 +715,5 @@
   .interest-grid,
   .links-grid {
     grid-template-columns: 1fr;
-  }
-
-  #hint {
-    gap: 10px;
-    padding: 7px 12px;
-    font-size: 10px;
   }
 }

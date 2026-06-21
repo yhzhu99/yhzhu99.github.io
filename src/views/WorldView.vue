@@ -60,12 +60,6 @@ onBeforeUnmount(() => {
 
     <div id="hotspots"></div>
 
-    <div id="hint">
-      <span><b>Guided</b>Workstation at BUAA</span>
-      <span class="sep"></span>
-      <span><b>Bright</b>desk scene</span>
-    </div>
-
     <div id="panel-overlay">
       <div id="panel">
         <div class="panel-head">

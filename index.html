@@ -573,15 +573,17 @@
                                 </div>
 
                                 <!-- Featured Publications Header - Responsive -->
-                                <div class="featured-publications-section hidden md:flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
-                                    <h4 class="text-lg font-semibold text-text-gray tracking-tight">Featured Publications</h4>
+                                <div class="featured-publications-section hidden md:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 gap-3">
+                                    <div class="flex items-center gap-x-4 gap-y-1 flex-wrap">
+                                        <h4 class="text-lg font-semibold text-text-gray tracking-tight">Featured Publications</h4>
+                                        <div class="flex items-center space-x-4 text-xs text-text-gray-light">
+                                            <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
+                                            <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
+                                        </div>
+                                    </div>
                                     <button @click="activeTab = 'publications'; selectedTag = 'All'" class="view-all-btn interactive-element flex-shrink-0" aria-label="View all publications">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                     </button>
-                                </div>
-                                <div class="featured-publications-section hidden md:flex mb-3 text-xs text-text-gray-light items-center space-x-4">
-                                    <span><sup class="text-text-gray-light font-bold">*</sup> Co-first author</span>
-                                    <span><sup class="text-text-gray-light font-bold">†</sup> Corresponding author</span>
                                 </div>
                             </div>
 

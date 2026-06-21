@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Workspace · Yinghao Zhu (朱英豪)</title>
+<meta name="description" content="An interactive 3D reconstruction of Yinghao Zhu's graduate workstation.">
+<link rel="icon" type="image/jpeg" href="https://www.hku.hk/f/page/7561/150p169/1d@750.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+    :root {
+        --primary-blue: #005bac;
+        --ink: #0f172a;
+        --ink-soft: #475569;
+        --ink-faint: #94a3b8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+        width: 100%; height: 100%; overflow: hidden;
+        background: #06080f;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        letter-spacing: -0.011em;
+    }
+    #scene { display: block; width: 100vw; height: 100vh; cursor: grab; }
+    #scene:active { cursor: grabbing; }
+    #scene.pointer { cursor: pointer; }
+
+    /* ---------- Loader ---------- */
+    #loader {
+        position: fixed; inset: 0; z-index: 100;
+        background: radial-gradient(circle at 50% 40%, #0c1226 0%, #06080f 70%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 22px; color: #e2e8f0;
+        transition: opacity 0.8s ease 0.2s;
+    }
+    #loader.hide { opacity: 0; pointer-events: none; }
+    .loader-cube {
+        width: 54px; height: 54px;
+        transform-style: preserve-3d;
+        animation: spin 2.4s linear infinite;
+        position: relative;
+    }
+    .loader-cube span {
+        position: absolute; inset: 0; border: 1.5px solid rgba(0,91,172,0.55);
+        background: rgba(0,91,172,0.06);
+    }
+    .loader-cube span:nth-child(1) { transform: rotateY(0deg) translateZ(27px); }
+    .loader-cube span:nth-child(2) { transform: rotateY(90deg) translateZ(27px); }
+    .loader-cube span:nth-child(3) { transform: rotateY(180deg) translateZ(27px); }
+    .loader-cube span:nth-child(4) { transform: rotateY(-90deg) translateZ(27px); }
+    .loader-cube span:nth-child(5) { transform: rotateX(90deg) translateZ(27px); }
+    .loader-cube span:nth-child(6) { transform: rotateX(-90deg) translateZ(27px); }
+    @keyframes spin { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
+    #loader p { font-size: 13px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; }
+
+    /* ---------- Top bar ---------- */
+    #topbar {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 22px;
+        background: linear-gradient(to bottom, rgba(6,8,15,0.75), rgba(6,8,15,0));
+        pointer-events: none;
+    }
+    #topbar > * { pointer-events: auto; }
+    .brand { display: flex; align-items: center; gap: 10px; color: #e2e8f0; }
+    .brand .dot { width: 6px; height: 22px; border-radius: 3px; background: var(--primary-blue); box-shadow: 0 0 14px rgba(0,91,172,0.8); }
+    .brand h1 { font-size: 16px; font-weight: 700; }
+    .brand .sub { font-size: 12px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
+    #back-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 9px 15px; border-radius: 999px;
+        background: rgba(255,255,255,0.06); color: #e2e8f0;
+        border: 1px solid rgba(255,255,255,0.14);
+        font-size: 13px; font-weight: 500; cursor: pointer;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    #back-btn:hover { background: var(--primary-blue); border-color: var(--primary-blue); color: #fff; transform: translateX(-2px); }
+    #back-btn svg { width: 15px; height: 15px; }
+
+    /* ---------- Hint bar ---------- */
+    #hint {
+        position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+        z-index: 40; pointer-events: none;
+        display: flex; align-items: center; gap: 18px;
+        padding: 9px 18px; border-radius: 999px;
+        background: rgba(6,8,15,0.6);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        color: var(--ink-faint); font-size: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        white-space: nowrap;
+    }
+    #hint b { color: #cbd5e1; font-weight: 600; margin-right: 4px; }
+    #hint .sep { width: 1px; height: 12px; background: rgba(255,255,255,0.14); }
+
+    /* ---------- Hotspot pings (markers over interactive objects) ---------- */
+    #hotspots { position: fixed; inset: 0; z-index: 30; pointer-events: none; overflow: hidden; }
+    .ping {
+        position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px;
+        transform: translate3d(-9999px,-9999px,0);
+    }
+    .ping::before, .ping::after {
+        content: ''; position: absolute; inset: 0; border-radius: 50%;
+        border: 2px solid #5aa7ff;
+    }
+    .ping::before { animation: ping 2.4s ease-out infinite; }
+    .ping::after { background: #5aa7ff; transform: scale(0.42); box-shadow: 0 0 12px rgba(90,167,255,0.9); opacity: 0.95; }
+    @keyframes ping {
+        0% { transform: scale(0.5); opacity: 0.9; }
+        100% { transform: scale(2.6); opacity: 0; }
+    }
+    .ping .label {
+        position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
+        white-space: nowrap; font-size: 11px; font-weight: 600; color: #dbeafe;
+        background: rgba(6,8,15,0.72); border: 1px solid rgba(90,167,255,0.35);
+        padding: 3px 8px; border-radius: 6px;
+        font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em;
+        backdrop-filter: blur(6px);
+    }
+
+    /* ---------- Detail panel ---------- */
+    #panel-overlay {
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(3,7,18,0.55);
+        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        display: flex; align-items: center; justify-content: center; padding: 24px;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.28s ease;
+    }
+    #panel-overlay.open { opacity: 1; pointer-events: auto; }
+    #panel {
+        width: 100%; max-width: 760px; max-height: 86vh;
+        background: #ffffff; border-radius: 18px; overflow: hidden;
+        display: flex; flex-direction: column;
+        box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+        transform: translateY(14px) scale(0.97); opacity: 0;
+        transition: transform 0.32s cubic-bezier(.2,.8,.2,1), opacity 0.32s ease;
+    }
+    #panel-overlay.open #panel { transform: none; opacity: 1; }
+    .panel-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .panel-head .titles { display: flex; align-items: center; gap: 11px; }
+    .panel-head .ic {
+        width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(0,91,172,0.1); color: var(--primary-blue);
+    }
+    .panel-head .ic svg { width: 18px; height: 18px; }
+    .panel-head h2 { font-size: 17px; font-weight: 700; color: var(--ink); }
+    .panel-head .kicker { font-size: 11px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+    .close-btn {
+        width: 32px; height: 32px; border-radius: 9px; border: none;
+        background: #f1f5f9; color: var(--ink-soft); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.18s ease;
+    }
+    .close-btn:hover { background: #e2e8f0; color: var(--ink); transform: rotate(90deg); }
+    .close-btn svg { width: 16px; height: 16px; }
+    .panel-body { padding: 20px 22px; overflow-y: auto; }
+    .panel-body::-webkit-scrollbar { width: 8px; }
+    .panel-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .about-grid { display: grid; grid-template-columns: 130px 1fr; gap: 20px; align-items: start; }
+    .about-grid img { width: 130px; height: 130px; border-radius: 14px; object-fit: cover; box-shadow: 0 0 0 1px rgba(15,23,42,0.08), 0 6px 18px -6px rgba(15,23,42,0.25); }
+    .about-name { font-size: 22px; font-weight: 800; color: var(--ink); }
+    .about-cn { color: var(--ink-soft); font-size: 15px; margin-bottom: 6px; }
+    .about-role { color: var(--primary-blue); font-weight: 600; font-size: 13px; }
+    .about-aff { color: var(--ink-soft); font-size: 13px; }
+    .about-bio { grid-column: 1 / -1; color: var(--ink); font-size: 14px; line-height: 1.7; margin-top: 4px; }
+    .about-bio a { color: var(--primary-blue); text-decoration: none; }
+    .about-bio a:hover { text-decoration: underline; }
+    .about-bio strong { color: var(--primary-blue); font-weight: 600; }
+    .interest-grid { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .interest { border-left: 2px solid var(--primary-blue); padding: 8px 12px; background: #f8fafc; border-radius: 0 8px 8px 0; }
+    .interest h5 { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .interest p { font-size: 12px; color: var(--ink-soft); margin-top: 2px; line-height: 1.5; }
+
+    .pub { padding: 13px 0; border-bottom: 1px solid #eef2f7; }
+    .pub:last-child { border-bottom: none; }
+    .pub h4 { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+    .pub .authors { font-size: 12px; color: var(--ink-soft); margin-top: 3px; line-height: 1.5; }
+    .pub .authors .me { font-weight: 700; color: var(--primary-blue); }
+    .pub .venue { font-size: 12px; color: var(--primary-blue); font-style: italic; margin-top: 3px; }
+    .pub .links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+    .pub .links a {
+        font-size: 11px; padding: 3px 9px; border-radius: 999px;
+        background: #f1f5f9; color: var(--ink-soft); text-decoration: none;
+        border: 1px solid rgba(15,23,42,0.05);
+        transition: all 0.18s ease;
+    }
+    .pub .links a:hover { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+
+    .timeline { position: relative; padding-left: 22px; }
+    .timeline::before { content: ''; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background: linear-gradient(to bottom, var(--primary-blue), rgba(0,91,172,0.15)); }
+    .tl-item { position: relative; padding: 0 0 16px 6px; }
+    .tl-item::before { content: ''; position: absolute; left: -22px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary-blue); box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--primary-blue); }
+    .tl-item .tl-when { font-size: 11px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
+    .tl-item h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin-top: 1px; }
+    .tl-item .tl-sub { font-size: 12.5px; color: var(--primary-blue); font-weight: 500; }
+    .tl-item .tl-meta { font-size: 12px; color: var(--ink-soft); }
+    .tl-item .tl-det { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+    .tl-item .tl-det a { color: var(--primary-blue); text-decoration: none; }
+
+    .award { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid #eef2f7; }
+    .award:last-child { border-bottom: none; }
+    .award .yr { font-size: 11px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; width: 46px; padding-top: 1px; }
+    .award .body h4 { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+    .award .body p { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+
+    .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .lk {
+        display: flex; align-items: center; gap: 10px;
+        padding: 11px 13px; border-radius: 11px;
+        background: #f8fafc; border: 1px solid #eef2f7;
+        text-decoration: none; color: var(--ink);
+        transition: all 0.18s ease;
+    }
+    .lk:hover { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); transform: translateY(-1px); }
+    .lk svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .lk .nm { font-size: 13px; font-weight: 500; }
+    .contact-row { margin-top: 16px; padding: 14px 16px; background: #f8fafc; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
+    .contact-row svg { width: 16px; height: 16px; color: var(--primary-blue); }
+    .contact-row a { color: var(--ink); text-decoration: none; font-size: 14px; font-family: 'JetBrains Mono', monospace; }
+
+    @media (max-width: 640px) {
+        .about-grid { grid-template-columns: 1fr; }
+        .about-grid img { width: 96px; height: 96px; }
+        .interest-grid { grid-template-columns: 1fr; }
+        .links-grid { grid-template-columns: 1fr; }
+        #hint { font-size: 10px; gap: 10px; padding: 7px 12px; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+
+<div id="loader">
+    <div class="loader-cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <p>Booting up the workstation…</p>
+</div>
+
+<div id="topbar">
+    <div class="brand">
+        <div class="dot"></div>
+        <div>
+            <h1>Yinghao Zhu <span style="color:var(--ink-faint);font-weight:400;">朱英豪</span></h1>
+            <div class="sub">3D Workspace · 北航新主楼 工位</div>
+        </div>
+    </div>
+    <a id="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to homepage
+    </a>
+</div>
+
+<div id="hotspots"></div>
+
+<div id="hint">
+    <span><b>Drag</b>look around</span>
+    <span class="sep"></span>
+    <span><b>Scroll</b>zoom</span>
+    <span class="sep"></span>
+    <span><b>Click</b>glowing objects</span>
+</div>
+
+<div id="panel-overlay">
+    <div id="panel">
+        <div class="panel-head">
+            <div class="titles">
+                <div class="ic" id="panel-ic"></div>
+                <div>
+                    <div class="kicker" id="panel-kicker">Detail</div>
+                    <h2 id="panel-title">Title</h2>
+                </div>
+            </div>
+            <button class="close-btn" id="panel-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="panel-body" id="panel-body"></div>
+    </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ============================ DATA ============================ */
+const DATA = {
+    name: 'Yinghao Zhu',
+    cnName: '朱英豪',
+    title: 'PhD Student',
+    affiliation: 'The University of Hong Kong',
+    school: 'School of Computing and Data Science',
+    email: 'yhzhu99@gmail.com',
+    photo: 'https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png',
+    bio: 'I am a PhD student at The University of Hong Kong, supervised by <a href="https://yulequan.github.io/" target="_blank" rel="noopener">Prof. Lequan Yu</a>. I also work closely with <a href="http://scholar.pku.edu.cn/malt/home" target="_blank" rel="noopener">Prof. Liantao Ma</a> at Peking University. My research focuses on <strong>AI for Healthcare</strong> — building reliable, practical AI systems that improve clinical decision-making and accelerate healthcare research.',
+    interests: [
+        { title: 'AI Agents for Healthcare', desc: 'Autonomous & collaborative agents for clinical workflows.' },
+        { title: 'Medical LLMs', desc: 'Medical large language & multimodal models.' },
+        { title: 'Benchmarks & Toolkits', desc: 'Robust benchmarks, open-source toolkits, platforms.' },
+        { title: 'Human-Agent Collaboration', desc: 'Interpretable, reliable, real-world usable AI.' }
+    ],
+    featuredPublications: [
+        { title: 'Augmenting Clinical Decision-Making with an Interactive and Interpretable AI Copilot', authors: 'Yinghao Zhu, Dehao Sui, Zixiang Wang, Xuning Hu, Lei Gu, Yifan Qi, Tianchen Wu, Ling Wang, Yuan Wei, Wen Tang, Zhihan Cui, Yasha Wang, Lequan Yu, Ewen Harrison, Junyi Gao, Liantao Ma', venue: 'ACM CHI, 2026', year: '2026', links: [{type:'Paper',url:'https://arxiv.org/abs/2602.00726'},{type:'Platform',url:'https://aicare.pages.dev/'},{type:'Video',url:'https://www.youtube.com/watch?v=hKWljcF50Wg'}] },
+        { title: 'HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research', authors: 'Yinghao Zhu, Yifan Qi, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma, Lequan Yu', venue: 'Preprint, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2508.02621'},{type:'Code',url:'https://github.com/yhzhu99/HealthFlow'},{type:'Website',url:'https://healthflow.medx-pku.com/'}] },
+        { title: 'MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks', authors: 'Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma, Lequan Yu', venue: 'NeurIPS Datasets & Benchmarks, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2505.12371'},{type:'Code',url:'https://github.com/yhzhu99/MedAgentBoard'},{type:'Website',url:'https://medagentboard.netlify.app/'}] },
+        { title: 'MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems', authors: 'Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu, Liantao Ma', venue: 'Preprint, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2510.10185'},{type:'Code',url:'https://github.com/yhzhu99/MedAgentAudit'}] },
+        { title: 'ClinicRealm: Re-evaluating Large Language Models with Conventional ML for Non-Generative Clinical Prediction', authors: 'Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan, Ewen Harrison, Liantao Ma', venue: 'npj Digital Medicine, 2026', year: '2026', links: [{type:'Paper',url:'https://www.nature.com/articles/s41746-026-02539-z'},{type:'Code',url:'https://github.com/yhzhu99/ehr-llm-benchmark'}] },
+        { title: 'ColaCare: Enhancing EHR Modeling through LLM-Driven Multi-Agent Collaboration', authors: 'Zixiang Wang, Yinghao Zhu, Huiya Zhao, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen Harrison, Junyi Gao, Liantao Ma', venue: 'ACM WWW, 2025', year: '2025', links: [{type:'Paper',url:'https://dl.acm.org/doi/10.1145/3696410.3714877'},{type:'Code',url:'https://github.com/PKU-AICare/ColaCare'},{type:'Website',url:'https://colacare.netlify.app'}] },
+        { title: 'EMERGE: Enhancing Multimodal EHR Predictive Modeling with Retrieval-Augmented Generation', authors: 'Yinghao Zhu, Changyu Ren, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan', venue: 'ACM CIKM, 2024', year: '2024', links: [{type:'Paper',url:'https://dl.acm.org/doi/10.1145/3627673.3679582'},{type:'Code',url:'https://github.com/yhzhu99/EMERGE'}] },
+        { title: 'A Comprehensive Benchmark For COVID-19 Predictive Modeling Using EHR in Intensive Care', authors: 'Junyi Gao, Yinghao Zhu, Wenqing Wang, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen Harrison, Liantao Ma', venue: 'Cell Patterns, 2024', year: '2024', links: [{type:'Paper',url:'https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3'},{type:'Code',url:'https://github.com/yhzhu99/pyehr'}] }
+    ],
+    education: [
+        { institution: 'The University of Hong Kong', sub: 'PhD Student', meta: 'School of Computing and Data Science, Hong Kong', when: '2025.07 – Present', det: 'Supervised by Prof. Lequan Yu' },
+        { institution: 'Beihang University', sub: 'M.Eng. in Artificial Intelligence', meta: 'School of Artificial Intelligence, Beijing', when: '2022.09 – 2025.01', det: 'Supervised by Prof. Chengwei Pan' },
+        { institution: 'Politecnico di Milano', sub: 'Exchange, Computer Science & Engineering', meta: 'Milan, Italy', when: '2024.02 – 2024.07', det: 'Exchange Program' },
+        { institution: 'Beihang University', sub: 'B.Eng. in Software Engineering', meta: 'School of Software, Beijing', when: '2018.09 – 2022.06', det: '' }
+    ],
+    experience: [
+        { institution: 'Peking University', sub: 'External Research Advisor', meta: 'School of Computer Science, Beijing', when: '2023.09 – Present', det: 'With Prof. Liantao Ma' },
+        { institution: 'Stanford University', sub: 'Research Assistant', meta: 'Stanford Causal Science Center, Remote', when: '2024.03 – 2024.12', det: 'Advised by Prof. Yiqing Xu' },
+        { institution: 'University of Zurich & USZ', sub: 'Research Assistant', meta: 'KrauthammerLab, Zurich, Switzerland', when: '2024.04 – 2024.12', det: 'Advised by Dr. Ahmed Allam & Prof. Michael Krauthammer' },
+        { institution: 'Children\'s Hospital of Fudan Univ.', sub: 'Research Assistant', meta: 'Dept. of Radiology, Shanghai', when: '2022.10 – 2023.12', det: 'Advised by Prof. Zhongwei Qiao' }
+    ],
+    awards: [
+        { year: '2026', title: 'ICML 2026 Silver Reviewer Award', org: 'International Conference on Machine Learning' },
+        { year: '2025', title: 'Avenir-HKU Web3.0 Quantitative Trading Challenge', org: '1st Runner-up (12,000 USD Prize)' },
+        { year: '2025', title: 'Outstanding Graduate of Beijing', org: 'Beijing Municipal Education Commission' },
+        { year: '2024', title: 'Detecting Active Tuberculosis Bacilli', org: 'Top 4 of all teams, Nightingale Open Science' },
+        { year: '2023', title: 'Bias Detection Tools for Clinical Decision Making', org: '3rd Place (75,000 USD), NIH/NCATS' },
+        { year: '2023', title: '“Challenge Cup” Competition of Science Achievement', org: 'Special Prize (Top 1), CAST' },
+        { year: '2022', title: 'High Risk Breast Cancer Prediction Contest I', org: 'Top 3 of all teams (1,500 USD), Nightingale' }
+    ],
+    links: [
+        { name: 'Google Scholar', url: 'https://scholar.google.com/citations?user=LYrsSoEAAAAJ' },
+        { name: 'GitHub', url: 'https://github.com/yhzhu99' },
+        { name: 'ResearchGate', url: 'https://www.researchgate.net/profile/Yinghao-Zhu-5' },
+        { name: 'ORCID', url: 'https://orcid.org/0000-0002-2640-6477' },
+        { name: 'OpenReview', url: 'https://openreview.net/profile?id=~Yinghao_Zhu1' },
+        { name: 'arXiv', url: 'https://arxiv.org/a/zhu_y_10.html' },
+        { name: 'Semantic Scholar', url: 'https://www.semanticscholar.org/author/Yinghao-Zhu/2098545' },
+        { name: 'WCA (Rubik\'s)', url: 'https://www.worldcubeassociation.org/persons/2013ZHUY01' }
+    ]
+};
+
+const LINK_ICONS = {
+    'Google Scholar': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>',
+    'GitHub': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
+    'ResearchGate': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a3.193 3.193 0 0 0-.112.437 8.365 8.365 0 0 0-.078.53 9 9 0 0 0-.05.727c-.01.282-.013.621-.013 1.016a31.121 31.123 0 0 0 .014 1.017 9 9 0 0 0 .05.727 7.946 7.946 0 0 0 .077.53h-.005a3.334 3.334 0 0 0 .113.438c.245.743.65 1.303 1.214 1.68.565.376 1.256.564 2.075.564.8 0 1.536-.213 2.105-.603.57-.39.94-.916 1.175-1.65.076-.235.135-.558.177-.93a10.9 10.9 0 0 0 .043-1.207v-.82c0-.095-.047-.142-.14-.142h-3.064c-.094 0-.14.047-.14.141v.956c0 .094.046.14.14.14h1.666c.056 0 .084.03.084.086 0 .36 0 .62-.036.865-.038.244-.1.447-.147.606-.108.385-.348.664-.638.876-.29.212-.738.35-1.227.35-.545 0-.901-.15-1.21-.353-.306-.203-.517-.454-.67-.915a3.136 3.136 0 0 1-.147-.762 17.366 17.367 0 0 1-.034-.656c-.01-.26-.014-.572-.014-.939a26.401 26.403 0 0 1 .014-.938 15.821 15.822 0 0 1 .035-.656 3.19 3.19 0 0 1 .148-.76 1.89 1.89 0 0 1 .742-1.01c.344-.244.593-.352 1.137-.352.508 0 .815.096 1.144.303.33.207.528.492.764.925.047.094.111.118.198.07l1.044-.43c.075-.048.09-.115.042-.199a3.549 3.549 0 0 0-.466-.742 3 3 0 0 0-.679-.607 3.313 3.313 0 0 0-.903-.41A4.068 4.068 0 0 0 19.586 0zM8.217 5.836c-1.69 0-3.036.086-4.297.086-1.146 0-2.291 0-3.007-.029v.831l1.088.2c.744.144 1.174.488 1.174 2.264v11.288c0 1.777-.43 2.12-1.174 2.263l-1.088.2v.832c.773-.029 2.12-.086 3.465-.086 1.29 0 2.951.057 3.667.086v-.831l-1.49-.2c-.773-.115-1.174-.487-1.174-2.264v-4.784c.688.057 1.29.057 2.206.057 1.748 3.123 3.41 5.472 4.355 6.56.86 1.032 2.177 1.691 3.839 1.691.487 0 1.003-.086 1.318-.23v-.744c-1.031 0-2.063-.716-2.808-1.518-1.26-1.376-2.95-3.582-4.355-6.074 2.32-.545 4.04-2.722 4.04-4.9 0-3.208-2.492-4.698-5.758-4.698zm-.515 1.29c2.406 0 3.839 1.26 3.839 3.552 0 2.263-1.547 3.782-4.097 3.782-.974 0-1.404-.03-2.063-.086v-7.19c.66-.059 1.547-.059 2.32-.059z"/></svg>',
+    'ORCID': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.372 0 12s5.373 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg>',
+    'arXiv': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.8423 0a1.0037 1.0037 0 0 0-.922.6078c-.1536.3687-.0438.6275.2938 1.1113l6.9185 8.3597-1.0223 1.1058a1.0393 1.0393 0 0 0 .003 1.4229l1.2292 1.3135-5.4391 6.4444c-.2803.299-.4538.823-.2971 1.1986a1.0253 1.0253 0 0 0 .9585.635.9133.9133 0 0 0 .6891-.3405l5.783-6.126 7.4902 8.0051a.8527.8527 0 0 0 .6835.2597.9575.9575 0 0 0 .8777-.6138c.1577-.377-.017-.7502-.306-1.1407l-7.0518-8.3418 1.0632-1.13a.9626.9626 0 0 0 .0089-1.3165L4.6336.4639s-.3733-.4535-.768-.463z"/></svg>',
+    'Semantic Scholar': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 8.609c-.848.536-1.436.83-2.146 1.245-4.152 2.509-8.15 5.295-11.247 8.981l-1.488 1.817-4.568-7.268c1.021.814 3.564 3.098 4.603 3.599l3.356-2.526c2.336-1.644 8.946-5.226 11.49-5.848Z"/></svg>',
+    'OpenReview': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>',
+    'WCA (Rubik\'s)': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/></svg>'
+};
+
+/* ============================ SCENE SETUP ============================ */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e1a);
+scene.fog = new THREE.Fog(0x0a0e1a, 9, 20);
+
+const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+const CAM_START = new THREE.Vector3(4.6, 2.5, 4.8);
+const CAM_REST = new THREE.Vector3(3.1, 1.78, 3.05);
+camera.position.copy(CAM_START);
+
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 1.15, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.enablePan = false;
+controls.minDistance = 1.8;
+controls.maxDistance = 6.5;
+controls.minPolarAngle = 0.35;
+controls.maxPolarAngle = Math.PI / 2 - 0.04;
+controls.minAzimuthAngle = -1.35;
+controls.maxAzimuthAngle = 1.35;
+controls.rotateSpeed = 0.65;
+controls.zoomSpeed = 0.7;
+
+/* ============================ LIGHTING ============================ */
+scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x3a2f25, 0.55));
+
+const sun = new THREE.DirectionalLight(0xfff1d6, 1.15);
+sun.position.set(-3.5, 5, 3);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -5;
+sun.shadow.camera.right = 5;
+sun.shadow.camera.top = 5;
+sun.shadow.camera.bottom = -5;
+sun.shadow.camera.near = 0.5;
+sun.shadow.camera.far = 18;
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.02;
+scene.add(sun);
+
+const deskLamp = new THREE.PointLight(0xffd9a0, 1.4, 6, 1.6);
+deskLamp.position.set(1.25, 1.55, -0.55);
+deskLamp.castShadow = true;
+deskLamp.shadow.mapSize.set(512, 512);
+scene.add(deskLamp);
+
+const screenGlow = new THREE.PointLight(0x6fb3ff, 0.7, 3.5, 2);
+screenGlow.position.set(0, 1.3, -0.35);
+scene.add(screenGlow);
+
+/* ============================ MATERIAL HELPERS ============================ */
+const std = (color, opts = {}) => new THREE.MeshStandardMaterial({ color: new THREE.Color(color), roughness: 0.85, metalness: 0.0, ...opts });
+const box = (w, h, d, mat, x = 0, y = 0, z = 0) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    return m;
+};
+const addBox = (w, h, d, mat, x = 0, y = 0, z = 0, parent = scene) => {
+    const m = box(w, h, d, mat, x, y, z);
+    parent.add(m);
+    return m;
+};
+
+/* ============================ ROOM ============================ */
+const ROOM = new THREE.Group();
+scene.add(ROOM);
+
+const floorMat = std(0x6b5640, { roughness: 0.62 });
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+ROOM.add(floor);
+
+const wallColor = 0xd9d2c4;
+const backWall = addBox(8, 3.2, 0.16, std(wallColor, { roughness: 0.98 }), 0, 1.6, -2.4, ROOM);
+backWall.receiveShadow = true;
+const leftWall = addBox(0.16, 3.2, 6, std(0xcfc7b6, { roughness: 0.98 }), -3.2, 1.6, -0.4, ROOM);
+leftWall.receiveShadow = true;
+
+const skirtingMat = std(0xeae4d6);
+addBox(8.2, 0.12, 0.05, skirtingMat, 0, 0.06, -2.31, ROOM);
+
+/* ---- Window on back wall (warm sky glow) ---- */
+const winFrame = addBox(2.7, 1.7, 0.08, std(0xefe9dc), 1.55, 1.85, -2.31, ROOM);
+const winGlass = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.5, 1.5),
+    new THREE.MeshBasicMaterial({ color: 0x9fc4ff, transparent: true, opacity: 0.92 })
+);
+winGlass.position.set(1.55, 1.85, -2.34);
+ROOM.add(winGlass);
+const winGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.6, 2.4),
+    new THREE.MeshBasicMaterial({ color: 0xbcd8ff, transparent: true, opacity: 0.18 })
+);
+winGlow.position.set(1.55, 1.85, -2.36);
+ROOM.add(winGlow);
+
+const winLight = new THREE.PointLight(0xbcd6ff, 0.6, 7, 2);
+winLight.position.set(1.4, 1.9, -1.6);
+scene.add(winLight);
+
+/* ---- Baseboard cable trough / power strip hint ---- */
+
+/* ============================ DESK ============================ */
+const DESK = new THREE.Group();
+DESK.position.set(0, 0, -1.55);
+scene.add(DESK);
+
+const deskMat = std(0x7a5c3e, { roughness: 0.55 });
+const deskTop = addBox(3.0, 0.07, 1.25, deskMat, 0, 0.78, 0, DESK);
+deskTop.castShadow = true; deskTop.receiveShadow = true;
+const deskLegMat = std(0x3a3a40, { roughness: 0.5, metalness: 0.5 });
+addBox(0.06, 0.78, 0.06, deskLegMat, -1.45, 0.39, -0.55, DESK);
+addBox(0.06, 0.78, 0.06, deskLegMat, 1.45, 0.39, -0.55, DESK);
+addBox(0.06, 0.78, 0.06, deskLegMat, -1.45, 0.39, 0.55, DESK);
+addBox(0.06, 0.78, 0.06, deskLegMat, 1.45, 0.39, 0.55, DESK);
+
+/* ---- Monitor riser / stand shelf ---- */
+addBox(2.2, 0.05, 0.5, std(0x2c2c30), 0, 0.815, -0.35, DESK);
+
+/* ---- Desktop tower under desk ---- */
+const tower = addBox(0.42, 0.62, 0.55, std(0x14161c, { roughness: 0.45, metalness: 0.35 }), 1.2, 0.34, 0.35, DESK);
+tower.castShadow = true;
+const towerLed = addBox(0.012, 0.18, 0.012, new THREE.MeshStandardMaterial({ color: 0x005bac, emissive: 0x005bac, emissiveIntensity: 2 }), 1.0, 0.5, 0.075, DESK);
+
+/* ============================ MONITORS ============================ */
+function makeEditorCanvas(title, drawContent, opts = {}) {
+    const W = 1024, H = 620;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const ctx = c.getContext('2d');
+    return { canvas: c, ctx, W, H, title, drawContent, opts };
+}
+
+function drawEditorShell(ctx, W, H, filename, folder) {
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = '#3c3c3c';
+    ctx.fillRect(0, 0, W, 30);
+
+    const dotCols = ['#ff5f57', '#febc2e', '#28c840'];
+    dotCols.forEach((col, i) => {
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(20 + i * 20, 15, 6, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.fillStyle = '#cccccc';
+    ctx.font = '13px "JetBrains Mono", monospace';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Visual Studio Code', W / 2 - 60, 15);
+
+    ctx.fillStyle = '#252526';
+    ctx.fillRect(0, 30, 54, H - 30);
+
+    const actIcons = ['\u{1F4C1}', '\u{1F50D}', '\u{1F37E}', '\u{1F4DE}'];
+    actIcons.forEach((ic, i) => {
+        ctx.fillStyle = i === 0 ? '#fff' : '#858585';
+        ctx.font = '20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(ic, 27, 70 + i * 50);
+    });
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = '#252526';
+    ctx.fillRect(54, 30, 220, H - 30);
+
+    ctx.fillStyle = '#cccccc';
+    ctx.font = 'bold 12px "Inter", sans-serif';
+    ctx.fillText(folder || 'EXPLORER', 68, 52);
+
+    ctx.fillStyle = '#858585';
+    ctx.font = '12px "JetBrains Mono", monospace';
+    const tree = ['>  YINGHAO', '   >  research', '      portfolio', '   >  personal'];
+    tree.forEach((t, i) => {
+        ctx.fillStyle = i === 0 ? '#cccccc' : '#888';
+        ctx.fillText(t, 68, 86 + i * 22);
+    });
+
+    const fileY = 86 + tree.length * 22 + 12;
+    const files = [{ n: 'README.md', active: false }, { n: filename, active: true }, { n: 'notes.md', active: false }];
+    files.forEach((f, i) => {
+        if (f.active) {
+            ctx.fillStyle = '#37373d';
+            ctx.fillRect(56, fileY + i * 22 - 12, 216, 22);
+            ctx.fillStyle = '#fff';
+        } else {
+            ctx.fillStyle = '#888';
+        }
+        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.fillText('\u{1F4C4} ' + f.n, 64, fileY + i * 22);
+    });
+
+    ctx.fillStyle = '#2d2d2d';
+    ctx.fillRect(274, 30, W - 274, 35);
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(274, 40, 200, 25);
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px "JetBrains Mono", monospace';
+    ctx.fillText(filename, 286, 53);
+    ctx.fillStyle = '#858585';
+    ctx.fillText('notes.md', 484, 53);
+
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(274, 65, W - 274, H - 65);
+
+    ctx.fillStyle = '#007acc';
+    ctx.fillRect(274, 65, 3, H - 65);
+
+    ctx.fillStyle = '#858585';
+    ctx.font = '13px "JetBrains Mono", monospace';
+    for (let i = 1; i <= 22; i++) {
+        ctx.fillText(String(i), 290, 86 + (i - 1) * 22);
+    }
+}
+
+const aboutEditor = makeEditorCanvas('about_me.md', (ctx, W, H) => {
+    drawEditorShell(ctx, W, H, 'about_me.md', 'PERSONAL');
+    const x = 320, y0 = 88, lh = 22;
+
+    const line = (text, color, y, bold) => {
+        ctx.fillStyle = color || '#d4d4d4';
+        ctx.font = (bold ? 'bold ' : '') + '13px "JetBrains Mono", monospace';
+        ctx.fillText(text, x, y);
+    };
+
+    line('# Yinghao Zhu  (朱英豪)', '#569cd6', y0, true);
+    line('PhD Student · The University of Hong Kong', '#9cdcfe', y0 + lh);
+    line('AI for Healthcare · Medical LLMs · Agents', '#ce9178', y0 + lh * 2);
+    line('', '#d4d4d4', y0 + lh * 3);
+
+    line('## Research Interests', '#569cd6', y0 + lh * 4, true);
+    line('- Autonomous & collaborative AI agents', '#d4d4d4', y0 + lh * 5);
+    line('- Medical large language models (LLMs)', '#d4d4d4', y0 + lh * 6);
+    line('- Benchmarks, toolkits & platforms', '#d4d4d4', y0 + lh * 7);
+    line('- Human-agent collaboration in healthcare', '#d4d4d4', y0 + lh * 8);
+    line('', '#d4d4d4', y0 + lh * 9);
+
+    line('## Advisors', '#569cd6', y0 + lh * 10, true);
+    line('Prof. Lequan Yu  (HKU)', '#4ec9b0', y0 + lh * 11);
+    line('Prof. Liantao Ma (Peking Univ.)', '#4ec9b0', y0 + lh * 12);
+    line('', '#d4d4d4', y0 + lh * 13);
+
+    line('## Contact', '#569cd6', y0 + lh * 14, true);
+    line('yhzhu99@gmail.com', '#c586c2', y0 + lh * 15);
+    line('scholar.google.com  ·  github.com/yhzhu99', '#6a9955', y0 + lh * 16);
+    line('', '#d4d4d4', y0 + lh * 17);
+
+    line('// click this monitor to read more', '#6a9955', y0 + lh * 19);
+    line('// or explore the desk & shelves', '#6a9955', y0 + lh * 20);
+
+    const cy = y0 + lh * 21.6;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x, cy - 11, 8, 16);
+});
+
+const aboutTex = new THREE.CanvasTexture(aboutEditor.canvas);
+aboutTex.colorSpace = THREE.SRGBColorSpace;
+aboutTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+function redrawAbout() {
+    aboutEditor.drawContent(aboutEditor.ctx, aboutEditor.W, aboutEditor.H);
+    aboutTex.needsUpdate = true;
+}
+redrawAbout();
+
+/* Publications: tall scrolling canvas */
+const pubW = 1024, pubH = 2480;
+const pubCanvas = document.createElement('canvas');
+pubCanvas.width = pubW; pubCanvas.height = pubH;
+const pubCtx = pubCanvas.getContext('2d');
+function drawPubScroll() {
+    pubCtx.fillStyle = '#1e1e1e';
+    pubCtx.fillRect(0, 0, pubW, pubH);
+    pubCtx.fillStyle = '#3c3c3c';
+    pubCtx.fillRect(0, 0, pubW, 30);
+    ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => {
+        pubCtx.fillStyle = c; pubCtx.beginPath(); pubCtx.arc(20 + i * 20, 15, 6, 0, Math.PI * 2); pubCtx.fill();
+    });
+    pubCtx.fillStyle = '#cccccc'; pubCtx.font = '13px "JetBrains Mono", monospace'; pubCtx.textBaseline = 'middle';
+    pubCtx.fillText('publications.md  —  featured works', pubW / 2 - 110, 15);
+
+    pubCtx.fillStyle = '#2d2d2d'; pubCtx.fillRect(0, 30, pubW, 35);
+    pubCtx.fillStyle = '#1e1e1e'; pubCtx.fillRect(0, 40, 240, 25);
+    pubCtx.fillStyle = '#fff'; pubCtx.font = '12px "JetBrains Mono", monospace';
+    pubCtx.fillText('publications.md', 16, 53);
+
+    let y = 90;
+    const wrap = (text, max) => {
+        const words = text.split(' '); const lines = []; let cur = '';
+        words.forEach(w => { if ((cur + ' ' + w).length > max) { lines.push(cur); cur = w; } else cur = cur ? cur + ' ' + w : w; });
+        if (cur) lines.push(cur); return lines;
+    };
+    DATA.featuredPublications.forEach((p, i) => {
+        pubCtx.fillStyle = '#6a9955'; pubCtx.font = 'italic 13px "JetBrains Mono", monospace';
+        pubCtx.fillText('// [' + (i + 1) + ']  ' + p.year + '  ·  ' + p.venue, 40, y);
+        y += 26;
+        const titleLines = wrap(p.title, 78);
+        pubCtx.fillStyle = '#569cd6'; pubCtx.font = 'bold 19px "Inter", sans-serif';
+        titleLines.forEach(l => { pubCtx.fillText(l, 40, y); y += 26; });
+        y += 4;
+        const authLines = wrap(p.authors, 86);
+        pubCtx.fillStyle = '#9cdcfe'; pubCtx.font = '13px "JetBrains Mono", monospace';
+        authLines.forEach(l => { pubCtx.fillText(l, 40, y); y += 20; });
+        y += 6;
+        pubCtx.fillStyle = '#c586c2'; pubCtx.font = '13px "JetBrains Mono", monospace';
+        const links = p.links.map(l => l.type).join('  ·  ');
+        pubCtx.fillText('▸ ' + links, 40, y);
+        y += 44;
+    });
+    pubCtx.fillStyle = '#6a9955'; pubCtx.font = 'italic 14px "JetBrains Mono", monospace';
+    pubCtx.fillText('// end of featured list — click to open full details', 40, y + 10);
+}
+drawPubScroll();
+const pubTex = new THREE.CanvasTexture(pubCanvas);
+pubTex.colorSpace = THREE.SRGBColorSpace;
+pubTex.wrapT = THREE.RepeatWrapping;
+pubTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+const pubViewportH = 620;
+pubTex.repeat.y = pubViewportH / pubH;
+pubTex.offset.y = 0.02;
+
+function buildMonitor(screenTex, x, opts = {}) {
+    const g = new THREE.Group();
+    const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: 0.4, metalness: 0.6 });
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.7, 0.045), bezelMat);
+    frame.position.y = 0.35;
+    frame.castShadow = true;
+    g.add(frame);
+
+    const screen = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.1, 0.62),
+        new THREE.MeshStandardMaterial({ map: screenTex, emissive: 0xffffff, emissiveMap: screenTex, emissiveIntensity: opts.emissive ?? 0.85, roughness: 0.35 })
+    );
+    screen.position.set(0, 0.35, 0.024);
+    g.add(screen);
+
+    const standNeck = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.34, 0.07), bezelMat);
+    standNeck.position.set(0, 0.05, 0);
+    g.add(standNeck);
+    const standBase = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.03, 0.26), bezelMat);
+    standBase.position.set(0, -0.12, 0.02);
+    standBase.castShadow = true;
+    g.add(standBase);
+
+    if (opts.tilt) g.rotation.x = opts.tilt;
+    g.position.set(x, 0.815 + 0.12, -0.55 + 0.18);
+    return { group: g, screen, screenTex };
+}
+
+const monitorA = buildMonitor(aboutTex, -0.62, { emissive: 0.8 });
+const monitorB = buildMonitor(pubTex, 0.62, { emissive: 0.85 });
+monitorA.group.rotation.y = 0.16;
+monitorB.group.rotation.y = -0.16;
+DESK.add(monitorA.group);
+DESK.add(monitorB.group);
+
+/* ============================ KEYBOARD / MOUSE ============================ */
+const kb = addBox(0.92, 0.03, 0.32, std(0x18181c, { roughness: 0.6 }), 0, 0.83, 0.18, DESK);
+kb.castShadow = true;
+const kbMat = std(0x2c2c33);
+for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 14; c++) {
+        addBox(0.052, 0.012, 0.052, kbMat, -0.42 + c * 0.06, 0.851, 0.08 + r * 0.065, DESK);
+    }
+}
+const mouse = addBox(0.1, 0.035, 0.17, std(0x18181c, { roughness: 0.5 }), 0.62, 0.838, 0.2, DESK);
+mouse.castShadow = true;
+
+/* ============================ DESK DECOR ============================ */
+/* Mug */
+const mug = new THREE.Group();
+const mugBody = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.07, 0.16, 28), std(0x005bac, { roughness: 0.4 }));
+mugBody.castShadow = true;
+mug.add(mugBody);
+const mugHandle = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.012, 12, 20, Math.PI), std(0x005bac, { roughness: 0.4 }));
+mugHandle.rotation.y = Math.PI / 2; mugHandle.position.set(0.085, 0, 0);
+mug.add(mugHandle);
+const coffee = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.01, 28), std(0x2a1a0e, { roughness: 0.3 }));
+coffee.position.y = 0.078; mug.add(coffee);
+mug.position.set(1.05, 0.875, 0.3); DESK.add(mug);
+
+/* Notebook + pen */
+const notebook = addBox(0.26, 0.025, 0.34, std(0x1e3a5f, { roughness: 0.6 }), -1.05, 0.84, 0.3, DESK);
+notebook.castShadow = true;
+const pen = addBox(0.018, 0.018, 0.16, std(0x111317, { roughness: 0.4, metalness: 0.3 }), -1.0, 0.862, 0.46, DESK);
+pen.rotation.y = 0.3;
+
+/* Desk lamp */
+const lampGroup = new THREE.Group();
+const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.03, 24), std(0x222226, { metalness: 0.5, roughness: 0.4 }));
+lampBase.castShadow = true; lampGroup.add(lampBase);
+const lampArm1 = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.5, 12), std(0x33333a, { metalness: 0.5, roughness: 0.4 }));
+lampArm1.position.y = 0.25; lampGroup.add(lampArm1);
+const lampJoint = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 12), std(0x222226));
+lampJoint.position.y = 0.5; lampGroup.add(lampJoint);
+const lampArm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.34, 12), std(0x33333a, { metalness: 0.5, roughness: 0.4 }));
+lampArm2.position.set(0.12, 0.6, 0); lampArm2.rotation.z = -1.0; lampGroup.add(lampArm2);
+const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.18, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0x2a2a30, metalness: 0.4, roughness: 0.45, side: THREE.DoubleSide }));
+lampShade.position.set(0.24, 0.66, 0); lampShade.rotation.z = -0.9; lampGroup.add(lampShade);
+const lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 10), new THREE.MeshStandardMaterial({ color: 0xfff2cc, emissive: 0xffd9a0, emissiveIntensity: 3 }));
+lampBulb.position.set(0.26, 0.6, 0); lampGroup.add(lampBulb);
+lampGroup.position.set(1.32, 0.82, -0.45);
+DESK.add(lampGroup);
+
+/* Sticky note (links) */
+const sticky = addBox(0.18, 0.005, 0.18, std(0xfff176, { roughness: 0.8, emissive: 0xfff176, emissiveIntensity: 0.05 }), 1.0, 0.84, -0.15, DESK);
+sticky.rotation.y = -0.25;
+
+/* Trophy (awards) */
+const trophyGroup = new THREE.Group();
+const trophyBase = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.12, 0.05, 24), std(0x1a1a1e, { roughness: 0.4 }));
+trophyBase.castShadow = true; trophyGroup.add(trophyBase);
+const trophyPole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.12, 16), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.25 }));
+trophyPole.position.y = 0.085; trophyGroup.add(trophyPole);
+const trophyCup = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 0.16, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0xe8c766, metalness: 0.9, roughness: 0.2, side: THREE.DoubleSide }));
+trophyCup.position.y = 0.22; trophyGroup.add(trophyCup);
+const trophyHandleL = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.012, 10, 18, Math.PI), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.25 }));
+trophyHandleL.position.set(-0.1, 0.22, 0); trophyHandleL.rotation.z = Math.PI / 2; trophyGroup.add(trophyHandleL);
+const trophyHandleR = trophyHandleL.clone(); trophyHandleR.position.set(0.1, 0.22, 0); trophyGroup.add(trophyHandleR);
+const trophyTop = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), new THREE.MeshStandardMaterial({ color: 0xe8c766, metalness: 0.9, roughness: 0.2 }));
+trophyTop.position.y = 0.32; trophyGroup.add(trophyTop);
+trophyGroup.position.set(-1.32, 0.82, -0.35); trophyGroup.rotation.y = 0.3;
+DESK.add(trophyGroup);
+
+/* Name card / business card holder (education/experience) */
+const cardHolder = addBox(0.22, 0.04, 0.14, std(0x0c0c0e, { metalness: 0.4, roughness: 0.4 }), -1.32, 0.835, 0.35, DESK);
+const card = addBox(0.2, 0.004, 0.12, std(0xf4f4f4, { roughness: 0.6 }), -1.32, 0.857, 0.35, DESK);
+
+/* ============================ BOOKSHELF (publications) ============================ */
+const SHELF = new THREE.Group();
+SHELF.position.set(-2.55, 0, -1.4);
+SHELF.rotation.y = Math.PI / 2;
+scene.add(SHELF);
+
+const shelfMat = std(0x4a3526, { roughness: 0.7 });
+const backPanel = addBox(0.18, 2.4, 1.8, shelfMat, 0, 1.2, 0, SHELF);
+backPanel.castShadow = true;
+const shelfPositions = [0.25, 0.85, 1.45, 2.05];
+shelfPositions.forEach((sy) => {
+    addBox(0.2, 0.04, 1.8, shelfMat, 0, sy, 0, SHELF);
+});
+
+const bookColors = [0x005bac, 0x7a1f1f, 0x1f6b3a, 0x4a3526, 0x222e5c, 0x7a4a1f, 0x3a2c4a, 0x1a1a1a, 0x005bac, 0x6b6b6b];
+const shelves = [[], [], []];
+const allPubs = DATA.featuredPublications;
+let bi = 0;
+for (let s = 0; s < 3; s++) {
+    const count = s === 0 ? 4 : (s === 1 ? 5 : 3);
+    let x = -0.7;
+    for (let i = 0; i < count; i++) {
+        const h = 0.42 + (i % 3) * 0.04;
+        const w = 0.05 + (i % 2) * 0.012;
+        const book = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.26), new THREE.MeshStandardMaterial({ color: bookColors[bi % bookColors.length], roughness: 0.7 }));
+        book.position.set(x + w / 2, shelfPositions[s] + 0.02 + h / 2, 0);
+        book.castShadow = true;
+        SHELF.add(book);
+        bi++;
+        x += w + 0.008;
+    }
+    const decor = addBox(0.14, 0.04, 0.12, std(0x222226), x + 0.1, shelfPositions[s] + 0.04, 0, SHELF);
+}
+
+/* Wall diploma frame (education/experience) */
+const frameGroup = new THREE.Group();
+const frameMat = new THREE.MeshStandardMaterial({ color: 0x8a6a3a, metalness: 0.5, roughness: 0.4 });
+const frameOuter = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.82, 0.04), frameMat);
+frameGroup.add(frameOuter);
+const framePaper = new THREE.Mesh(new THREE.PlaneGeometry(0.52, 0.72), std(0xf7f3e8, { roughness: 0.9 }));
+framePaper.position.z = 0.022; frameGroup.add(framePaper);
+const seal = new THREE.Mesh(new THREE.CircleGeometry(0.06, 24), std(0x7a1f1f));
+seal.position.set(0, -0.22, 0.024); frameGroup.add(seal);
+frameGroup.position.set(-0.7, 1.95, -2.32);
+ROOM.add(frameGroup);
+
+const frame2 = frameGroup.clone();
+frame2.position.set(0.2, 1.95, -2.32);
+frame2.scale.set(0.7, 0.7, 1);
+ROOM.add(frame2);
+
+/* ============================ PLANT ============================ */
+const plant = new THREE.Group();
+const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.1, 0.2, 20), std(0xb5532a, { roughness: 0.7 }));
+pot.castShadow = true; plant.add(pot);
+const soil = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.02, 20), std(0x2a1a0e));
+soil.position.y = 0.09; plant.add(soil);
+const leafMat = new THREE.MeshStandardMaterial({ color: 0x2f6b34, roughness: 0.7 });
+for (let i = 0; i < 7; i++) {
+    const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.34, 6), leafMat);
+    const a = (i / 7) * Math.PI * 2;
+    leaf.position.set(Math.cos(a) * 0.05, 0.26, Math.sin(a) * 0.05);
+    leaf.rotation.set(Math.cos(a) * 0.5, 0, -Math.sin(a) * 0.5);
+    leaf.castShadow = true;
+    plant.add(leaf);
+}
+plant.position.set(1.55, 0.1, -1.0);
+scene.add(plant);
+
+/* ============================ CHAIR ============================ */
+const chair = new THREE.Group();
+const chairMat = std(0x15151a, { roughness: 0.55 });
+const seat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.5), chairMat);
+seat.position.y = 0.5; seat.castShadow = true; chair.add(seat);
+const backRest = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.55, 0.06), chairMat);
+backRest.position.set(0, 0.82, -0.22); backRest.castShadow = true; chair.add(backRest);
+const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 12), std(0x33333a, { metalness: 0.5 }));
+pole.position.y = 0.25; chair.add(pole);
+const chairBase = new THREE.Group();
+for (let i = 0; i < 5; i++) {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.04, 0.06), std(0x222226, { metalness: 0.4 }));
+    leg.position.set(Math.cos(i / 5 * Math.PI * 2) * 0.16, 0.04, Math.sin(i / 5 * Math.PI * 2) * 0.16);
+    leg.rotation.y = i / 5 * Math.PI * 2;
+    chairBase.add(leg);
+}
+chair.add(chairBase);
+chair.position.set(0.1, 0, 0.55);
+chair.rotation.y = -0.2;
+scene.add(chair);
+
+/* ============================ DUST MOTES ============================ */
+const dustGeo = new THREE.BufferGeometry();
+const dustCount = 220;
+const dustPos = new Float32Array(dustCount * 3);
+for (let i = 0; i < dustCount; i++) {
+    dustPos[i * 3] = (Math.random() - 0.5) * 6;
+    dustPos[i * 3 + 1] = Math.random() * 3;
+    dustPos[i * 3 + 2] = (Math.random() - 0.5) * 5 - 0.5;
+}
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xfff1d6, size: 0.018, transparent: true, opacity: 0.5, depthWrite: false, sizeAttenuation: true }));
+scene.add(dust);
+
+/* ============================ INTERACTABLES ============================ */
+const interactables = [];
+function register(obj3d, config) {
+    obj3d.userData.interactive = true;
+    obj3d.userData.config = config;
+    obj3d.traverse(o => { if (o.isMesh) { o.userData.root = obj3d; o.userData.interactive = true; o.userData.config = config; } });
+    interactables.push(obj3d);
+    return obj3d;
+}
+
+register(monitorA.group, { id: 'about', label: 'About Me', hotspot: new THREE.Vector3(0, 0.35, 0.04) });
+register(monitorB.group, { id: 'publications', label: 'Featured Publications', hotspot: new THREE.Vector3(0, 0.35, 0.04) });
+register(SHELF, { id: 'books', label: 'Publication Library', hotspot: new THREE.Vector3(-0.3, 1.1, 0.1) });
+register(trophyGroup, { id: 'awards', label: 'Awards & Honors', hotspot: new THREE.Vector3(0, 0.2, 0) });
+register(frameGroup, { id: 'education', label: 'Education & Experience', hotspot: new THREE.Vector3(0, 0, 0.03) });
+register(sticky, { id: 'links', label: 'Quick Links', hotspot: new THREE.Vector3(0, 0.01, 0.01) });
+
+/* ============================ HOTSPOT MARKERS ============================ */
+const hotspotsEl = document.getElementById('hotspots');
+const hotspotMarkers = interactables.map(it => {
+    const el = document.createElement('div');
+    el.className = 'ping';
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = it.userData.config.label;
+    el.appendChild(label);
+    hotspotsEl.appendChild(el);
+    return { obj: it, el, offset: it.userData.config.hotspot };
+});
+
+/* ============================ RAYCASTING ============================ */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+let hovered = null;
+const hoveredOriginalEmissive = new Map();
+
+function setHover(obj) {
+    if (hovered === obj) return;
+    if (hovered) {
+        hovered.traverse(o => {
+            if (o.isMesh && o.material && hoveredOriginalEmissive.has(o)) {
+                o.material.emissiveIntensity = hoveredOriginalEmissive.get(o);
+            }
+        });
+        hoveredOriginalEmissive.clear();
+        const s = hovered.userData.scaleBase || 1;
+        hovered.scale.set(s, s, s);
+    }
+    hovered = obj;
+    canvas.classList.toggle('pointer', !!obj);
+    if (obj) {
+        obj.userData.scaleBase = obj.scale.x;
+        obj.traverse(o => {
+            if (o.isMesh && o.material && o.material.emissiveIntensity !== undefined) {
+                hoveredOriginalEmissive.set(o, o.material.emissiveIntensity);
+                o.material.emissiveIntensity = Math.min(2, (o.material.emissiveIntensity || 0) + 0.6);
+            }
+        });
+    }
+}
+
+function intersect(e) {
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const meshes = [];
+    interactables.forEach(it => it.traverse(o => { if (o.isMesh) meshes.push(o); }));
+    const hits = raycaster.intersectObjects(meshes, false);
+    return hits.length ? hits[0].object.userData.root : null;
+}
+
+let dragMoved = false;
+let downXY = null;
+canvas.addEventListener('pointerdown', e => { downXY = [e.clientX, e.clientY]; dragMoved = false; });
+canvas.addEventListener('pointermove', e => {
+    if (downXY) {
+        if (Math.hypot(e.clientX - downXY[0], e.clientY - downXY[1]) > 6) dragMoved = true;
+    }
+    setHover(intersect(e));
+});
+canvas.addEventListener('pointerup', e => {
+    const wasDrag = dragMoved;
+    downXY = null; dragMoved = false;
+    if (wasDrag) return;
+    const obj = intersect(e);
+    if (obj) openPanel(obj.userData.config);
+});
+canvas.addEventListener('pointerleave', () => setHover(null));
+
+/* ============================ DETAIL PANEL ============================ */
+const overlay = document.getElementById('panel-overlay');
+const panelTitle = document.getElementById('panel-title');
+const panelKicker = document.getElementById('panel-kicker');
+const panelIc = document.getElementById('panel-ic');
+const panelBody = document.getElementById('panel-body');
+document.getElementById('panel-close').addEventListener('click', closePanel);
+overlay.addEventListener('click', e => { if (e.target === overlay) closePanel(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+const ICONS = {
+    about: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    publications: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+    books: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    awards: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
+    education: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+    links: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+};
+
+function fmtAuthors(s) {
+    return s.split(',').map(a => {
+        const t = a.trim();
+        return t === 'Yinghao Zhu' ? '<span class="me">Yinghao Zhu</span>' : t;
+    }).join(', ');
+}
+
+function renderPanel(id) {
+    panelIc.innerHTML = ICONS[id] || '';
+    if (id === 'about') {
+        panelKicker.textContent = 'About Me';
+        panelTitle.textContent = 'Yinghao Zhu';
+        return `<div class="about-grid">
+            <img src="${DATA.photo}" alt="Yinghao Zhu">
+            <div>
+                <div class="about-name">Yinghao Zhu <span style="color:var(--ink-soft);font-weight:500;">朱英豪</span></div>
+                <div class="about-cn">PhD Student · Researcher</div>
+                <div class="about-role">${DATA.title} · AI for Healthcare</div>
+                <div class="about-aff">${DATA.affiliation}</div>
+                <div class="about-aff">${DATA.school}</div>
+            </div>
+            <p class="about-bio">${DATA.bio}</p>
+            <div class="interest-grid">${DATA.interests.map(i => `<div class="interest"><h5>${i.title}</h5><p>${i.desc}</p></div>`).join('')}</div>
+        </div>`;
+    }
+    if (id === 'publications' || id === 'books') {
+        panelKicker.textContent = id === 'books' ? 'Publication Library' : 'Featured Publications';
+        panelTitle.textContent = 'Selected Works';
+        return DATA.featuredPublications.map(p => `<div class="pub">
+            <h4>${p.title}</h4>
+            <div class="authors">${fmtAuthors(p.authors)}</div>
+            <div class="venue">${p.venue} · ${p.year}</div>
+            <div class="links">${p.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.type}</a>`).join('')}</div>
+        </div>`).join('');
+    }
+    if (id === 'awards') {
+        panelKicker.textContent = 'Awards & Honors';
+        panelTitle.textContent = 'Recognition';
+        return DATA.awards.map(a => `<div class="award"><div class="yr">${a.year}</div><div class="body"><h4>${a.title}</h4><p>${a.org}</p></div></div>`).join('');
+    }
+    if (id === 'education') {
+        panelKicker.textContent = 'Education & Experience';
+        panelTitle.textContent = 'Academic Journey';
+        const edu = DATA.education.map(e => `<div class="tl-item"><div class="tl-when">${e.when}</div><h4>${e.institution}</h4><div class="tl-sub">${e.sub}</div><div class="tl-meta">${e.meta}</div>${e.det ? `<div class="tl-det">${e.det}</div>` : ''}</div>`).join('');
+        const exp = DATA.experience.map(e => `<div class="tl-item"><div class="tl-when">${e.when}</div><h4>${e.institution}</h4><div class="tl-sub">${e.sub}</div><div class="tl-meta">${e.meta}</div>${e.det ? `<div class="tl-det">${e.det}</div>` : ''}</div>`).join('');
+        return `<h3 style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">Education</h3><div class="timeline" style="margin-bottom:26px;">${edu}</div><h3 style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">Professional Experience</h3><div class="timeline">${exp}</div>`;
+    }
+    if (id === 'links') {
+        panelKicker.textContent = 'Quick Links';
+        panelTitle.textContent = 'Find Me Online';
+        return `<div class="links-grid">${DATA.links.map(l => `<a class="lk" href="${l.url}" target="_blank" rel="noopener">${LINK_ICONS[l.name] || ''}<span class="nm">${l.name}</span></a>`).join('')}</div>
+        <div class="contact-row">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            <a href="mailto:${DATA.email}">${DATA.email}</a>
+        </div>`;
+    }
+    return '';
+}
+
+function openPanel(config) {
+    panelBody.innerHTML = renderPanel(config.id);
+    panelTitle.textContent = config.label;
+    overlay.classList.add('open');
+    controls.enabled = false;
+}
+function closePanel() {
+    overlay.classList.remove('open');
+    controls.enabled = true;
+}
+
+/* ============================ ANIMATION LOOP ============================ */
+let introT = 0;
+const introDuration = 1.8;
+let introDone = false;
+const clock = new THREE.Clock();
+let cursorPhase = 0;
+
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const t = clock.elapsedTime;
+
+    if (!introDone) {
+        introT += dt;
+        const k = Math.min(1, introT / introDuration);
+        const e = 1 - Math.pow(1 - k, 3);
+        camera.position.lerpVectors(CAM_START, CAM_REST, e);
+        controls.enabled = k >= 1;
+        if (k >= 1) { introDone = true; controls.enabled = true; }
+    }
+
+    cursorPhase += dt;
+    if (cursorPhase > 0.53) {
+        cursorPhase = 0;
+        const ctx = aboutEditor.ctx;
+        ctx.fillStyle = (Math.floor(t * 1.9) % 2 === 0) ? '#fff' : '#1e1e1e';
+        ctx.fillRect(320, 88 + 22 * 21.6 - 11, 8, 16);
+        aboutTex.needsUpdate = true;
+    }
+
+    pubTex.offset.y -= dt * 0.012;
+    if (pubTex.offset.y < -0.7) pubTex.offset.y = 0.02;
+
+    const dpos = dust.geometry.attributes.position;
+    for (let i = 0; i < dustCount; i++) {
+        dpos.array[i * 3 + 1] += dt * 0.04 * (0.5 + (i % 5) * 0.1);
+        dpos.array[i * 3] += Math.sin(t * 0.3 + i) * dt * 0.01;
+        if (dpos.array[i * 3 + 1] > 3) dpos.array[i * 3 + 1] = 0;
+    }
+    dpos.needsUpdate = true;
+
+    if (hovered && hovered.userData.scaleBase !== undefined) {
+        const s = hovered.userData.scaleBase * (1 + Math.sin(t * 6) * 0.005 + 0.02);
+        hovered.scale.set(s, s, s);
+    }
+
+    trophyGroup.rotation.y = 0.3 + Math.sin(t * 0.5) * 0.05;
+
+    controls.update();
+
+    updateHotspots();
+
+    renderer.render(scene, camera);
+}
+
+const _hp = new THREE.Vector3();
+function updateHotspots() {
+    hotspotMarkers.forEach(h => {
+        h.obj.updateWorldMatrix(true, false);
+        _hp.copy(h.offset).applyMatrix4(h.obj.matrixWorld).project(camera);
+        const inFront = _hp.z < 1;
+        const onScreen = _hp.x > -1.05 && _hp.x < 1.05 && _hp.y > -1.05 && _hp.y < 1.05;
+        if (inFront && onScreen && introDone && !overlay.classList.contains('open')) {
+            const x = (_hp.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-_hp.y * 0.5 + 0.5) * window.innerHeight;
+            h.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            h.el.style.opacity = '';
+        } else {
+            h.el.style.transform = 'translate3d(-9999px,-9999px,0)';
+        }
+    });
+}
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+animate();
+
+setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+}, 500);
+</script>
+</body>
+</html>

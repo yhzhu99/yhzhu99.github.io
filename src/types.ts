@@ -118,8 +118,6 @@ export interface ServiceModalState {
 }
 
 export interface SiteData {
-  profile: Profile;
-  tabs: TabItem[];
   authorLinks: Record<string, string>;
   newsItems: NewsItem[];
   quickLinks: QuickLink[];

@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
         <span></span>
         <span></span>
       </div>
-      <p>Opening the Beihang workstation...</p>
+      <p>Opening Workstation at BUAA...</p>
     </div>
 
     <div id="topbar">
@@ -39,7 +39,7 @@ onBeforeUnmount(() => {
             Yinghao Zhu
             <span>朱英豪</span>
           </h1>
-          <div class="sub">3D Workspace · 北航工位</div>
+          <div class="sub">3D Workspace · Workstation at BUAA</div>
         </div>
       </div>
       <RouterLink id="back-btn" to="/">
@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
     <div id="hotspots"></div>
 
     <div id="hint">
-      <span><b>360°</b>Beihang workstation</span>
+      <span><b>360°</b>Workstation at BUAA</span>
       <span class="sep"></span>
       <span><b>Bright</b>desk scene</span>
     </div>

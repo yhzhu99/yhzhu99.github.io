@@ -13,6 +13,7 @@ import PublicationCard from "../components/PublicationCard.vue";
 import QuickLinks from "../components/QuickLinks.vue";
 import TimelineColumn from "../components/TimelineColumn.vue";
 import { siteData } from "../data";
+import { profile, tabs } from "../site";
 import type {
   AwardItem,
   ModalItem,
@@ -35,13 +36,11 @@ const {
   education,
   experience,
   newsItems,
-  profile,
   projects,
   publications,
   quickLinkIcons,
   quickLinks,
   services,
-  tabs,
   talks,
 } = siteData;
 

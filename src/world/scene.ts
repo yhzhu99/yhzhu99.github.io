@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { siteData } from "../data";
+import { profile } from "../site";
 
 /* ============================ DATA ============================ */
 type AnyRecord = Record<string, any>;
 const SITE_DATA: AnyRecord = siteData as unknown as AnyRecord;
-const PROFILE = SITE_DATA.profile || {};
+const PROFILE = profile;
 const DATA = {
   name: PROFILE.name || "Yinghao Zhu",
   cnName: PROFILE.cnName || "朱英豪",
@@ -513,14 +514,14 @@ export function mountWorldScene() {
   }
   redrawAbout();
 
-  /* Publications: tall scrolling canvas */
+  /* Publications: fixed screen canvas */
   const pubW = 1024,
-    pubH = 2480;
+    pubH = 620;
   const pubCanvas = document.createElement("canvas");
   pubCanvas.width = pubW;
   pubCanvas.height = pubH;
   const pubCtx = pubCanvas.getContext("2d");
-  function drawPubScroll() {
+  function drawPubScreen() {
     pubCtx.fillStyle = "#ffffff";
     pubCtx.fillRect(0, 0, pubW, pubH);
     pubCtx.fillStyle = "#e5e7eb";
@@ -534,7 +535,7 @@ export function mountWorldScene() {
     pubCtx.fillStyle = "#475569";
     pubCtx.font = '13px "JetBrains Mono", monospace';
     pubCtx.textBaseline = "middle";
-    pubCtx.fillText("publications.md  —  featured works", pubW / 2 - 110, 15);
+    pubCtx.fillText("publications.md  -  featured works", pubW / 2 - 110, 15);
 
     pubCtx.fillStyle = "#e2e8f0";
     pubCtx.fillRect(0, 30, pubW, 35);
@@ -544,7 +545,7 @@ export function mountWorldScene() {
     pubCtx.font = '12px "JetBrains Mono", monospace';
     pubCtx.fillText("publications.md", 16, 53);
 
-    let y = 90;
+    let y = 82;
     const wrap = (text, max) => {
       const words = text.split(" ");
       const lines = [];
@@ -558,53 +559,66 @@ export function mountWorldScene() {
       if (cur) lines.push(cur);
       return lines;
     };
-    DATA.featuredPublications.forEach((p, i) => {
-      pubCtx.fillStyle = "#15803d";
-      pubCtx.font = 'italic 13px "JetBrains Mono", monospace';
-      pubCtx.fillText(
-        "// [" + (i + 1) + "]  " + p.year + "  ·  " + p.venue,
-        40,
-        y,
-      );
-      y += 26;
-      const titleLines = wrap(p.title, 78);
+
+    DATA.featuredPublications.slice(0, 3).forEach((p, i) => {
+      const titleLines = wrap(p.title, 72).slice(0, 2);
+      const cardHeight = titleLines.length === 1 ? 120 : 142;
+      const headerY = y + 30;
+      const titleY = y + 62;
+      const authorY = titleY + titleLines.length * 24 + 8;
+      const venueY = authorY + 22;
+
+      pubCtx.fillStyle = "#f8fafc";
+      pubCtx.strokeStyle = "#cbd5e1";
+      pubCtx.lineWidth = 1;
+      pubCtx.beginPath();
+      pubCtx.roundRect(36, y, pubW - 72, cardHeight, 14);
+      pubCtx.fill();
+      pubCtx.stroke();
+
       pubCtx.fillStyle = "#005bac";
-      pubCtx.font = 'bold 19px "Inter", sans-serif';
-      titleLines.forEach((l) => {
-        pubCtx.fillText(l, 40, y);
-        y += 26;
-      });
-      y += 4;
-      const authLines = wrap(p.authors, 86);
+      pubCtx.font = 'bold 18px "Inter", sans-serif';
+      pubCtx.fillText(String(i + 1).padStart(2, "0"), 58, headerY);
+
       pubCtx.fillStyle = "#334155";
-      pubCtx.font = '13px "JetBrains Mono", monospace';
-      authLines.forEach((l) => {
-        pubCtx.fillText(l, 40, y);
-        y += 20;
+      pubCtx.font = 'bold 12px "JetBrains Mono", monospace';
+      pubCtx.fillText(p.year + "  |  " + p.tag, 104, headerY);
+
+      pubCtx.fillStyle = "#0f172a";
+      pubCtx.font = 'bold 20px "Inter", sans-serif';
+      titleLines.forEach((l, lineIndex) => {
+        pubCtx.fillText(l, 58, titleY + lineIndex * 24);
       });
-      y += 6;
-      pubCtx.fillStyle = "#7e22ce";
-      pubCtx.font = '13px "JetBrains Mono", monospace';
+
+      const authLine = wrap(p.authors, 92)[0] || "";
+      pubCtx.fillStyle = "#334155";
+      pubCtx.font = '14px "JetBrains Mono", monospace';
+      pubCtx.fillText(authLine, 58, authorY);
+
+      pubCtx.fillStyle = "#0369a1";
+      pubCtx.font = 'italic 13px "Inter", sans-serif';
+      pubCtx.fillText(p.venue, 58, venueY);
+
+      pubCtx.fillStyle = "#475569";
+      pubCtx.font = 'bold 12px "JetBrains Mono", monospace';
       const links = p.links.map((l) => l.type).join("  ·  ");
-      pubCtx.fillText("▸ " + links, 40, y);
-      y += 44;
+      pubCtx.fillText("open: " + links, 760, venueY);
+
+      y += cardHeight + 16;
     });
+
     pubCtx.fillStyle = "#15803d";
-    pubCtx.font = 'italic 14px "JetBrains Mono", monospace';
+    pubCtx.font = 'italic 13px "JetBrains Mono", monospace';
     pubCtx.fillText(
-      "// end of featured list — click to open full details",
+      "// static window - click monitor for full details",
       40,
-      y + 10,
+      596,
     );
   }
-  drawPubScroll();
+  drawPubScreen();
   const pubTex = new THREE.CanvasTexture(pubCanvas);
   pubTex.colorSpace = THREE.SRGBColorSpace;
-  pubTex.wrapT = THREE.RepeatWrapping;
   pubTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const pubViewportH = 620;
-  pubTex.repeat.y = pubViewportH / pubH;
-  pubTex.offset.y = 0.02;
 
   function buildMonitor(
     screenTex: THREE.Texture,

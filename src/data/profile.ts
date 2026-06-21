@@ -16,5 +16,5 @@ export const profile: Profile = {
     { uid: "healthcare-benchmarks", title: "Healthcare Benchmarks, Toolkits & Platforms", description: "Creating robust benchmarks, open-source toolkits, and accessible platforms." },
     { uid: "human-agent-collaboration", title: "Human-Agent Collaboration & Interaction in Healthcare", description: "Advancing effective clinician/researcher-AI collaboration with a focus on interpretability, reliability, and real-world usability." },
   ],
-  workspace: { title: "3D Workspace", location: "Workstation at BUAA", description: "A bright 360-degree reconstruction of my workstation at BUAA." },
+  workspace: { title: "3D Workspace", location: "Workstation at BUAA", description: "A bright guided 3D reconstruction of my workstation at BUAA." },
 };

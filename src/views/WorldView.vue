@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
     <div id="hotspots"></div>
 
     <div id="hint">
-      <span><b>360°</b>Workstation at BUAA</span>
+      <span><b>Guided</b>Workstation at BUAA</span>
       <span class="sep"></span>
       <span><b>Bright</b>desk scene</span>
     </div>

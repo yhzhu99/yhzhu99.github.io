@@ -17,6 +17,7 @@ const DATA = {
   bio: PROFILE.bio || "",
   interests: PROFILE.interests || [],
   workspace: PROFILE.workspace || {},
+  allPublications: SITE_DATA.publications || [],
   featuredPublications: (SITE_DATA.publications || []).filter(
     (pub: AnyRecord) => pub.featured,
   ),
@@ -53,19 +54,21 @@ export function mountWorldScene() {
     0.1,
     100,
   );
-  const CAM_START = new THREE.Vector3(4.6, 2.5, 4.8);
-  const CAM_REST = new THREE.Vector3(3.1, 1.78, 3.05);
+  const CAM_START = new THREE.Vector3(4.0, 2.28, 4.0);
+  const CAM_REST = new THREE.Vector3(2.75, 1.72, 2.65);
   camera.position.copy(CAM_START);
 
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 1.1, -0.75);
+  controls.target.set(0, 1.03, -0.82);
   controls.enableDamping = true;
   controls.dampingFactor = 0.07;
   controls.enablePan = false;
   controls.minDistance = 1.9;
-  controls.maxDistance = 7.4;
-  controls.minPolarAngle = 0.35;
+  controls.maxDistance = 4.8;
+  controls.minPolarAngle = 1.18;
   controls.maxPolarAngle = Math.PI / 2 - 0.04;
+  controls.minAzimuthAngle = -0.38;
+  controls.maxAzimuthAngle = 0.86;
   controls.rotateSpeed = 0.65;
   controls.zoomSpeed = 0.7;
 
@@ -241,7 +244,7 @@ export function mountWorldScene() {
   winLight.position.set(1.7, 2.0, -2.0);
   scene.add(winLight);
 
-  /* ---- Low partitions behind the chair so the rear 360 view stays occupied ---- */
+  /* ---- Low partitions behind the chair so the guided rear edge stays occupied ---- */
   const partitionMat = std(0xe8edf0, { roughness: 0.9 });
   addBox(2.0, 1.05, 0.09, partitionMat, -1.35, 0.68, 2.35, ROOM);
   addBox(2.0, 1.05, 0.09, partitionMat, 1.35, 0.68, 2.35, ROOM);
@@ -310,6 +313,75 @@ export function mountWorldScene() {
       ROOM,
     );
   });
+
+  /* ---- Right-front stairwell glimpse at the edge of the workspace ---- */
+  const stairGroup = new THREE.Group();
+  stairGroup.position.set(2.48, 0.018, 1.28);
+  stairGroup.rotation.y = -0.16;
+  ROOM.add(stairGroup);
+
+  const stairOpening = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.04, 1.24),
+    new THREE.MeshBasicMaterial({ color: 0x2f3a42 }),
+  );
+  stairOpening.rotation.x = -Math.PI / 2;
+  stairOpening.position.y = 0.003;
+  stairGroup.add(stairOpening);
+
+  const stepMats = [
+    std(0xd5c5a7, { roughness: 0.7 }),
+    std(0xcdbb9b, { roughness: 0.72 }),
+    std(0xc2af8f, { roughness: 0.74 }),
+  ];
+  for (let i = 0; i < 6; i++) {
+    const step = addBox(
+      0.86,
+      0.035,
+      0.15,
+      stepMats[i % stepMats.length],
+      0,
+      0.04 - i * 0.004,
+      -0.43 + i * 0.16,
+      stairGroup,
+    );
+    step.castShadow = true;
+    step.receiveShadow = true;
+  }
+  addBox(
+    0.05,
+    0.34,
+    1.12,
+    std(0xb9aa90, { roughness: 0.75 }),
+    -0.55,
+    0.12,
+    0.02,
+    stairGroup,
+  );
+  addBox(
+    0.05,
+    0.34,
+    1.12,
+    std(0xb9aa90, { roughness: 0.75 }),
+    0.55,
+    0.12,
+    0.02,
+    stairGroup,
+  );
+  const railMat = std(0x9f8b6f, { roughness: 0.5, metalness: 0.12 });
+  cylinderBetween(
+    [-0.48, 0.36, -0.52],
+    [-0.48, 0.22, 0.52],
+    0.012,
+    railMat,
+    stairGroup,
+  );
+  cylinderBetween(
+    [0.48, 0.36, -0.52],
+    [0.48, 0.22, 0.52],
+    0.012,
+    railMat,
+    stairGroup,
+  );
 
   /* ============================ DESK ============================ */
   const DESK = new THREE.Group();
@@ -715,63 +787,93 @@ export function mountWorldScene() {
   mouse.castShadow = true;
 
   /* ============================ DESK DECOR ============================ */
-  /* 3x3 Rubik's cube */
-  function createRubiksCube() {
+  /* Speedcubing cubes */
+  function createStickeredCube(
+    dimension: number,
+    faceColors: AnyRecord,
+    cubieSize = 0.048,
+    gap = 0.004,
+  ) {
     const cubeGroup = new THREE.Group();
     const black = new THREE.MeshStandardMaterial({
       color: 0x222222,
       roughness: 0.58,
     });
+    const sticker = (color: number) =>
+      new THREE.MeshStandardMaterial({ color, roughness: 0.5 });
     const colors = {
-      right: new THREE.MeshStandardMaterial({
-        color: 0xd62828,
-        roughness: 0.5,
-      }),
-      left: new THREE.MeshStandardMaterial({ color: 0xf77f00, roughness: 0.5 }),
-      top: new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.45 }),
-      bottom: new THREE.MeshStandardMaterial({
-        color: 0xffd60a,
-        roughness: 0.5,
-      }),
-      front: new THREE.MeshStandardMaterial({
-        color: 0x1d4ed8,
-        roughness: 0.5,
-      }),
-      back: new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.5 }),
+      right: sticker(faceColors.right),
+      left: sticker(faceColors.left),
+      top: sticker(faceColors.top),
+      bottom: sticker(faceColors.bottom),
+      front: sticker(faceColors.front),
+      back: sticker(faceColors.back),
     };
-    const size = 0.048;
-    const gap = 0.004;
-    for (let x = -1; x <= 1; x++) {
-      for (let y = -1; y <= 1; y++) {
-        for (let z = -1; z <= 1; z++) {
+    const offset = (dimension - 1) / 2;
+    for (let xi = 0; xi < dimension; xi++) {
+      for (let yi = 0; yi < dimension; yi++) {
+        for (let zi = 0; zi < dimension; zi++) {
+          const x = xi - offset;
+          const y = yi - offset;
+          const z = zi - offset;
           const materials = [
-            x === 1 ? colors.right : black,
-            x === -1 ? colors.left : black,
-            y === 1 ? colors.top : black,
-            y === -1 ? colors.bottom : black,
-            z === 1 ? colors.front : black,
-            z === -1 ? colors.back : black,
+            xi === dimension - 1 ? colors.right : black,
+            xi === 0 ? colors.left : black,
+            yi === dimension - 1 ? colors.top : black,
+            yi === 0 ? colors.bottom : black,
+            zi === dimension - 1 ? colors.front : black,
+            zi === 0 ? colors.back : black,
           ];
           const cubie = new THREE.Mesh(
-            new THREE.BoxGeometry(size, size, size),
+            new THREE.BoxGeometry(cubieSize, cubieSize, cubieSize),
             materials,
           );
           cubie.position.set(
-            x * (size + gap),
-            y * (size + gap),
-            z * (size + gap),
+            x * (cubieSize + gap),
+            y * (cubieSize + gap),
+            z * (cubieSize + gap),
           );
           cubie.castShadow = true;
           cubeGroup.add(cubie);
         }
       }
     }
-    cubeGroup.position.set(-1.12, 0.9, 0.45);
-    cubeGroup.rotation.set(0.12, -0.48, 0.08);
     return cubeGroup;
   }
-  const rubiksCube = createRubiksCube();
-  DESK.add(rubiksCube);
+
+  const speedcubePair = new THREE.Group();
+  speedcubePair.position.set(-1.03, 0.9, 0.45);
+
+  const rubiksCube3 = createStickeredCube(3, {
+    right: 0xd62828,
+    left: 0xf77f00,
+    top: 0xffd60a,
+    bottom: 0xf8f9fa,
+    front: 0x1d4ed8,
+    back: 0x15803d,
+  });
+  rubiksCube3.position.set(-0.095, 0, 0);
+  rubiksCube3.rotation.set(0.12, -0.48, 0.08);
+  speedcubePair.add(rubiksCube3);
+
+  const pocketCube = createStickeredCube(
+    2,
+    {
+      right: 0x1d4ed8,
+      left: 0xf8f9fa,
+      top: 0xf77f00,
+      bottom: 0xffd60a,
+      front: 0xf8f9fa,
+      back: 0xd62828,
+    },
+    0.056,
+    0.005,
+  );
+  pocketCube.position.set(0.095, -0.018, 0.025);
+  pocketCube.rotation.set(0.14, -0.34, -0.04);
+  speedcubePair.add(pocketCube);
+
+  DESK.add(speedcubePair);
 
   /* Sticky note (links) */
   const sticky = addBox(
@@ -843,8 +945,8 @@ export function mountWorldScene() {
   );
   trophyTop.position.y = 0.32;
   trophyGroup.add(trophyTop);
-  trophyGroup.position.set(-1.32, 0.82, -0.35);
-  trophyGroup.rotation.y = 0.3;
+  trophyGroup.position.set(1.22, 0.82, -0.42);
+  trophyGroup.rotation.y = -0.28;
   DESK.add(trophyGroup);
 
   /* Name card / business card holder (education/experience) */
@@ -1043,6 +1145,96 @@ export function mountWorldScene() {
   const frameGroup = makeMilestoneFrame("education", -0.92, 1);
   const frame2 = makeMilestoneFrame("experience", -0.18, 0.92);
 
+  /* ============================ WHITEBOARD ============================ */
+  function makeWhiteboardTexture() {
+    const c = document.createElement("canvas");
+    c.width = 1024;
+    c.height = 640;
+    const ctx = c.getContext("2d");
+
+    ctx.fillStyle = "#fbfcfb";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.strokeStyle = "#d8e1e7";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(18, 18, c.width - 36, c.height - 36);
+
+    ctx.fillStyle = "rgba(0, 91, 172, 0.055)";
+    for (let y = 120; y < 560; y += 72) {
+      ctx.fillRect(92, y, 840, 3);
+    }
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = '84px "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive';
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(0, 65, 125, 0.18)";
+    ctx.lineWidth = 7;
+    ctx.strokeText("AI for Healthcare", c.width / 2 + 3, c.height / 2 - 2);
+    ctx.fillStyle = "#005bac";
+    ctx.fillText("AI for Healthcare", c.width / 2, c.height / 2);
+
+    ctx.strokeStyle = "#2aa876";
+    ctx.lineWidth = 8;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(248, 406);
+    ctx.bezierCurveTo(384, 436, 646, 436, 782, 404);
+    ctx.stroke();
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return tex;
+  }
+
+  const whiteboard = new THREE.Group();
+  whiteboard.position.set(2.38, 0, -2.22);
+  whiteboard.rotation.y = -0.72;
+  scene.add(whiteboard);
+
+  const whiteboardFrameMat = std(0xd7d1c5, {
+    roughness: 0.42,
+    metalness: 0.18,
+  });
+  const whiteboardFrame = new THREE.Mesh(
+    new THREE.BoxGeometry(1.36, 0.88, 0.045),
+    whiteboardFrameMat,
+  );
+  whiteboardFrame.position.y = 1.55;
+  whiteboardFrame.castShadow = true;
+  whiteboard.add(whiteboardFrame);
+
+  const whiteboardTex = makeWhiteboardTexture();
+  const whiteboardSurface = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.25, 0.76),
+    new THREE.MeshStandardMaterial({
+      map: whiteboardTex,
+      roughness: 0.42,
+      metalness: 0.02,
+      emissive: 0xffffff,
+      emissiveMap: whiteboardTex,
+      emissiveIntensity: 0.08,
+    }),
+  );
+  whiteboardSurface.position.set(0, 1.55, 0.026);
+  whiteboard.add(whiteboardSurface);
+
+  [-0.52, 0.52].forEach((x) => {
+    const leg = addBox(
+      0.035,
+      1.16,
+      0.035,
+      whiteboardFrameMat,
+      x,
+      0.58,
+      -0.02,
+      whiteboard,
+    );
+    leg.castShadow = true;
+  });
+  addBox(1.18, 0.035, 0.04, whiteboardFrameMat, 0, 1.1, -0.02, whiteboard);
+  addBox(1.0, 0.035, 0.08, whiteboardFrameMat, 0, 0.05, 0.06, whiteboard);
+
   /* ============================ PLANT ============================ */
   const plant = new THREE.Group();
   const pot = new THREE.Mesh(
@@ -1057,20 +1249,81 @@ export function mountWorldScene() {
   );
   soil.position.y = 0.09;
   plant.add(soil);
+  const stemMat = std(0x2f6b34, { roughness: 0.72 });
   const leafMat = new THREE.MeshStandardMaterial({
-    color: 0x2f6b34,
+    color: 0x3f8f3d,
     roughness: 0.7,
   });
-  for (let i = 0; i < 7; i++) {
-    const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.34, 6), leafMat);
-    const a = (i / 7) * Math.PI * 2;
-    leaf.position.set(Math.cos(a) * 0.05, 0.26, Math.sin(a) * 0.05);
-    leaf.rotation.set(Math.cos(a) * 0.5, 0, -Math.sin(a) * 0.5);
-    leaf.castShadow = true;
-    plant.add(leaf);
+  const petalMat = new THREE.MeshStandardMaterial({
+    color: 0xffc928,
+    roughness: 0.62,
+  });
+  const centerMat = new THREE.MeshStandardMaterial({
+    color: 0x5b3217,
+    roughness: 0.78,
+  });
+
+  function addSunflower(x: number, z: number, height: number, tilt = 0) {
+    const flower = new THREE.Group();
+    flower.position.set(x, 0.11, z);
+    plant.add(flower);
+
+    const stem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.012, 0.015, height, 10),
+      stemMat,
+    );
+    stem.position.y = height / 2;
+    stem.rotation.z = tilt;
+    stem.castShadow = true;
+    flower.add(stem);
+
+    [
+      [-0.045, height * 0.44, 0.028, 0.55],
+      [0.04, height * 0.58, -0.02, -0.55],
+    ].forEach(([lx, ly, lz, rz]) => {
+      const leaf = new THREE.Mesh(
+        new THREE.SphereGeometry(0.052, 12, 8),
+        leafMat,
+      );
+      leaf.scale.set(1.5, 0.34, 0.58);
+      leaf.position.set(lx, ly, lz);
+      leaf.rotation.set(0.15, 0.25, rz);
+      leaf.castShadow = true;
+      flower.add(leaf);
+    });
+
+    const head = new THREE.Group();
+    head.position.set(Math.sin(tilt) * height * 0.42, height + 0.015, 0);
+    head.rotation.set(-0.08, 0.42, -tilt * 0.5);
+    flower.add(head);
+
+    for (let i = 0; i < 14; i++) {
+      const petal = new THREE.Mesh(
+        new THREE.SphereGeometry(0.034, 12, 8),
+        petalMat,
+      );
+      const a = (i / 14) * Math.PI * 2;
+      petal.scale.set(0.72, 1.85, 0.16);
+      petal.position.set(Math.cos(a) * 0.072, Math.sin(a) * 0.072, 0);
+      petal.rotation.z = a;
+      petal.castShadow = true;
+      head.add(petal);
+    }
+
+    const center = new THREE.Mesh(
+      new THREE.SphereGeometry(0.052, 18, 12),
+      centerMat,
+    );
+    center.scale.set(1, 1, 0.35);
+    center.castShadow = true;
+    head.add(center);
   }
-  plant.position.set(-1.48, 0.9, -1.28);
-  plant.scale.set(1.25, 1.25, 1.25);
+
+  addSunflower(-0.035, 0, 0.46, -0.08);
+  addSunflower(0.05, 0.03, 0.38, 0.11);
+  addSunflower(0.01, -0.05, 0.32, 0.04);
+  plant.position.set(-2.25, 0.21, -1.08);
+  plant.scale.set(2.1, 2.1, 2.1);
   scene.add(plant);
 
   /* ============================ CHAIR ============================ */
@@ -1247,7 +1500,7 @@ export function mountWorldScene() {
   });
   register(SHELF, {
     id: "books",
-    label: "Bookshelf",
+    label: "Full Publications",
     hotspot: new THREE.Vector3(0, 1.55, -0.2),
   });
   register(trophyGroup, {
@@ -1270,9 +1523,9 @@ export function mountWorldScene() {
     label: "Quick Links",
     hotspot: new THREE.Vector3(0, 0.01, 0.01),
   });
-  register(rubiksCube, {
+  register(speedcubePair, {
     id: "rubiks",
-    label: "3x3 Cube",
+    label: "3x3 & 2x2 Cubes",
     hotspot: new THREE.Vector3(0, 0.16, 0),
   });
 
@@ -1426,9 +1679,12 @@ export function mountWorldScene() {
     }
     if (id === "publications" || id === "books") {
       panelKicker.textContent =
-        id === "books" ? "Publication Library" : "Featured Publications";
-      panelTitle.textContent = "Selected Works";
-      return DATA.featuredPublications
+        id === "books" ? "Full Publications" : "Featured Publications";
+      panelTitle.textContent =
+        id === "books" ? "Publication Library" : "Selected Works";
+      const publicationItems =
+        id === "books" ? DATA.allPublications : DATA.featuredPublications;
+      return publicationItems
         .map(
           (p) => `<div class="pub">
             <h4>${p.title}</h4>
@@ -1478,9 +1734,9 @@ export function mountWorldScene() {
     if (id === "rubiks") {
       const wca = DATA.links.find((l) => l.name === "WCA");
       panelKicker.textContent = "Desk Object";
-      panelTitle.textContent = "Three-by-three Cube";
-      return `<p class="about-bio" style="margin-top:0;">A bright 3x3 cube sits on the front-left side of the desk, matching the cube in the workstation photo and linking back to Yinghao's speedcubing profile.</p>
-        ${wca ? `<div class="links-grid" style="margin-top:12px;"><a class="lk" href="${wca.url}" target="_blank" rel="noopener">${LINK_ICONS[wca.name] || ""}<span class="nm">WCA Profile</span></a></div>` : ""}`;
+      panelTitle.textContent = "Speedcubing Cubes";
+      return `<p class="about-bio" style="margin-top:0;">Yinghao can solve the 3x3 cube in about 6 seconds and the 2x2 cube in about 2 seconds. His World Cube Association (WCA) profile records his official speedcubing results.</p>
+        ${wca ? `<div class="links-grid" style="margin-top:12px;"><a class="lk" href="${wca.url}" target="_blank" rel="noopener">${LINK_ICONS[wca.name] || ""}<span class="nm">World Cube Association (WCA) Profile</span></a></div>` : ""}`;
     }
     return "";
   }
@@ -1545,7 +1801,7 @@ export function mountWorldScene() {
       hovered.scale.set(s, s, s);
     }
 
-    trophyGroup.rotation.y = 0.3 + Math.sin(t * 0.5) * 0.05;
+    trophyGroup.rotation.y = -0.28 + Math.sin(t * 0.5) * 0.05;
 
     controls.update();
 

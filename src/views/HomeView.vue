@@ -7,6 +7,7 @@ import {
   ref,
   watch,
 } from "vue";
+import { RouterLink } from "vue-router";
 import ModalDialog from "../components/ModalDialog.vue";
 import NewsList from "../components/NewsList.vue";
 import PublicationCard from "../components/PublicationCard.vue";
@@ -329,14 +330,6 @@ watch(activeTab, () => {
             >
               Yinghao Zhu
             </span>
-            <span class="hidden text-xl text-text-gray-light sm:inline"
-              >朱英豪</span
-            >
-            <img
-              src="https://www.hku.hk/f/page/7561/150p169/1d@750.jpg"
-              alt="HKU Logo"
-              class="h-9 w-auto opacity-80 transition-opacity hover:opacity-100"
-            />
           </button>
 
           <nav
@@ -437,39 +430,54 @@ watch(activeTab, () => {
             <section
               class="academic-card interactive-element flex-shrink-0 rounded-lg p-4"
             >
-              <div class="text-center">
-                <img
-                  :src="profile.photo"
-                  :alt="profile.name"
-                  class="avatar-ring mx-auto mb-2 h-20 w-20 rounded-full object-cover transition-transform hover:scale-105"
-                />
-                <h2 class="mb-1 text-lg font-bold text-text-gray">
-                  {{ profile.name }}
-                </h2>
-                <p class="mb-2 text-sm text-text-gray-light">
-                  {{ profile.cnName }}
-                </p>
-                <a
-                  :href="`mailto:${profile.email}`"
-                  class="mb-2 flex items-center justify-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue"
-                >
-                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
-                    />
-                    <path
-                      d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
-                    />
-                  </svg>
-                  {{ profile.email }}
-                </a>
-                <div class="space-y-0.5 text-xs text-text-gray-light">
-                  <p class="font-semibold text-primary-blue">
-                    {{ profile.title }}
+              <div class="space-y-3">
+                <div>
+                  <h2 class="text-lg font-bold tracking-tight text-text-gray">
+                    {{ profile.name }}
+                  </h2>
+                  <a
+                    :href="`mailto:${profile.email}`"
+                    class="mt-1.5 flex items-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue"
+                  >
+                    <svg
+                      class="h-3.5 w-3.5 flex-shrink-0"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
+                      />
+                      <path
+                        d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
+                      />
+                    </svg>
+                    <span>{{ profile.email }}</span>
+                  </a>
+                  <p class="mt-1 text-xs font-medium text-text-gray-light">
+                    {{ profile.affiliation }}
                   </p>
-                  <p>{{ profile.affiliation }}</p>
-                  <p class="text-xs opacity-75">{{ profile.school }}</p>
                 </div>
+                <RouterLink
+                  to="/world"
+                  class="interactive-element flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                  aria-label="Open 3D world"
+                >
+                  <span>3D World</span>
+                  <svg
+                    class="h-3.5 w-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 17 17 7" />
+                    <path d="M7 7h10v10" />
+                  </svg>
+                </RouterLink>
               </div>
             </section>
 
@@ -528,22 +536,54 @@ watch(activeTab, () => {
               class="panel-pane scrollable-container animate-scale-in flex h-full min-h-0 min-w-0 flex-col overflow-y-auto p-4 lg:p-6"
             >
               <div class="mb-6 lg:hidden">
-                <div class="mb-4 text-center">
-                  <img
-                    :src="profile.photo"
-                    :alt="profile.name"
-                    class="avatar-ring mx-auto mb-3 h-20 w-20 rounded-full object-cover"
-                  />
-                  <h2 class="mb-1 text-xl font-bold text-text-gray">
+                <div
+                  class="mb-4 rounded-lg border border-slate-200 bg-white p-4"
+                >
+                  <h2 class="text-xl font-bold tracking-tight text-text-gray">
                     {{ profile.name }}
                   </h2>
-                  <p class="mb-2 text-text-gray-light">{{ profile.cnName }}</p>
-                  <p class="text-sm font-semibold text-primary-blue">
-                    {{ profile.title }}
-                  </p>
-                  <p class="text-sm text-text-gray-light">
+                  <a
+                    :href="`mailto:${profile.email}`"
+                    class="mt-2 flex items-center gap-2 text-sm text-text-gray-light transition-colors hover:text-primary-blue"
+                  >
+                    <svg
+                      class="h-4 w-4 flex-shrink-0"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
+                      />
+                      <path
+                        d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
+                      />
+                    </svg>
+                    <span>{{ profile.email }}</span>
+                  </a>
+                  <p class="mt-1 text-sm font-medium text-text-gray-light">
                     {{ profile.affiliation }}
                   </p>
+                  <RouterLink
+                    to="/world"
+                    class="interactive-element mt-3 flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                    aria-label="Open 3D world"
+                  >
+                    <span>3D World</span>
+                    <svg
+                      class="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 17 17 7" />
+                      <path d="M7 7h10v10" />
+                    </svg>
+                  </RouterLink>
                 </div>
                 <QuickLinks :links="quickLinks" :icons="quickLinkIcons" />
                 <div class="mt-6">
@@ -578,7 +618,7 @@ watch(activeTab, () => {
 
               <div class="prose prose-sm max-w-none flex-shrink-0">
                 <p
-                  class="bio mb-4 leading-relaxed text-text-gray"
+                  class="bio mb-4 leading-[1.55] text-text-gray"
                   v-html="profile.bio"
                 />
                 <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -657,122 +697,139 @@ watch(activeTab, () => {
               class="panel-pane animate-scale-in flex h-full min-h-0 flex-col overflow-hidden"
             >
               <div class="flex-shrink-0 border-b border-slate-200">
-                <div class="p-3 pb-2 lg:p-4 lg:pb-3">
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition-colors hover:bg-bg-secondary/50"
-                    @click="filterExpanded = !filterExpanded"
-                  >
-                    <span class="flex items-center gap-2">
-                      <svg
-                        class="h-4 w-4 text-primary-blue transition-transform"
-                        :class="{ 'rotate-180': filterExpanded }"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                      <span class="text-sm font-medium text-text-gray"
-                        >Filters</span
-                      >
-                    </span>
-                    <span class="text-xs text-text-gray-light">
-                      {{ filterExpanded ? "Hide" : "Show" }}
-                    </span>
-                  </button>
-                </div>
-
-                <div v-show="filterExpanded" class="px-4 pb-4 lg:px-6 lg:pb-5">
+                <div class="px-3 py-3 lg:px-5">
                   <div
-                    class="mb-3 flex flex-wrap items-center justify-between gap-3"
+                    class="filter-panel rounded-lg border border-slate-200/80 bg-slate-50/70 p-3"
                   >
-                    <div class="flex min-w-0 flex-1 items-center gap-2">
-                      <input
-                        v-model="searchQuery"
-                        type="text"
-                        placeholder="Search publications..."
-                        class="min-w-[200px] flex-1 rounded-lg border border-slate-200 bg-white/70 px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
-                      />
-                      <select
-                        v-model="selectedYear"
-                        class="flex-shrink-0 rounded-lg border border-slate-200 bg-white/70 px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                    <div class="flex flex-wrap items-start gap-3">
+                      <div
+                        class="grid min-w-[min(100%,28rem)] flex-1 grid-cols-1 gap-2 sm:grid-cols-[minmax(12rem,1fr)_auto]"
                       >
-                        <option value="">All Years</option>
-                        <option
-                          v-for="year in availableYears"
-                          :key="year"
-                          :value="year"
+                        <input
+                          v-model="searchQuery"
+                          type="text"
+                          placeholder="Search publications..."
+                          class="filter-control min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                        />
+                        <select
+                          v-model="selectedYear"
+                          class="filter-control rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
                         >
-                          {{ year }}
-                        </option>
-                      </select>
+                          <option value="">All Years</option>
+                          <option
+                            v-for="year in availableYears"
+                            :key="year"
+                            :value="year"
+                          >
+                            {{ year }}
+                          </option>
+                        </select>
+                      </div>
+                      <div
+                        class="hidden shrink-0 pt-2 text-xs text-text-gray-light sm:flex sm:items-center sm:gap-4"
+                      >
+                        <span
+                          ><sup class="font-bold">*</sup> Co-first author</span
+                        >
+                        <span
+                          ><sup class="font-bold">†</sup> Corresponding
+                          author</span
+                        >
+                      </div>
                     </div>
+
                     <div
-                      class="hidden space-x-4 text-xs text-text-gray-light sm:block"
+                      v-show="filterExpanded"
+                      class="mt-3 flex flex-wrap gap-1.5"
                     >
-                      <span
-                        ><sup class="font-bold">*</sup> Co-first author</span
+                      <button
+                        type="button"
+                        class="publication-filter-tab"
+                        :class="
+                          selectedTag === ''
+                            ? 'bg-primary-blue text-white'
+                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                        "
+                        @click="selectedTag = ''"
                       >
-                      <span
-                        ><sup class="font-bold">†</sup> Corresponding
-                        author</span
+                        Featured
+                        <span class="publication-filter-tab-count"
+                          >({{ featuredPublications.length }})</span
+                        >
+                      </button>
+                      <button
+                        type="button"
+                        class="publication-filter-tab"
+                        :class="
+                          selectedTag === 'All'
+                            ? 'bg-primary-blue text-white'
+                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                        "
+                        @click="selectedTag = 'All'"
                       >
+                        All
+                        <span class="publication-filter-tab-count"
+                          >({{ publications.length }})</span
+                        >
+                      </button>
+                      <button
+                        v-for="tag in publicationTags"
+                        :key="tag.name"
+                        type="button"
+                        class="publication-filter-tab"
+                        :class="
+                          selectedTag === tag.name
+                            ? 'bg-primary-blue text-white'
+                            : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                        "
+                        @click="selectPublicationTag(tag.name)"
+                      >
+                        {{ tag.name }}
+                        <span class="publication-filter-tab-count"
+                          >({{ tag.count }})</span
+                        >
+                      </button>
                     </div>
-                  </div>
-                  <div class="flex flex-wrap gap-1.5">
-                    <button
-                      type="button"
-                      class="publication-filter-tab"
-                      :class="
-                        selectedTag === ''
-                          ? 'bg-primary-blue text-white'
-                          : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'
-                      "
-                      @click="selectedTag = ''"
-                    >
-                      Featured
-                      <span class="publication-filter-tab-count"
-                        >({{ featuredPublications.length }})</span
+
+                    <div class="mt-2 flex items-center justify-between gap-3">
+                      <div
+                        class="text-xs text-text-gray-light sm:hidden"
+                        :class="{ invisible: !filterExpanded }"
                       >
-                    </button>
-                    <button
-                      type="button"
-                      class="publication-filter-tab"
-                      :class="
-                        selectedTag === 'All'
-                          ? 'bg-primary-blue text-white'
-                          : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'
-                      "
-                      @click="selectedTag = 'All'"
-                    >
-                      All
-                      <span class="publication-filter-tab-count"
-                        >({{ publications.length }})</span
+                        <span
+                          ><sup class="font-bold">*</sup> Co-first author</span
+                        >
+                        <span
+                          ><sup class="font-bold">†</sup> Corresponding
+                          author</span
+                        >
+                      </div>
+                      <button
+                        type="button"
+                        class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:text-primary-blue-dark"
+                        :aria-expanded="filterExpanded"
+                        @click="filterExpanded = !filterExpanded"
                       >
-                    </button>
-                    <button
-                      v-for="tag in publicationTags"
-                      :key="tag.name"
-                      type="button"
-                      class="publication-filter-tab"
-                      :class="
-                        selectedTag === tag.name
-                          ? 'bg-primary-blue text-white'
-                          : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'
-                      "
-                      @click="selectPublicationTag(tag.name)"
-                    >
-                      {{ tag.name }}
-                      <span class="publication-filter-tab-count"
-                        >({{ tag.count }})</span
-                      >
-                    </button>
+                        <span>{{
+                          filterExpanded ? "Hide filters" : "Show filters"
+                        }}</span>
+                        <svg
+                          class="h-3.5 w-3.5 transition-transform"
+                          :class="{ 'rotate-180': filterExpanded }"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -825,7 +882,7 @@ watch(activeTab, () => {
               >
                 <section>
                   <div
-                    class="mb-3 flex items-center justify-between border-b border-slate-200 pb-2"
+                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-2 pb-2"
                   >
                     <h3
                       class="text-lg font-semibold tracking-tight text-text-gray"
@@ -874,7 +931,7 @@ watch(activeTab, () => {
 
                 <section>
                   <div
-                    class="mb-3 flex items-center justify-between border-b border-slate-200 pb-2"
+                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-2 pb-2"
                   >
                     <h3
                       class="text-lg font-semibold tracking-tight text-text-gray"

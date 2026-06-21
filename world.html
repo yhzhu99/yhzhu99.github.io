@@ -19,6 +19,13 @@
 }
 </script>
 
+<script src="data/profile.js"></script>
+<script src="data/links.js"></script>
+<script src="data/publications.js"></script>
+<script src="data/education.js"></script>
+<script src="data/experience.js"></script>
+<script src="data/awards.js"></script>
+
 <style>
     :root {
         --primary-blue: #005bac;
@@ -263,7 +270,7 @@
         <div class="dot"></div>
         <div>
             <h1>Yinghao Zhu <span style="color:var(--ink-faint);font-weight:400;">朱英豪</span></h1>
-            <div class="sub">3D Workspace · 北航新主楼 工位</div>
+            <div class="sub">3D Workspace · 北航工位</div>
         </div>
     </div>
     <a id="back-btn" href="index.html">
@@ -305,74 +312,26 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 /* ============================ DATA ============================ */
+const SITE_DATA = window.SiteData || {};
+const PROFILE = SITE_DATA.profile || {};
 const DATA = {
-    name: 'Yinghao Zhu',
-    cnName: '朱英豪',
-    title: 'PhD Student',
-    affiliation: 'The University of Hong Kong',
-    school: 'School of Computing and Data Science',
-    email: 'yhzhu99@gmail.com',
-    photo: 'https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png',
-    bio: 'I am a PhD student at The University of Hong Kong, supervised by <a href="https://yulequan.github.io/" target="_blank" rel="noopener">Prof. Lequan Yu</a>. I also work closely with <a href="http://scholar.pku.edu.cn/malt/home" target="_blank" rel="noopener">Prof. Liantao Ma</a> at Peking University. My research focuses on <strong>AI for Healthcare</strong> — building reliable, practical AI systems that improve clinical decision-making and accelerate healthcare research.',
-    interests: [
-        { title: 'AI Agents for Healthcare', desc: 'Autonomous & collaborative agents for clinical workflows.' },
-        { title: 'Medical LLMs', desc: 'Medical large language & multimodal models.' },
-        { title: 'Benchmarks & Toolkits', desc: 'Robust benchmarks, open-source toolkits, platforms.' },
-        { title: 'Human-Agent Collaboration', desc: 'Interpretable, reliable, real-world usable AI.' }
-    ],
-    featuredPublications: [
-        { title: 'Augmenting Clinical Decision-Making with an Interactive and Interpretable AI Copilot', authors: 'Yinghao Zhu, Dehao Sui, Zixiang Wang, Xuning Hu, Lei Gu, Yifan Qi, Tianchen Wu, Ling Wang, Yuan Wei, Wen Tang, Zhihan Cui, Yasha Wang, Lequan Yu, Ewen Harrison, Junyi Gao, Liantao Ma', venue: 'ACM CHI, 2026', year: '2026', links: [{type:'Paper',url:'https://arxiv.org/abs/2602.00726'},{type:'Platform',url:'https://aicare.pages.dev/'},{type:'Video',url:'https://www.youtube.com/watch?v=hKWljcF50Wg'}] },
-        { title: 'HealthFlow: A Self-Evolving AI Agent with Meta Planning for Autonomous Healthcare Research', authors: 'Yinghao Zhu, Yifan Qi, Zixiang Wang, Lei Gu, Dehao Sui, Haoran Hu, Xichen Zhang, Ziyi He, Junjun He, Liantao Ma, Lequan Yu', venue: 'Preprint, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2508.02621'},{type:'Code',url:'https://github.com/yhzhu99/HealthFlow'},{type:'Website',url:'https://healthflow.medx-pku.com/'}] },
-        { title: 'MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks', authors: 'Yinghao Zhu, Ziyi He, Haoran Hu, Xiaochen Zheng, Xichen Zhang, Zixiang Wang, Junyi Gao, Liantao Ma, Lequan Yu', venue: 'NeurIPS Datasets & Benchmarks, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2505.12371'},{type:'Code',url:'https://github.com/yhzhu99/MedAgentBoard'},{type:'Website',url:'https://medagentboard.netlify.app/'}] },
-        { title: 'MedAgentAudit: Diagnosing and Quantifying Collaborative Failure Modes in Medical Multi-Agent Systems', authors: 'Lei Gu, Yinghao Zhu, Haoran Sang, Zixiang Wang, Dehao Sui, Wen Tang, Ewen Harrison, Junyi Gao, Lequan Yu, Liantao Ma', venue: 'Preprint, 2025', year: '2025', links: [{type:'Paper',url:'https://arxiv.org/abs/2510.10185'},{type:'Code',url:'https://github.com/yhzhu99/MedAgentAudit'}] },
-        { title: 'ClinicRealm: Re-evaluating Large Language Models with Conventional ML for Non-Generative Clinical Prediction', authors: 'Yinghao Zhu, Junyi Gao, Zixiang Wang, Weibin Liao, Xiaochen Zheng, Lifang Liang, Miguel O. Bernabeu, Yasha Wang, Lequan Yu, Chengwei Pan, Ewen Harrison, Liantao Ma', venue: 'npj Digital Medicine, 2026', year: '2026', links: [{type:'Paper',url:'https://www.nature.com/articles/s41746-026-02539-z'},{type:'Code',url:'https://github.com/yhzhu99/ehr-llm-benchmark'}] },
-        { title: 'ColaCare: Enhancing EHR Modeling through LLM-Driven Multi-Agent Collaboration', authors: 'Zixiang Wang, Yinghao Zhu, Huiya Zhao, Xiaochen Zheng, Tianlong Wang, Wen Tang, Yasha Wang, Chengwei Pan, Ewen Harrison, Junyi Gao, Liantao Ma', venue: 'ACM WWW, 2025', year: '2025', links: [{type:'Paper',url:'https://dl.acm.org/doi/10.1145/3696410.3714877'},{type:'Code',url:'https://github.com/PKU-AICare/ColaCare'},{type:'Website',url:'https://colacare.netlify.app'}] },
-        { title: 'EMERGE: Enhancing Multimodal EHR Predictive Modeling with Retrieval-Augmented Generation', authors: 'Yinghao Zhu, Changyu Ren, Zixiang Wang, Xiaochen Zheng, Shiyun Xie, Junlan Feng, Xi Zhu, Zhoujun Li, Liantao Ma, Chengwei Pan', venue: 'ACM CIKM, 2024', year: '2024', links: [{type:'Paper',url:'https://dl.acm.org/doi/10.1145/3627673.3679582'},{type:'Code',url:'https://github.com/yhzhu99/EMERGE'}] },
-        { title: 'A Comprehensive Benchmark For COVID-19 Predictive Modeling Using EHR in Intensive Care', authors: 'Junyi Gao, Yinghao Zhu, Wenqing Wang, Zixiang Wang, Guiying Dong, Wen Tang, Hao Wang, Yasha Wang, Ewen Harrison, Liantao Ma', venue: 'Cell Patterns, 2024', year: '2024', links: [{type:'Paper',url:'https://www.cell.com/patterns/fulltext/S2666-3899(24)00050-3'},{type:'Code',url:'https://github.com/yhzhu99/pyehr'}] }
-    ],
-    education: [
-        { institution: 'The University of Hong Kong', sub: 'PhD Student', meta: 'School of Computing and Data Science, Hong Kong', when: '2025.07 – Present', det: 'Supervised by Prof. Lequan Yu' },
-        { institution: 'Beihang University', sub: 'M.Eng. in Artificial Intelligence', meta: 'School of Artificial Intelligence, Beijing', when: '2022.09 – 2025.01', det: 'Supervised by Prof. Chengwei Pan' },
-        { institution: 'Politecnico di Milano', sub: 'Exchange, Computer Science & Engineering', meta: 'Milan, Italy', when: '2024.02 – 2024.07', det: 'Exchange Program' },
-        { institution: 'Beihang University', sub: 'B.Eng. in Software Engineering', meta: 'School of Software, Beijing', when: '2018.09 – 2022.06', det: '' }
-    ],
-    experience: [
-        { institution: 'Peking University', sub: 'External Research Advisor', meta: 'School of Computer Science, Beijing', when: '2023.09 – Present', det: 'With Prof. Liantao Ma' },
-        { institution: 'Stanford University', sub: 'Research Assistant', meta: 'Stanford Causal Science Center, Remote', when: '2024.03 – 2024.12', det: 'Advised by Prof. Yiqing Xu' },
-        { institution: 'University of Zurich & USZ', sub: 'Research Assistant', meta: 'KrauthammerLab, Zurich, Switzerland', when: '2024.04 – 2024.12', det: 'Advised by Dr. Ahmed Allam & Prof. Michael Krauthammer' },
-        { institution: 'Children\'s Hospital of Fudan Univ.', sub: 'Research Assistant', meta: 'Dept. of Radiology, Shanghai', when: '2022.10 – 2023.12', det: 'Advised by Prof. Zhongwei Qiao' }
-    ],
-    awards: [
-        { year: '2026', title: 'ICML 2026 Silver Reviewer Award', org: 'International Conference on Machine Learning' },
-        { year: '2025', title: 'Avenir-HKU Web3.0 Quantitative Trading Challenge', org: '1st Runner-up (12,000 USD Prize)' },
-        { year: '2025', title: 'Outstanding Graduate of Beijing', org: 'Beijing Municipal Education Commission' },
-        { year: '2024', title: 'Detecting Active Tuberculosis Bacilli', org: 'Top 4 of all teams, Nightingale Open Science' },
-        { year: '2023', title: 'Bias Detection Tools for Clinical Decision Making', org: '3rd Place (75,000 USD), NIH/NCATS' },
-        { year: '2023', title: '“Challenge Cup” Competition of Science Achievement', org: 'Special Prize (Top 1), CAST' },
-        { year: '2022', title: 'High Risk Breast Cancer Prediction Contest I', org: 'Top 3 of all teams (1,500 USD), Nightingale' }
-    ],
-    links: [
-        { name: 'Google Scholar', url: 'https://scholar.google.com/citations?user=LYrsSoEAAAAJ' },
-        { name: 'GitHub', url: 'https://github.com/yhzhu99' },
-        { name: 'ResearchGate', url: 'https://www.researchgate.net/profile/Yinghao-Zhu-5' },
-        { name: 'ORCID', url: 'https://orcid.org/0000-0002-2640-6477' },
-        { name: 'OpenReview', url: 'https://openreview.net/profile?id=~Yinghao_Zhu1' },
-        { name: 'arXiv', url: 'https://arxiv.org/a/zhu_y_10.html' },
-        { name: 'Semantic Scholar', url: 'https://www.semanticscholar.org/author/Yinghao-Zhu/2098545' },
-        { name: 'WCA (Rubik\'s)', url: 'https://www.worldcubeassociation.org/persons/2013ZHUY01' }
-    ]
+    name: PROFILE.name || 'Yinghao Zhu',
+    cnName: PROFILE.cnName || '朱英豪',
+    title: PROFILE.title || 'PhD Student',
+    affiliation: PROFILE.affiliation || 'The University of Hong Kong',
+    school: PROFILE.school || 'School of Computing and Data Science',
+    email: PROFILE.email || 'yhzhu99@gmail.com',
+    photo: PROFILE.photo || 'https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png',
+    bio: PROFILE.bio || '',
+    interests: PROFILE.interests || [],
+    workspace: PROFILE.workspace || {},
+    featuredPublications: (SITE_DATA.publications || []).filter(pub => pub.featured),
+    education: SITE_DATA.education || [],
+    experience: SITE_DATA.experience || [],
+    awards: SITE_DATA.awards || [],
+    links: SITE_DATA.quickLinks || []
 };
-
-const LINK_ICONS = {
-    'Google Scholar': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>',
-    'GitHub': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
-    'ResearchGate': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a3.193 3.193 0 0 0-.112.437 8.365 8.365 0 0 0-.078.53 9 9 0 0 0-.05.727c-.01.282-.013.621-.013 1.016a31.121 31.123 0 0 0 .014 1.017 9 9 0 0 0 .05.727 7.946 7.946 0 0 0 .077.53h-.005a3.334 3.334 0 0 0 .113.438c.245.743.65 1.303 1.214 1.68.565.376 1.256.564 2.075.564.8 0 1.536-.213 2.105-.603.57-.39.94-.916 1.175-1.65.076-.235.135-.558.177-.93a10.9 10.9 0 0 0 .043-1.207v-.82c0-.095-.047-.142-.14-.142h-3.064c-.094 0-.14.047-.14.141v.956c0 .094.046.14.14.14h1.666c.056 0 .084.03.084.086 0 .36 0 .62-.036.865-.038.244-.1.447-.147.606-.108.385-.348.664-.638.876-.29.212-.738.35-1.227.35-.545 0-.901-.15-1.21-.353-.306-.203-.517-.454-.67-.915a3.136 3.136 0 0 1-.147-.762 17.366 17.367 0 0 1-.034-.656c-.01-.26-.014-.572-.014-.939a26.401 26.403 0 0 1 .014-.938 15.821 15.822 0 0 1 .035-.656 3.19 3.19 0 0 1 .148-.76 1.89 1.89 0 0 1 .742-1.01c.344-.244.593-.352 1.137-.352.508 0 .815.096 1.144.303.33.207.528.492.764.925.047.094.111.118.198.07l1.044-.43c.075-.048.09-.115.042-.199a3.549 3.549 0 0 0-.466-.742 3 3 0 0 0-.679-.607 3.313 3.313 0 0 0-.903-.41A4.068 4.068 0 0 0 19.586 0zM8.217 5.836c-1.69 0-3.036.086-4.297.086-1.146 0-2.291 0-3.007-.029v.831l1.088.2c.744.144 1.174.488 1.174 2.264v11.288c0 1.777-.43 2.12-1.174 2.263l-1.088.2v.832c.773-.029 2.12-.086 3.465-.086 1.29 0 2.951.057 3.667.086v-.831l-1.49-.2c-.773-.115-1.174-.487-1.174-2.264v-4.784c.688.057 1.29.057 2.206.057 1.748 3.123 3.41 5.472 4.355 6.56.86 1.032 2.177 1.691 3.839 1.691.487 0 1.003-.086 1.318-.23v-.744c-1.031 0-2.063-.716-2.808-1.518-1.26-1.376-2.95-3.582-4.355-6.074 2.32-.545 4.04-2.722 4.04-4.9 0-3.208-2.492-4.698-5.758-4.698zm-.515 1.29c2.406 0 3.839 1.26 3.839 3.552 0 2.263-1.547 3.782-4.097 3.782-.974 0-1.404-.03-2.063-.086v-7.19c.66-.059 1.547-.059 2.32-.059z"/></svg>',
-    'ORCID': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.372 0 12s5.373 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg>',
-    'arXiv': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.8423 0a1.0037 1.0037 0 0 0-.922.6078c-.1536.3687-.0438.6275.2938 1.1113l6.9185 8.3597-1.0223 1.1058a1.0393 1.0393 0 0 0 .003 1.4229l1.2292 1.3135-5.4391 6.4444c-.2803.299-.4538.823-.2971 1.1986a1.0253 1.0253 0 0 0 .9585.635.9133.9133 0 0 0 .6891-.3405l5.783-6.126 7.4902 8.0051a.8527.8527 0 0 0 .6835.2597.9575.9575 0 0 0 .8777-.6138c.1577-.377-.017-.7502-.306-1.1407l-7.0518-8.3418 1.0632-1.13a.9626.9626 0 0 0 .0089-1.3165L4.6336.4639s-.3733-.4535-.768-.463z"/></svg>',
-    'Semantic Scholar': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 8.609c-.848.536-1.436.83-2.146 1.245-4.152 2.509-8.15 5.295-11.247 8.981l-1.488 1.817-4.568-7.268c1.021.814 3.564 3.098 4.603 3.599l3.356-2.526c2.336-1.644 8.946-5.226 11.49-5.848Z"/></svg>',
-    'OpenReview': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>',
-    'WCA (Rubik\'s)': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/></svg>'
-};
+const LINK_ICONS = SITE_DATA.quickLinkIcons || {};
 
 /* ============================ SCENE SETUP ============================ */
 const canvas = document.getElementById('scene');
@@ -1049,7 +1008,7 @@ function renderPanel(id) {
                 <div class="about-aff">${DATA.school}</div>
             </div>
             <p class="about-bio">${DATA.bio}</p>
-            <div class="interest-grid">${DATA.interests.map(i => `<div class="interest"><h5>${i.title}</h5><p>${i.desc}</p></div>`).join('')}</div>
+            <div class="interest-grid">${DATA.interests.map(i => `<div class="interest"><h5>${i.title}</h5><p>${i.description || i.desc || ''}</p></div>`).join('')}</div>
         </div>`;
     }
     if (id === 'publications' || id === 'books') {
@@ -1065,13 +1024,13 @@ function renderPanel(id) {
     if (id === 'awards') {
         panelKicker.textContent = 'Awards & Honors';
         panelTitle.textContent = 'Recognition';
-        return DATA.awards.map(a => `<div class="award"><div class="yr">${a.year}</div><div class="body"><h4>${a.title}</h4><p>${a.org}</p></div></div>`).join('');
+        return DATA.awards.map(a => `<div class="award"><div class="yr">${a.year}</div><div class="body"><h4>${a.title}</h4><p>${a.organization || a.org || ''}</p></div></div>`).join('');
     }
     if (id === 'education') {
         panelKicker.textContent = 'Education & Experience';
         panelTitle.textContent = 'Academic Journey';
-        const edu = DATA.education.map(e => `<div class="tl-item"><div class="tl-when">${e.when}</div><h4>${e.institution}</h4><div class="tl-sub">${e.sub}</div><div class="tl-meta">${e.meta}</div>${e.det ? `<div class="tl-det">${e.det}</div>` : ''}</div>`).join('');
-        const exp = DATA.experience.map(e => `<div class="tl-item"><div class="tl-when">${e.when}</div><h4>${e.institution}</h4><div class="tl-sub">${e.sub}</div><div class="tl-meta">${e.meta}</div>${e.det ? `<div class="tl-det">${e.det}</div>` : ''}</div>`).join('');
+        const edu = DATA.education.map(e => `<div class="tl-item"><div class="tl-when">${e.period || e.when || ''}</div><h4>${e.institution || e.organization || ''}</h4><div class="tl-sub">${e.degree || e.position || e.sub || ''}</div><div class="tl-meta">${e.location || e.meta || ''}</div>${(e.details || e.det) ? `<div class="tl-det">${e.details || e.det}</div>` : ''}</div>`).join('');
+        const exp = DATA.experience.map(e => `<div class="tl-item"><div class="tl-when">${e.period || e.when || ''}</div><h4>${e.institution || e.organization || ''}</h4><div class="tl-sub">${e.degree || e.position || e.sub || ''}</div><div class="tl-meta">${e.location || e.meta || ''}</div>${(e.details || e.det) ? `<div class="tl-det">${e.details || e.det}</div>` : ''}</div>`).join('');
         return `<h3 style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">Education</h3><div class="timeline" style="margin-bottom:26px;">${edu}</div><h3 style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">Professional Experience</h3><div class="timeline">${exp}</div>`;
     }
     if (id === 'links') {

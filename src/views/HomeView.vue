@@ -14,6 +14,14 @@ import PublicationCard from "../components/PublicationCard.vue";
 import QuickLinks from "../components/QuickLinks.vue";
 import TimelineColumn from "../components/TimelineColumn.vue";
 import { siteData } from "../data";
+import { escapeHtml } from "../utils/html";
+import {
+  filterPublications,
+  getActivePublicationFilterLabel,
+  getFeaturedPublications,
+  getPublicationTags,
+  getPublicationYears,
+} from "../utils/publications";
 import type {
   AwardItem,
   LinkItem,
@@ -43,26 +51,6 @@ const reviewerPreview = [
   "UIST",
   "AMIA",
 ];
-
-const publicationTagOrder = [
-  "LLM Agents for Healthcare",
-  "LLM for Healthcare",
-  "Healthcare Benchmark",
-  "Healthcare Modeling",
-  "Trustworthy AI",
-  "Software Engineering",
-  "Toolkits & Platforms",
-  "Survey",
-  "Book Chapters",
-];
-
-const htmlEscapes: Record<string, string> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;",
-};
 
 const {
   authorLinks,
@@ -97,85 +85,24 @@ let filterAnimationFrame = 0;
 let filterAnimationTimeout = 0;
 
 const featuredPublications = computed(() =>
-  publications.filter((publication) => publication.featured),
+  getFeaturedPublications(publications),
 );
 
-const availableYears = computed(() =>
-  [
-    ...new Set(
-      publications.map((publication) => publication.year).filter(Boolean),
-    ),
-  ].sort((a, b) => b.localeCompare(a)),
+const availableYears = computed(() => getPublicationYears(publications));
+
+const publicationTags = computed(() => getPublicationTags(publications));
+
+const filteredPublications = computed(() =>
+  filterPublications(publications, featuredPublications.value, {
+    searchQuery: searchQuery.value,
+    selectedTag: selectedTag.value,
+    selectedYear: selectedYear.value,
+  }),
 );
 
-const publicationTags = computed(() => {
-  const tagCounts = publications.reduce<Record<string, number>>(
-    (counts, publication) => {
-      if (publication.tag) {
-        counts[publication.tag] = (counts[publication.tag] ?? 0) + 1;
-      }
-
-      return counts;
-    },
-    {},
-  );
-
-  return Object.entries(tagCounts)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => {
-      if (a.name === "Other Topics") return 1;
-      if (b.name === "Other Topics") return -1;
-
-      const indexA = publicationTagOrder.indexOf(a.name);
-      const indexB = publicationTagOrder.indexOf(b.name);
-
-      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-
-      return b.count - a.count;
-    });
-});
-
-const filteredPublications = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase();
-  const base =
-    selectedTag.value === "All"
-      ? publications
-      : selectedTag.value
-        ? publications.filter(
-            (publication) => publication.tag === selectedTag.value,
-          )
-        : featuredPublications.value;
-
-  return [...base].filter((publication) => {
-    const searchable = [
-      publication.title,
-      publication.authors,
-      publication.venue,
-      publication.tag,
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    return (
-      (!query || searchable.includes(query)) &&
-      (!selectedYear.value || publication.year === selectedYear.value)
-    );
-  });
-});
-
-const activePublicationFilterLabel = computed(() => {
-  if (selectedTag.value === "") {
-    return "Featured";
-  }
-
-  if (selectedTag.value === "All") {
-    return "All";
-  }
-
-  return selectedTag.value;
-});
+const activePublicationFilterLabel = computed(() =>
+  getActivePublicationFilterLabel(selectedTag.value),
+);
 
 function selectTab(tabId: TabId) {
   activeTab.value = tabId;
@@ -292,10 +219,6 @@ function toAwardModalItem(item: AwardItem): ModalItem {
   };
 }
 
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => htmlEscapes[char]);
-}
-
 function formatServiceItemContent(item: Partial<ServiceItem>) {
   if (item.content && !item.title) {
     return escapeHtml(item.content);
@@ -324,7 +247,7 @@ function formatLinks(links: LinkItem[]) {
   const html = links
     .map(
       (link) =>
-        `<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="inline-flex rounded-full bg-bg-secondary px-2 py-0.5 text-xs text-text-gray transition-colors hover:bg-primary-blue/10 hover:text-primary-blue-dark">${escapeHtml(link.type)}</a>`,
+        `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex rounded-full bg-bg-secondary px-2 py-0.5 text-xs text-text-gray transition-colors hover:bg-primary-blue/10 hover:text-primary-blue-dark">${escapeHtml(link.type)}</a>`,
     )
     .join(" ");
 

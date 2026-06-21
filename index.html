@@ -331,11 +331,13 @@
                 </div>
 
                 <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-1 text-sm font-medium bg-gray-100/50 p-1 rounded-full border border-gray-200/50">
+                <nav x-ref="desktopNav" class="hidden md:flex relative items-center gap-1 text-sm font-medium bg-gray-100/50 p-1 rounded-full border border-gray-200/50">
+                    <!-- Sliding indicator -->
+                    <span aria-hidden="true" class="absolute top-1 bottom-1 left-0 rounded-full bg-white shadow-sm ring-1 ring-black/5 pointer-events-none" :class="navIndicatorReady ? 'transition-all duration-300 ease-out' : ''" :style="navIndicatorStyle" style="will-change: transform, width;"></span>
                     <template x-for="tab in tabs" :key="tab.id">
-                         <button type="button" @click="activeTab = tab.id"
-                                :class="activeTab === tab.id ? 'bg-white text-primary-blue shadow-sm ring-1 ring-black/5' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'"
-                                class="px-4 py-1.5 rounded-full transition-all duration-300 ease-out"
+                         <button type="button" :data-tab-id="tab.id" @click="activeTab = tab.id"
+                                :class="activeTab === tab.id ? 'text-primary-blue' : 'text-gray-500 hover:text-gray-900'"
+                                class="relative z-10 px-4 py-1.5 rounded-full transition-colors duration-300 ease-out"
                                 :aria-current="activeTab === tab.id ? 'page' : null"
                                 x-text="tab.name">
                         </button>
@@ -826,6 +828,8 @@
                 showServiceModal: false,
                 selectedService: null,
                 filterExpanded: true, // Filter section expanded by default
+                navIndicatorStyle: '',
+                navIndicatorReady: false,
 
                 // Filter State
                 searchQuery: '',
@@ -1178,6 +1182,32 @@
                     }
                     this.selectedService = { title, items: flatItems };
                     this.showServiceModal = true;
+                },
+
+                init() {
+                    const measure = () => {
+                        this.updateNavIndicator();
+                        requestAnimationFrame(() => { this.navIndicatorReady = true; });
+                    };
+                    this.$nextTick(measure);
+                    this.$watch('activeTab', () => this.$nextTick(() => this.updateNavIndicator()));
+                    window.addEventListener('resize', () => this.updateNavIndicator());
+                    this.$nextTick(() => {
+                        if (window.ResizeObserver && this.$refs.desktopNav) {
+                            (new ResizeObserver(() => this.updateNavIndicator())).observe(this.$refs.desktopNav);
+                        }
+                    });
+                },
+
+                updateNavIndicator() {
+                    const nav = this.$refs.desktopNav;
+                    if (!nav) return;
+                    const btn = nav.querySelector('[data-tab-id="' + this.activeTab + '"]');
+                    if (!btn) return;
+                    const navRect = nav.getBoundingClientRect();
+                    const btnRect = btn.getBoundingClientRect();
+                    const x = btnRect.left - navRect.left - (nav.clientLeft || 0);
+                    this.navIndicatorStyle = 'transform: translateX(' + x + 'px); width: ' + btnRect.width + 'px;';
                 },
             };
 

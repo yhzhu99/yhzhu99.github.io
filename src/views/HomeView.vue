@@ -13,22 +13,55 @@ import PublicationCard from "../components/PublicationCard.vue";
 import QuickLinks from "../components/QuickLinks.vue";
 import TimelineColumn from "../components/TimelineColumn.vue";
 import { siteData } from "../data";
-import { profile, tabs } from "../site";
 import type {
   AwardItem,
+  LinkItem,
   ModalItem,
-  Publication,
   ServiceModalState,
+  ServiceItem,
   TabId,
+  TabItem,
 } from "../types";
-import {
-  formatServiceItemContent,
-  isPublished,
-  latestYear,
-  publicationTagOrder,
-  reviewerPreview,
-  venuePriority,
-} from "../utils/format";
+
+const tabs = [
+  { name: "About", id: "about" },
+  { name: "Publications", id: "publications" },
+  { name: "Experience", id: "experience" },
+  { name: "Honors & Service", id: "awards" },
+] satisfies TabItem[];
+
+const reviewerPreview = [
+  "npj Digital Medicine",
+  "NeurIPS",
+  "ICML",
+  "ICLR",
+  "KDD",
+  "WWW",
+  "AAAI",
+  "CHI",
+  "UIST",
+  "AMIA",
+];
+
+const publicationTagOrder = [
+  "LLM Agents for Healthcare",
+  "LLM for Healthcare",
+  "Healthcare Benchmark",
+  "Healthcare Modeling",
+  "Trustworthy AI",
+  "Software Engineering",
+  "Toolkits & Platforms",
+  "Survey",
+  "Book Chapters",
+];
+
+const htmlEscapes: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
 
 const {
   authorLinks,
@@ -36,6 +69,7 @@ const {
   education,
   experience,
   newsItems,
+  profile,
   projects,
   publications,
   quickLinkIcons,
@@ -109,23 +143,21 @@ const filteredPublications = computed(() => {
           )
         : featuredPublications.value;
 
-  return [...base]
-    .filter((publication) => {
-      const searchable = [
-        publication.title,
-        publication.authors,
-        publication.venue,
-        publication.tag,
-      ]
-        .join(" ")
-        .toLowerCase();
+  return [...base].filter((publication) => {
+    const searchable = [
+      publication.title,
+      publication.authors,
+      publication.venue,
+      publication.tag,
+    ]
+      .join(" ")
+      .toLowerCase();
 
-      return (
-        (!query || searchable.includes(query)) &&
-        (!selectedYear.value || publication.year === selectedYear.value)
-      );
-    })
-    .sort(sortPublications);
+    return (
+      (!query || searchable.includes(query)) &&
+      (!selectedYear.value || publication.year === selectedYear.value)
+    );
+  });
 });
 
 function selectTab(tabId: TabId) {
@@ -159,20 +191,13 @@ function openServiceModal(title: string) {
   const service = services.find((item) => item.title === title);
   selectedService.value = {
     title,
-    items: (service?.items ?? [])
-      .slice()
-      .sort((a, b) => {
-        const yearDiff =
-          latestYear(String(b.year)) - latestYear(String(a.year));
-        return yearDiff || a.content.localeCompare(b.content);
-      })
-      .map(
-        (item): ModalItem => ({
-          uid: item.uid,
-          date: item.year,
-          content: formatServiceItemContent(item),
-        }),
-      ),
+    items: (service?.items ?? []).slice().map(
+      (item): ModalItem => ({
+        uid: item.uid,
+        date: item.year,
+        content: formatServiceItemContent(item),
+      }),
+    ),
   };
 }
 
@@ -205,27 +230,51 @@ function handleKeydown(event: KeyboardEvent) {
   }
 }
 
-function sortPublications(a: Publication, b: Publication) {
-  if (a.year !== b.year) {
-    return b.year.localeCompare(a.year);
-  }
-
-  const publishedDiff =
-    Number(isPublished(b.venue)) - Number(isPublished(a.venue));
-  if (publishedDiff) {
-    return publishedDiff;
-  }
-
-  const priorityDiff = venuePriority(a.venue) - venuePriority(b.venue);
-  return priorityDiff || a.title.localeCompare(b.title);
-}
-
 function toAwardModalItem(item: AwardItem): ModalItem {
   return {
     uid: item.uid,
     date: item.year,
     content: formatServiceItemContent(item),
   };
+}
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (char) => htmlEscapes[char]);
+}
+
+function formatServiceItemContent(item: Partial<ServiceItem>) {
+  if (item.content && !item.title) {
+    return escapeHtml(item.content);
+  }
+
+  const title = escapeHtml(item.title ?? item.content ?? "");
+  const subtext = escapeHtml(item.organization ?? item.venue ?? "");
+  const authors = item.authors ? escapeHtml(item.authors) : "";
+  const links = formatLinks(item.links ?? []);
+
+  return [
+    title,
+    subtext ? `<br><small class="text-gray-500">${subtext}</small>` : "",
+    authors
+      ? `<br><small class="mt-1 text-gray-400">Team: ${authors}</small>`
+      : "",
+    links,
+  ].join("");
+}
+
+function formatLinks(links: LinkItem[]) {
+  if (!links.length) {
+    return "";
+  }
+
+  const html = links
+    .map(
+      (link) =>
+        `<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="inline-flex rounded-full bg-bg-secondary px-2 py-0.5 text-xs text-text-gray transition-colors hover:bg-primary-blue/10 hover:text-primary-blue-dark">${escapeHtml(link.type)}</a>`,
+    )
+    .join(" ");
+
+  return `<div class="mt-2 flex flex-wrap gap-1.5">${html}</div>`;
 }
 
 onMounted(() => {
@@ -257,7 +306,9 @@ watch(activeTab, () => {
 </script>
 
 <template>
-  <div class="flex min-h-dvh flex-col bg-bg-light font-academic text-text-gray">
+  <div
+    class="grid h-dvh grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-bg-light font-academic text-text-gray"
+  >
     <header
       class="sticky top-0 z-50 flex-shrink-0 border-b border-slate-200/70 bg-white/90 backdrop-blur-md transition-all duration-300"
     >
@@ -375,42 +426,56 @@ watch(activeTab, () => {
       </div>
     </header>
 
-    <main class="main-container flex-1 overflow-hidden">
-      <div class="mx-auto h-full max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8">
-        <div class="grid h-full min-w-0 grid-cols-1 gap-4 lg:grid-cols-4">
+    <main class="min-h-0 overflow-hidden">
+      <div
+        class="mx-auto h-full min-h-0 max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8"
+      >
+        <div
+          class="grid h-full min-h-0 min-w-0 grid-cols-1 grid-rows-[minmax(0,1fr)] gap-4 lg:grid-cols-4"
+        >
           <aside class="hidden min-h-0 flex-col gap-4 overflow-hidden lg:flex">
             <section
-              class="academic-card flex-shrink-0 rounded-lg p-4 text-center"
+              class="academic-card interactive-element flex-shrink-0 rounded-lg p-4"
             >
-              <img
-                :src="profile.photo"
-                :alt="profile.name"
-                class="avatar-ring mx-auto mb-2 h-20 w-20 rounded-full object-cover transition-transform hover:scale-105"
-              />
-              <h2 class="mb-1 text-lg font-bold text-text-gray">
-                {{ profile.name }}
-              </h2>
-              <p class="mb-2 text-sm text-text-gray-light">
-                {{ profile.cnName }}
-              </p>
-              <a
-                :href="`mailto:${profile.email}`"
-                class="mb-2 block text-xs text-text-gray-light transition-colors hover:text-primary-blue"
-              >
-                {{ profile.email }}
-              </a>
-              <p class="text-xs font-semibold text-primary-blue">
-                {{ profile.title }}
-              </p>
-              <p class="text-xs text-text-gray-light">
-                {{ profile.affiliation }}
-              </p>
-              <p class="text-xs text-text-gray-light/75">
-                {{ profile.school }}
-              </p>
+              <div class="text-center">
+                <img
+                  :src="profile.photo"
+                  :alt="profile.name"
+                  class="avatar-ring mx-auto mb-2 h-20 w-20 rounded-full object-cover transition-transform hover:scale-105"
+                />
+                <h2 class="mb-1 text-lg font-bold text-text-gray">
+                  {{ profile.name }}
+                </h2>
+                <p class="mb-2 text-sm text-text-gray-light">
+                  {{ profile.cnName }}
+                </p>
+                <a
+                  :href="`mailto:${profile.email}`"
+                  class="mb-2 flex items-center justify-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue"
+                >
+                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884z"
+                    />
+                    <path
+                      d="m18 8.118-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z"
+                    />
+                  </svg>
+                  {{ profile.email }}
+                </a>
+                <div class="space-y-0.5 text-xs text-text-gray-light">
+                  <p class="font-semibold text-primary-blue">
+                    {{ profile.title }}
+                  </p>
+                  <p>{{ profile.affiliation }}</p>
+                  <p class="text-xs opacity-75">{{ profile.school }}</p>
+                </div>
+              </div>
             </section>
 
-            <section class="academic-card flex-shrink-0 rounded-lg p-3">
+            <section
+              class="academic-card interactive-element flex-shrink-0 rounded-lg p-3"
+            >
               <h3
                 class="mb-3 border-b border-slate-200 pb-2 text-sm font-semibold tracking-tight text-text-gray"
               >
@@ -420,7 +485,7 @@ watch(activeTab, () => {
             </section>
 
             <section
-              class="academic-card flex min-h-0 flex-1 flex-col rounded-lg p-3"
+              class="academic-card interactive-element flex min-h-0 flex-1 flex-col rounded-lg p-3"
             >
               <div
                 class="mb-2 flex flex-shrink-0 items-center justify-between border-b border-slate-200 pb-2"
@@ -456,11 +521,11 @@ watch(activeTab, () => {
           </aside>
 
           <section
-            class="academic-card col-span-1 flex min-h-0 min-w-0 flex-col overflow-hidden rounded-lg lg:col-span-3"
+            class="academic-card col-span-1 flex h-full min-h-0 min-w-0 flex-col overflow-hidden rounded-lg lg:col-span-3"
           >
             <div
               v-show="activeTab === 'about'"
-              class="panel-pane scrollable-container flex h-full min-w-0 flex-col overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in flex h-full min-h-0 min-w-0 flex-col overflow-y-auto p-4 lg:p-6"
             >
               <div class="mb-6 lg:hidden">
                 <div class="mb-4 text-center">
@@ -575,7 +640,7 @@ watch(activeTab, () => {
               <div
                 class="featured-publications-section scrollable-container min-h-0 flex-1 overflow-y-auto pt-3"
               >
-                <div class="hidden space-y-2 md:block">
+                <div class="space-y-2">
                   <PublicationCard
                     v-for="publication in featuredPublications"
                     :key="publication.uid"
@@ -589,7 +654,7 @@ watch(activeTab, () => {
 
             <div
               v-show="activeTab === 'publications'"
-              class="panel-pane flex min-h-0 flex-1 flex-col overflow-hidden"
+              class="panel-pane animate-scale-in flex h-full min-h-0 flex-col overflow-hidden"
             >
               <div class="flex-shrink-0 border-b border-slate-200">
                 <div class="p-3 pb-2 lg:p-4 lg:pb-3">
@@ -735,7 +800,7 @@ watch(activeTab, () => {
 
             <div
               v-show="activeTab === 'experience'"
-              class="panel-pane scrollable-container flex-1 overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in h-full min-h-0 flex-1 overflow-y-auto p-4 lg:p-6"
             >
               <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <TimelineColumn
@@ -753,7 +818,7 @@ watch(activeTab, () => {
 
             <div
               v-show="activeTab === 'awards'"
-              class="panel-pane scrollable-container overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in h-full min-h-0 flex-1 overflow-y-auto p-4 lg:p-6"
             >
               <div
                 class="grid grid-cols-1 gap-4 border-b border-slate-200 pb-4 lg:grid-cols-2"
@@ -787,7 +852,7 @@ watch(activeTab, () => {
                     </button>
                   </div>
                   <div
-                    class="mask-fade-bottom max-h-[30vh] space-y-1 overflow-y-auto pr-1"
+                    class="scrollable-container mask-fade-bottom max-h-[30vh] overflow-y-auto pr-1"
                   >
                     <article
                       v-for="award in awards"
@@ -836,7 +901,7 @@ watch(activeTab, () => {
                     </button>
                   </div>
                   <div
-                    class="mask-fade-bottom max-h-[30vh] space-y-1 overflow-y-auto pr-1"
+                    class="scrollable-container mask-fade-bottom max-h-[30vh] overflow-y-auto pr-1"
                   >
                     <article
                       v-for="talk in talks"
@@ -931,7 +996,7 @@ watch(activeTab, () => {
       :open="showNewsModal"
       @close="showNewsModal = false"
     >
-      <NewsList :items="newsItems" />
+      <NewsList :items="newsItems" modal />
     </ModalDialog>
 
     <ModalDialog
@@ -939,7 +1004,7 @@ watch(activeTab, () => {
       :open="Boolean(selectedService)"
       @close="selectedService = null"
     >
-      <div v-if="selectedService?.items.length" class="space-y-2">
+      <div v-if="selectedService?.items.length" class="unified-list">
         <article
           v-for="item in selectedService.items"
           :key="item.uid"

@@ -82,10 +82,6 @@
     min-height: 100dvh;
   }
 
-  :root {
-    --header-height: 55px;
-  }
-
   ::selection {
     background: rgba(0, 91, 172, 0.15);
     color: #003a75;
@@ -99,12 +95,6 @@
 }
 
 @layer components {
-  .main-container {
-    height: calc(100vh - var(--header-height, 50px));
-    height: calc(100dvh - var(--header-height, 50px));
-    min-height: 400px;
-  }
-
   .academic-card {
     border: 1px solid rgba(15, 23, 42, 0.08);
     background: #ffffff;
@@ -155,6 +145,15 @@
     color: #005bac;
     text-decoration-color: #005bac;
     text-decoration-style: solid;
+  }
+
+  .interactive-element {
+    transition:
+      background-color 0.2s ease-out,
+      border-color 0.2s ease-out,
+      color 0.2s ease-out,
+      box-shadow 0.25s ease-out,
+      transform 0.25s ease-out;
   }
 
   .panel-pane,
@@ -238,20 +237,18 @@
     height: 1rem;
   }
 
+  .unified-list {
+    display: flex;
+    flex-direction: column;
+  }
+
   .unified-item,
   .modal-unified-item {
     display: flex;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
     border-bottom: 1px solid #e2e8f0;
-  }
-
-  .unified-item {
-    padding: 0.3rem 0;
-  }
-
-  .modal-unified-item {
-    padding: 0.5rem 0;
+    padding: 0.55rem 0;
   }
 
   .unified-item:last-child,
@@ -335,32 +332,6 @@
     mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
   }
-
-  .enter-3d-btn {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    background: linear-gradient(135deg, #005bac 0%, #003a75 100%);
-  }
-
-  .enter-3d-btn::before {
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    background: linear-gradient(
-      110deg,
-      transparent 30%,
-      rgba(255, 255, 255, 0.22) 50%,
-      transparent 70%
-    );
-    content: "";
-    transform: translateX(-100%);
-    transition: transform 0.7s ease;
-  }
-
-  .enter-3d-btn:hover::before {
-    transform: translateX(100%);
-  }
 }
 
 @layer utilities {
@@ -399,17 +370,5 @@
 
   .publication-meta {
     display: none !important;
-  }
-}
-
-@media (max-height: 600px) {
-  .main-container {
-    min-height: 250px;
-  }
-}
-
-@media (max-height: 700px) {
-  :root {
-    --header-height: 45px;
   }
 }

@@ -26,13 +26,13 @@ defineProps<{
       <article
         v-for="item in items"
         :key="item.uid"
-        class="timeline-item"
+        class="timeline-item relative"
         :class="
           kind === 'education' ? 'timeline-item-blue' : 'timeline-item-gray'
         "
       >
         <div
-          class="rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
+          class="interactive-element rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
         >
           <div class="mb-2 flex items-start justify-between gap-3">
             <div class="min-w-0 flex-1">

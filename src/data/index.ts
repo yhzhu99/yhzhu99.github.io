@@ -4,6 +4,7 @@ import { education } from "./education";
 import { experience } from "./experience";
 import { quickLinkIcons, quickLinks } from "./links";
 import { newsItems } from "./news";
+import { profile } from "./profile";
 import { projects } from "./projects";
 import { publications } from "./publications";
 import { services } from "./services";
@@ -34,9 +35,10 @@ const withNestedServiceUids = (
       (group.items as readonly Record<string, unknown>[] | undefined) ?? [],
       `service-${groupIndex + 1}-item`,
     ) as unknown as ServiceItem[],
-}));
+  }));
 
 export const siteData: SiteData = {
+  profile,
   authorLinks,
   newsItems: withUid(newsItems, "news") as NewsItem[],
   quickLinks,
@@ -55,6 +57,7 @@ export {
   awards,
   education,
   experience,
+  profile,
   projects,
   publications,
   quickLinkIcons,

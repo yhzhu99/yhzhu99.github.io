@@ -34,7 +34,7 @@ defineEmits<{
               &times;
             </button>
           </header>
-          <div class="scrollable-container overflow-y-auto p-4">
+          <div class="scrollable-container min-h-0 flex-1 overflow-y-auto p-4">
             <slot />
           </div>
         </section>

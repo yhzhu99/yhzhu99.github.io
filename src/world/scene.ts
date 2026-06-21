@@ -1,12 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { siteData } from "../data";
-import { profile } from "../site";
 
 /* ============================ DATA ============================ */
 type AnyRecord = Record<string, any>;
 const SITE_DATA: AnyRecord = siteData as unknown as AnyRecord;
-const PROFILE = profile;
+const PROFILE = SITE_DATA.profile || {};
 const DATA = {
   name: PROFILE.name || "Yinghao Zhu",
   cnName: PROFILE.cnName || "朱英豪",

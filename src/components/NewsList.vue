@@ -5,6 +5,7 @@ import type { NewsItem } from "../types";
 const props = defineProps<{
   items: NewsItem[];
   limit?: number;
+  modal?: boolean;
 }>();
 
 const visibleItems = computed(() =>
@@ -13,10 +14,23 @@ const visibleItems = computed(() =>
 </script>
 
 <template>
-  <div class="space-y-1">
-    <article v-for="item in visibleItems" :key="item.uid" class="unified-item">
-      <div class="unified-item-content">
-        <p class="text-xs text-text-gray" v-html="item.content" />
+  <div class="unified-list">
+    <article
+      v-for="item in visibleItems"
+      :key="item.uid"
+      :class="modal ? 'modal-unified-item' : 'unified-item'"
+    >
+      <div
+        :class="modal ? 'modal-unified-item-content' : 'unified-item-content'"
+      >
+        <p
+          :class="
+            modal
+              ? 'text-sm leading-relaxed text-text-gray'
+              : 'text-xs text-text-gray'
+          "
+          v-html="item.content"
+        />
       </div>
       <span class="time-tag">{{ item.date }}</span>
     </article>

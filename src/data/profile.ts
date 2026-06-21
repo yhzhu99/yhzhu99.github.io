@@ -1,11 +1,4 @@
-import type { Profile, TabItem } from "./types";
-
-export const tabs = [
-  { name: "About", id: "about" },
-  { name: "Publications", id: "publications" },
-  { name: "Experience", id: "experience" },
-  { name: "Honors & Service", id: "awards" },
-] satisfies TabItem[];
+import type { Profile } from "../types";
 
 export const profile: Profile = {
   name: "Yinghao Zhu",

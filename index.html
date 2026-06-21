@@ -484,7 +484,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-1.5">
                             <template x-for="link in quickLinks" :key="link.name">
-                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg transition-colors duration-200 text-xs interactive-element flex flex-row items-center gap-1.5 text-left">
+                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group p-2.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg transition-colors duration-200 text-xs interactive-element flex flex-col items-center justify-center gap-1.5 text-center">
                                     <span class="quick-link-icon text-text-gray-light group-hover:text-primary-blue transition-colors" x-html="quickLinkIcons[link.name]"></span>
                                     <span x-text="link.name"></span>
                                 </a>
@@ -531,7 +531,7 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mb-4">
                                     <template x-for="link in quickLinks" :key="link.name">
-                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg text-xs transition-colors interactive-element flex flex-row items-center gap-1.5 text-left">
+                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group p-2.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg text-xs transition-colors interactive-element flex flex-col items-center justify-center gap-1.5 text-center">
                                             <span class="quick-link-icon text-text-gray-light group-hover:text-primary-blue transition-colors" x-html="quickLinkIcons[link.name]"></span>
                                             <span x-text="link.name"></span>
                                         </a>

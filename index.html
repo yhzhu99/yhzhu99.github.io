@@ -396,6 +396,25 @@
         .avatar-ring {
             box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
         }
+
+        /* Entry button to the 3D workspace — premium gradient with a gentle glow */
+        .enter-3d-btn {
+            position: relative;
+            background: linear-gradient(135deg, #005bac 0%, #003a75 100%);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .enter-3d-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.7s ease;
+            z-index: -1;
+        }
+        .enter-3d-btn:hover::before { transform: translateX(100%); }
+        .enter-3d-btn:hover { background: linear-gradient(135deg, #0069c4 0%, #004488 100%); }
     </style>
 </head>
 
@@ -475,6 +494,11 @@
                                 <p>The University of Hong Kong</p>
                                 <p class="text-xs opacity-75">School of Computing and Data Science</p>
                             </div>
+                            <a href="world.html" class="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-soft hover:scale-[1.02] hover:shadow-card enter-3d-btn" aria-label="Enter 3D workspace">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                                Enter 3D Workspace
+                                <svg class="w-3 h-3 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </a>
                         </div>
                     </div>
                     <!-- Quick Links -->
@@ -528,6 +552,11 @@
                                         <p class="font-semibold text-primary-blue">PhD Student</p>
                                         <p>The University of Hong Kong</p>
                                     </div>
+                                    <a href="world.html" class="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-white text-xs font-semibold rounded-lg transition-all duration-200 shadow-soft hover:scale-[1.02] enter-3d-btn" aria-label="Enter 3D workspace">
+                                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                                        Enter 3D Workspace
+                                        <svg class="w-3 h-3 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                    </a>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mb-4">
                                     <template x-for="link in quickLinks" :key="link.name">

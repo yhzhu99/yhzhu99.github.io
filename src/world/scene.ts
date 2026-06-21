@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { siteData } from "../data";
+import {
+  getFeaturedPublications,
+  sortPublications,
+} from "../utils/publications";
 
 /* ============================ DATA ============================ */
 type AnyRecord = Record<string, any>;
@@ -17,10 +21,8 @@ const DATA = {
   bio: PROFILE.bio || "",
   interests: PROFILE.interests || [],
   workspace: PROFILE.workspace || {},
-  allPublications: SITE_DATA.publications || [],
-  featuredPublications: (SITE_DATA.publications || []).filter(
-    (pub: AnyRecord) => pub.featured,
-  ),
+  allPublications: sortPublications(SITE_DATA.publications || []),
+  featuredPublications: getFeaturedPublications(SITE_DATA.publications || []),
   education: SITE_DATA.education || [],
   experience: SITE_DATA.experience || [],
   awards: SITE_DATA.awards || [],

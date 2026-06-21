@@ -32,7 +32,65 @@ export interface FormatAuthorsOptions {
 }
 
 export function getFeaturedPublications(publications: Publication[]) {
-  return publications.filter((publication) => publication.featured);
+  return sortPublications(
+    publications.filter((publication) => publication.featured),
+  );
+}
+
+export function sortPublications(publications: Publication[]) {
+  return [...publications].sort(comparePublications);
+}
+
+export function comparePublications(a: Publication, b: Publication) {
+  if (a.year !== b.year) return b.year.localeCompare(a.year);
+
+  const aPublished = isPublishedVenue(a.venue);
+  const bPublished = isPublishedVenue(b.venue);
+
+  if (aPublished !== bPublished) return aPublished ? -1 : 1;
+
+  const aPriority = getVenueTypePriority(a.venue);
+  const bPriority = getVenueTypePriority(b.venue);
+
+  if (aPriority !== bPriority) return aPriority - bPriority;
+
+  return a.title.localeCompare(b.title);
+}
+
+export function getVenueTypePriority(venue = "") {
+  const venueLower = venue.toLowerCase();
+
+  if (!venueLower) return 4;
+  if (venueLower.includes("arxiv") || venueLower.includes("preprint")) {
+    return 4;
+  }
+  if (
+    venueLower.includes("abstract") ||
+    venueLower.includes("poster") ||
+    venueLower.includes("demo") ||
+    venueLower.includes("nominee")
+  ) {
+    return 3;
+  }
+  if (
+    venueLower.includes("workshop") ||
+    venueLower.includes("symposium") ||
+    venueLower.includes("summit")
+  ) {
+    return 2;
+  }
+
+  return 1;
+}
+
+export function isPublishedVenue(venue = "") {
+  const venueLower = venue.toLowerCase();
+
+  return (
+    Boolean(venueLower) &&
+    !venueLower.includes("arxiv") &&
+    !venueLower.includes("preprint")
+  );
 }
 
 export function getPublicationYears(publications: Publication[]) {
@@ -73,7 +131,7 @@ export function filterPublications(
         ? publications.filter((publication) => publication.tag === selectedTag)
         : featuredPublications;
 
-  return [...base].filter((publication) => {
+  const filtered = [...base].filter((publication) => {
     const searchable = [
       publication.title,
       publication.authors,
@@ -88,6 +146,8 @@ export function filterPublications(
       (!selectedYear || publication.year === selectedYear)
     );
   });
+
+  return sortPublications(filtered);
 }
 
 export function getActivePublicationFilterLabel(selectedTag: string) {

@@ -363,6 +363,21 @@
             margin: 0.5rem 0;
         }
 
+        /* Section heading with short gradient underline accent */
+        .section-title {
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 2.25rem;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #005bac, #0ea5e9);
+        }
+
         /* Selection + focus styling */
         ::selection {
             background: rgba(0, 91, 172, 0.15);
@@ -387,23 +402,23 @@
 <body class="font-academic bg-bg-light text-text-gray academic-grid flex flex-col" x-data="academicWebsite()">
 
     <!-- Header Bar -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm flex-shrink-0 transition-all duration-300">
+    <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 shadow-soft flex-shrink-0 transition-all duration-300">
         <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-blue/30 rounded-sm" role="button" tabindex="0" aria-label="Show About section" @click="activeTab = 'about'" @keydown.enter.prevent="activeTab = 'about'" @keydown.space.prevent="activeTab = 'about'">
-                    <div class="w-1 h-6 bg-primary-blue"></div>
-                    <h1 class="text-lg md:text-xl font-bold text-text-gray">Yinghao Zhu</h1>
+                    <div class="w-1 h-6 rounded-full bg-accent-gradient"></div>
+                    <h1 class="text-lg md:text-xl font-bold text-text-gray tracking-tight">Yinghao Zhu</h1>
                     <span class="text-text-gray-light text-xl">朱英豪</span>
                     <img src="https://www.hku.hk/f/page/7561/150p169/1d@750.jpg" alt="HKU Logo" class="h-9 w-auto opacity-80 hover:opacity-100 transition-opacity">
                 </div>
 
                 <!-- Desktop Navigation -->
-                <nav x-ref="desktopNav" class="hidden md:flex relative items-center gap-1 text-sm font-medium bg-gray-100/50 p-1 rounded-full border border-gray-200/50">
+                <nav x-ref="desktopNav" class="hidden md:flex relative items-center gap-1 text-sm font-medium bg-slate-900/[0.04] p-1 rounded-full ring-1 ring-inset ring-slate-900/5">
                     <!-- Sliding indicator -->
-                    <span aria-hidden="true" class="absolute top-1 bottom-1 left-0 rounded-full bg-white shadow-sm ring-1 ring-black/5 pointer-events-none" :class="navIndicatorReady ? 'transition-all duration-300 ease-out' : ''" :style="navIndicatorStyle" style="will-change: transform, width;"></span>
+                    <span aria-hidden="true" class="absolute top-1 bottom-1 left-0 rounded-full bg-white shadow-soft ring-1 ring-slate-900/5 pointer-events-none" :class="navIndicatorReady ? 'transition-all duration-300 ease-out' : ''" :style="navIndicatorStyle" style="will-change: transform, width;"></span>
                     <template x-for="tab in tabs" :key="tab.id">
                          <button type="button" :data-tab-id="tab.id" @click="activeTab = tab.id"
-                                :class="activeTab === tab.id ? 'text-primary-blue' : 'text-gray-500 hover:text-gray-900'"
+                                :class="activeTab === tab.id ? 'text-primary-blue' : 'text-slate-500 hover:text-slate-900'"
                                 class="relative z-10 px-4 py-1.5 rounded-full transition-colors duration-300 ease-out"
                                 :aria-current="activeTab === tab.id ? 'page' : null"
                                 x-text="tab.name">
@@ -423,7 +438,7 @@
                          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0"
                          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2"
                          @click.away="showMobileNav = false"
-                         class="absolute right-4 top-14 w-48 bg-white rounded-lg shadow-lg border border-gray-200/70 py-2 z-50" style="display: none;">
+                         class="absolute right-4 top-14 w-48 bg-white rounded-xl shadow-card border border-slate-200/70 py-2 z-50" style="display: none;">
                         <template x-for="tab in tabs" :key="tab.id">
                             <button type="button" @click="activeTab = tab.id; showMobileNav = false"
                                    :class="activeTab === tab.id ? 'text-primary-blue bg-primary-blue/5 font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
@@ -448,7 +463,7 @@
                     <!-- Profile Card -->
                     <div class="academic-card rounded-lg p-4 interactive-element flex-shrink-0">
                         <div class="text-center">
-                            <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="w-20 h-20 rounded-full mx-auto mb-2 ring-3 ring-primary-blue/20 object-cover transition-transform duration-300 hover:scale-105">
+                            <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="avatar-ring w-20 h-20 rounded-full mx-auto mb-2 object-cover transition-transform duration-300 hover:scale-105">
                             <h2 class="text-lg font-bold text-text-gray mb-1">Yinghao Zhu</h2>
                             <p class="text-sm text-text-gray-light mb-1">朱英豪</p>
                             <div class="flex items-center justify-center space-x-2 text-xs text-text-gray-light mb-2">
@@ -469,7 +484,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-1 text-xs">
                             <template x-for="link in quickLinks" :key="link.id">
-                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-bg-light hover:bg-primary-blue hover:text-white rounded transition-all duration-200 text-center border border-primary-blue/15 hover:border-primary-blue text-xs interactive-element" x-text="link.name"></a>
+                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-white/70 hover:bg-accent-gradient hover:text-white rounded-lg transition-all duration-200 text-center ring-1 ring-inset ring-slate-900/5 hover:ring-transparent hover:shadow-soft text-xs interactive-element" x-text="link.name"></a>
                             </template>
                         </div>
                     </div>
@@ -501,7 +516,7 @@
                             <!-- Mobile Profile Section -->
                             <div class="lg:hidden mb-6 flex-shrink-0">
                                 <div class="text-center mb-4">
-                                    <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="w-20 h-20 rounded-full mx-auto mb-3 ring-3 ring-primary-blue/20 object-cover">
+                                    <img src="https://s1.imagehub.cc/images/2023/12/09/4b39a6bfda62b617772d6082ee8b21c8.th.png" alt="Yinghao Zhu" class="avatar-ring w-20 h-20 rounded-full mx-auto mb-3 object-cover">
                                     <h2 class="text-xl font-bold text-text-gray mb-1">Yinghao Zhu</h2>
                                     <p class="text-text-gray-light mb-2">朱英豪</p>
                                     <div class="text-sm text-text-gray-light space-y-0.5">
@@ -511,7 +526,7 @@
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mb-4">
                                     <template x-for="link in quickLinks" :key="link.id">
-                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-bg-light hover:bg-primary-blue/10 rounded text-center border border-primary-blue/15 text-xs transition-colors interactive-element" x-text="link.name"></a>
+                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="p-2 bg-white/70 hover:bg-accent-gradient-soft hover:text-primary-blue rounded-lg text-center ring-1 ring-inset ring-slate-900/5 text-xs transition-colors interactive-element" x-text="link.name"></a>
                                     </template>
                                 </div>
                                 <div class="mb-6">
@@ -540,7 +555,7 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <template x-for="area in detailedInterests" :key="area.id">
-                                        <div class="academic-border pl-4 py-2 bg-bg-light/50 rounded-r interactive-element hover:bg-bg-light">
+                                        <div class="academic-border pl-4 py-2.5 pr-3 bg-white/60 rounded-r-lg ring-1 ring-inset ring-slate-900/5 interactive-element hover:bg-white hover:shadow-soft">
                                             <h5 class="font-semibold text-text-gray text-sm" x-text="area.title"></h5>
                                             <p class="text-xs text-text-gray-light mt-1" x-text="area.description"></p>
                                         </div>
@@ -563,7 +578,7 @@
                                 <!-- Desktop/Tablet View: Show publication items -->
                                 <div class="hidden md:block space-y-2">
                                     <template x-for="pub in featuredPublications" :key="pub.id">
-                                        <div class="border border-primary-blue/15 rounded-lg p-3 bg-white/50 interactive-element interactive-border transition-all duration-200 publication-item">
+                                        <div class="border border-slate-200/70 rounded-xl p-3 bg-white/70 shadow-soft interactive-element interactive-border hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 publication-item">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h5 class="font-semibold text-text-gray text-sm mb-0.5 leading-tight" x-text="pub.title"></h5>
@@ -571,7 +586,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-900/[0.04] text-text-gray text-xs rounded-full ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue hover:text-white hover:ring-primary-blue transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -616,8 +631,8 @@
                                      class="px-4 lg:px-6 pb-4 lg:pb-5" style="display: none;">
                                     <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
                                         <div class="flex items-center gap-2 flex-1 min-w-0">
-                                            <input type="text" x-model="searchQuery" placeholder="Search publications..." class="flex-1 min-w-[200px] px-3 py-2 border border-primary-blue/30 rounded-md text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200">
-                                            <select x-model="selectedYear" class="px-3 py-2 border border-primary-blue/30 rounded-md text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200 flex-shrink-0">
+                                            <input type="text" x-model="searchQuery" placeholder="Search publications..." class="flex-1 min-w-[200px] px-3 py-2 border border-slate-200 bg-white/70 rounded-lg text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200">
+                                            <select x-model="selectedYear" class="px-3 py-2 border border-slate-200 bg-white/70 rounded-lg text-sm focus:ring-1 focus:ring-primary-blue focus:border-primary-blue transition-all duration-200 flex-shrink-0">
                                                 <option value="">All Years</option>
                                                 <template x-for="year in availableYears" :key="year">
                                                     <option :value="year" x-text="year"></option>
@@ -630,16 +645,16 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-wrap gap-1.5">
-                                        <button @click="selectedTag = ''" :class="selectedTag === '' ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="publication-filter-tab interactive-element">
+                                        <button @click="selectedTag = ''" :class="selectedTag === '' ? 'text-white bg-accent-gradient shadow-soft' : 'bg-white text-text-gray hover:bg-accent-gradient-soft hover:text-primary-blue ring-1 ring-inset ring-slate-900/5'" class="publication-filter-tab interactive-element">
                                             <span>Featured</span>
                                             <span class="publication-filter-tab-count" x-text="`(${featuredPublications.length})`"></span>
                                         </button>
-                                        <button @click="selectedTag = 'All'" :class="selectedTag === 'All' ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="publication-filter-tab interactive-element">
+                                        <button @click="selectedTag = 'All'" :class="selectedTag === 'All' ? 'text-white bg-accent-gradient shadow-soft' : 'bg-white text-text-gray hover:bg-accent-gradient-soft hover:text-primary-blue ring-1 ring-inset ring-slate-900/5'" class="publication-filter-tab interactive-element">
                                             <span>All</span>
                                             <span class="publication-filter-tab-count" x-text="`(${allPublications.length})`"></span>
                                         </button>
                                         <template x-for="tag in publicationTags" :key="tag.name">
-                                            <button @click="selectedTag = selectedTag === tag.name ? '' : tag.name" :class="selectedTag === tag.name ? 'bg-primary-blue text-white' : 'bg-bg-light text-text-gray hover:bg-primary-blue/10'" class="publication-filter-tab interactive-element">
+                                            <button @click="selectedTag = selectedTag === tag.name ? '' : tag.name" :class="selectedTag === tag.name ? 'text-white bg-accent-gradient shadow-soft' : 'bg-white text-text-gray hover:bg-accent-gradient-soft hover:text-primary-blue ring-1 ring-inset ring-slate-900/5'" class="publication-filter-tab interactive-element">
                                                 <span x-text="tag.name"></span>
                                                 <span class="publication-filter-tab-count" x-text="`(${tag.count})`"></span>
                                             </button>
@@ -655,7 +670,7 @@
                             <div class="flex-1 overflow-y-auto scrollable-container p-4 lg:p-6 pt-1 lg:pt-1">
                                 <div class="space-y-2">
                                     <template x-for="pub in filteredPublications" :key="pub.id">
-                                        <div class="border border-gray-200 rounded-lg p-3 bg-white/70 interactive-element interactive-border transition-all duration-200 publication-item">
+                                        <div class="border border-slate-200/70 rounded-xl p-3 bg-white/70 shadow-soft interactive-element interactive-border hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 publication-item">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h4 class="font-semibold text-text-gray text-sm mb-0.5 leading-tight" x-text="pub.title"></h4>
@@ -663,7 +678,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-1" x-text="pub.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in pub.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-900/[0.04] text-text-gray text-xs rounded-full ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue hover:text-white hover:ring-primary-blue transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -682,11 +697,11 @@
                         <div x-show="activeTab === 'experience'" class="animate-scale-in p-4 lg:p-6 overflow-y-auto scrollable-container flex-1" style="display: none;">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <div>
-                                    <h3 class="text-lg font-bold text-text-gray mb-3 pb-2 border-b-2 border-primary-blue">Education</h3>
+                                    <h3 class="text-lg font-bold text-text-gray mb-3 pb-2 section-title tracking-tight">Education</h3>
                                     <div class="relative pl-5 border-l-2 border-primary-blue/30 space-y-3">
                                         <template x-for="edu in education" :key="edu.id">
                                             <div class="relative timeline-item timeline-item-blue">
-                                                <div class="bg-white/80 p-3 rounded-lg border border-primary-blue/15 interactive-element hover:bg-bg-light">
+                                                <div class="bg-white/80 p-3 rounded-xl border border-slate-200/70 shadow-soft interactive-element hover:bg-white hover:shadow-card-hover hover:-translate-y-0.5">
                                                     <div class="flex justify-between items-start mb-2">
                                                         <div class="flex-1">
                                                             <h4 class="font-semibold text-text-gray text-sm" x-text="edu.institution"></h4>
@@ -702,11 +717,11 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-bold text-text-gray mb-3 pb-2 border-b-2 border-accent-gray">Professional Experience</h3>
+                                    <h3 class="text-lg font-bold text-text-gray mb-3 pb-2 section-title tracking-tight">Professional Experience</h3>
                                     <div class="relative pl-5 border-l-2 border-accent-gray/30 space-y-3">
                                         <template x-for="exp in experience" :key="exp.id">
                                             <div class="relative timeline-item timeline-item-gray">
-                                                <div class="bg-white/80 p-3 rounded-lg border border-accent-gray/15 interactive-element hover:bg-bg-light">
+                                                <div class="bg-white/80 p-3 rounded-xl border border-slate-200/70 shadow-soft interactive-element hover:bg-white hover:shadow-card-hover hover:-translate-y-0.5">
                                                     <div class="flex justify-between items-start mb-2">
                                                         <div class="flex-1">
                                                             <h4 class="font-semibold text-text-gray text-sm" x-text="exp.organization"></h4>
@@ -730,7 +745,7 @@
                              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-3 border-b border-primary-blue/10">
                                 <div>
                                     <div class="flex-shrink-0 flex items-center justify-between mb-2">
-                                        <h3 class="text-lg font-bold text-text-gray pb-1 border-b-2 border-primary-blue">Awards & Honors</h3>
+                                        <h3 class="text-lg font-bold text-text-gray pb-1 section-title tracking-tight">Awards & Honors</h3>
                                         <button @click="openServiceModal('Awards & Honors')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
                                     </div>
                                     <div class="space-y-1 max-h-[30vh] overflow-y-auto no-scrollbar pr-1 mask-fade-bottom">
@@ -747,7 +762,7 @@
                                 </div>
                                 <div>
                                     <div class="flex-shrink-0 flex items-center justify-between mb-2">
-                                        <h3 class="text-lg font-bold text-text-gray pb-1 border-b-2 border-accent-gray">Talks & Interviews</h3>
+                                        <h3 class="text-lg font-bold text-text-gray pb-1 section-title tracking-tight">Talks & Interviews</h3>
                                         <button @click="openServiceModal('Talks & Interviews')" class="text-xs text-primary-blue hover:underline interactive-element">View All</button>
                                     </div>
                                     <div class="space-y-1 max-h-[30vh] overflow-y-auto no-scrollbar pr-1 mask-fade-bottom">
@@ -765,10 +780,10 @@
                             </div>
                             <!-- Projects Section -->
                             <div class="pt-4">
-                                 <h3 class="text-lg font-bold text-text-gray mb-2 pb-1 border-b-2 border-primary-blue">Projects</h3>
+                                 <h3 class="text-lg font-bold text-text-gray mb-2 pb-1 section-title tracking-tight">Projects</h3>
                                  <div class="space-y-2">
                                      <template x-for="project in projects" :key="project.id">
-                                         <div class="border border-primary-blue/15 rounded-lg p-2.5 bg-white/50 interactive-element hover:border-primary-blue/40 transition-all duration-200 publication-item">
+                                         <div class="border border-slate-200/70 rounded-xl p-2.5 bg-white/70 shadow-soft interactive-element hover:border-primary-blue/40 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 publication-item">
                                             <div class="flex items-start justify-between gap-3">
                                                 <div class="flex-1 min-w-0 publication-content">
                                                     <h4 class="font-semibold text-text-gray text-sm mb-1 leading-tight" x-text="project.title"></h4>
@@ -776,7 +791,7 @@
                                                     <p class="text-xs text-primary-blue italic mb-2" x-show="project.venue" x-text="project.venue"></p>
                                                     <div class="flex flex-wrap gap-1.5">
                                                         <template x-for="link in project.links" :key="link.type">
-                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-bg-secondary text-text-gray text-xs rounded-full hover:bg-primary-blue/10 hover:text-primary-blue-dark transition-colors duration-200 interactive-element" x-text="link.type"></a>
+                                                            <a :href="link.url" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-slate-900/[0.04] text-text-gray text-xs rounded-full ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue hover:text-white hover:ring-primary-blue transition-colors duration-200 interactive-element" x-text="link.type"></a>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -788,7 +803,7 @@
                             </div>
                             <!-- Professional Services Section -->
                             <div class="mt-4">
-                                <h3 class="flex-shrink-0 text-lg font-bold text-text-gray mb-3 pb-1 border-b-2 border-accent-blue">Professional Services</h3>
+                                <h3 class="flex-shrink-0 text-lg font-bold text-text-gray mb-3 pb-1 section-title tracking-tight">Professional Services</h3>
                                 <div class="space-y-2">
                                     <template x-for="(service, index) in services" :key="service.id">
                                         <div>
@@ -801,12 +816,12 @@
                                             <div class="flex flex-wrap gap-2">
                                                 <template x-if="service.title === 'Reviewer'">
                                                     <template x-for="item in ['npj Digital Medicine', 'NeurIPS', 'ICML', 'ICLR', 'KDD', 'WWW', 'AAAI', 'CHI', 'UIST', 'AMIA']" :key="item">
-                                                        <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item"></div>
+                                                        <div class="px-2.5 py-1 bg-slate-900/[0.03] text-text-gray-light font-mono text-xs rounded-md ring-1 ring-inset ring-slate-900/5" x-text="item"></div>
                                                     </template>
                                                 </template>
                                                 <template x-if="service.title !== 'Reviewer'">
                                                     <template x-for="item in service.items.slice(0, 8)" :key="item.id">
-                                                        <div class="px-2.5 py-1 bg-bg-secondary text-text-gray-light font-mono text-xs rounded border border-gray-200/80" x-text="item.content"></div>
+                                                        <div class="px-2.5 py-1 bg-slate-900/[0.03] text-text-gray-light font-mono text-xs rounded-md ring-1 ring-inset ring-slate-900/5" x-text="item.content"></div>
                                                     </template>
                                                 </template>
                                             </div>
@@ -822,9 +837,9 @@
     </main>
 
     <!-- Modals -->
-    <div x-show="showNewsModal || showServiceModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" x-transition.opacity.duration.300ms style="display: none;">
+    <div x-show="showNewsModal || showServiceModal" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" x-transition.opacity.duration.300ms style="display: none;">
         <!-- News Modal -->
-        <div x-show="showNewsModal" @click.outside="showNewsModal = false" @keydown.escape.window="showNewsModal = false" class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+        <div x-show="showNewsModal" @click.outside="showNewsModal = false" @keydown.escape.window="showNewsModal = false" class="bg-white rounded-xl shadow-card w-full max-w-2xl max-h-[90vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 id="news-modal-title" class="text-lg font-bold text-text-gray">All News</h3>
                 <button type="button" @click="showNewsModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors" aria-label="Close news modal">&times;</button>
@@ -841,7 +856,7 @@
             </div>
         </div>
         <!-- Service Modal -->
-        <div x-show="showServiceModal" @click.outside="showServiceModal = false" @keydown.escape.window="showServiceModal = false" class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="service-modal-title" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+        <div x-show="showServiceModal" @click.outside="showServiceModal = false" @keydown.escape.window="showServiceModal = false" class="bg-white rounded-xl shadow-card w-full max-w-2xl max-h-[90vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="service-modal-title" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 id="service-modal-title" class="text-lg font-bold text-text-gray" x-text="selectedService?.title"></h3>
                 <button type="button" @click="showServiceModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none transition-colors" aria-label="Close service modal">&times;</button>

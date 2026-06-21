@@ -14,5 +14,10 @@ export const router = createRouter({
       name: "world",
       component: () => import("../views/WorldView.vue"),
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: () => import("../views/NotFoundView.vue"),
+    },
   ],
 });

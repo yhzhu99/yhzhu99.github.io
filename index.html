@@ -229,12 +229,12 @@
             color: #ffffff;
         }
         .view-all-btn svg {
-            width: 0.75rem;
-            height: 0.75rem;
+            width: 0.85rem;
+            height: 0.85rem;
             transition: transform 0.25s ease-out;
         }
         .view-all-btn:hover svg {
-            transform: translateX(1.5px);
+            transform: scale(1.12);
         }
 
         /* Quick-link brand glyphs */
@@ -484,7 +484,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-1.5">
                             <template x-for="link in quickLinks" :key="link.name">
-                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group p-2 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg transition-colors duration-200 text-xs interactive-element flex flex-col items-center justify-center gap-1 text-center">
+                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg transition-colors duration-200 text-xs interactive-element flex flex-row items-center gap-1.5 text-left">
                                     <span class="quick-link-icon text-text-gray-light group-hover:text-primary-blue transition-colors" x-html="quickLinkIcons[link.name]"></span>
                                     <span x-text="link.name"></span>
                                 </a>
@@ -496,7 +496,7 @@
                             <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-200 flex-shrink-0">
                             <h3 class="font-semibold text-text-gray text-sm tracking-tight">Recent News</h3>
                             <button @click="showNewsModal = true" class="view-all-btn interactive-element" aria-label="View all news">
-                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                             </button>
                         </div>
                         <div class="flex-1 overflow-y-auto scrollable-container pr-1 space-y-1 min-h-0">
@@ -531,7 +531,7 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mb-4">
                                     <template x-for="link in quickLinks" :key="link.name">
-                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group p-2 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg text-xs transition-colors interactive-element flex flex-col items-center justify-center gap-1 text-center">
+                                        <a :href="link.url" target="_blank" rel="noopener noreferrer" class="group px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 hover:text-primary-blue rounded-lg text-xs transition-colors interactive-element flex flex-row items-center gap-1.5 text-left">
                                             <span class="quick-link-icon text-text-gray-light group-hover:text-primary-blue transition-colors" x-html="quickLinkIcons[link.name]"></span>
                                             <span x-text="link.name"></span>
                                         </a>
@@ -541,7 +541,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <h3 class="font-semibold text-text-gray text-sm tracking-tight">Recent News</h3>
                                         <button @click="showNewsModal = true" class="view-all-btn interactive-element" aria-label="View all news">
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                         </button>
                                     </div>
                                     <div class="space-y-1">
@@ -576,7 +576,7 @@
                                 <div class="featured-publications-section hidden md:flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
                                     <h4 class="text-lg font-semibold text-text-gray tracking-tight">Featured Publications</h4>
                                     <button @click="activeTab = 'publications'; selectedTag = 'All'" class="view-all-btn interactive-element flex-shrink-0" aria-label="View all publications">
-                                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                     </button>
                                 </div>
                                 <div class="featured-publications-section hidden md:flex mb-3 text-xs text-text-gray-light items-center space-x-4">
@@ -759,7 +759,7 @@
                                     <div class="flex-shrink-0 flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
                                         <h3 class="text-lg font-semibold text-text-gray tracking-tight">Awards & Honors</h3>
                                         <button @click="openServiceModal('Awards & Honors')" class="view-all-btn interactive-element" aria-label="View all awards and honors">
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                         </button>
                                     </div>
                                     <div class="space-y-1 max-h-[30vh] overflow-y-auto no-scrollbar pr-1 mask-fade-bottom">
@@ -778,7 +778,7 @@
                                     <div class="flex-shrink-0 flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
                                         <h3 class="text-lg font-semibold text-text-gray tracking-tight">Talks & Interviews</h3>
                                         <button @click="openServiceModal('Talks & Interviews')" class="view-all-btn interactive-element" aria-label="View all talks and interviews">
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                         </button>
                                     </div>
                                     <div class="space-y-1 max-h-[30vh] overflow-y-auto no-scrollbar pr-1 mask-fade-bottom">
@@ -828,7 +828,7 @@
                                             <div class="flex justify-between items-center mb-2">
                                                 <h4 class="font-semibold text-text-gray text-sm" x-text="service.title"></h4>
                                                 <button @click="openServiceModal(service.title)" class="view-all-btn interactive-element" :aria-label="'View all ' + service.title">
-                                                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="9,4.5 12.5,8 9,11.5"/></svg>
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                                                 </button>
                                             </div>
                                             <div class="flex flex-wrap gap-2">

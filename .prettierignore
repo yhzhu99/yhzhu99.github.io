@@ -1,0 +1,7 @@
+assets/
+dist/
+node_modules/
+package-lock.json
+src/data/*.ts
+test-results/
+.tmp-check/

@@ -1,4 +1,6 @@
 node_modules/
+dist/
+assets/
 test-results/
 .tmp-check/
 assets/workspace.jpg

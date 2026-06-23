@@ -25,6 +25,31 @@ const withUid = <T extends Record<string, unknown>>(
   prefix: string,
 ) => items.map((item, index) => ({ ...item, uid: `${prefix}-${index + 1}` }));
 
+const getLatestServiceYear = (year: unknown) => {
+  const years = String(year ?? "").match(/\b\d{4}\b/g)?.map(Number) ?? [];
+
+  return years.length > 0 ? Math.max(...years) : Number.NEGATIVE_INFINITY;
+};
+
+const sortReviewerItems = (items: readonly Record<string, unknown>[]) =>
+  items.slice().sort((a, b) => {
+    const yearDifference = getLatestServiceYear(b.year) - getLatestServiceYear(a.year);
+
+    if (yearDifference !== 0) {
+      return yearDifference;
+    }
+
+    return String(a.content ?? "").localeCompare(String(b.content ?? ""), "en", {
+      sensitivity: "base",
+    });
+  });
+
+const getServiceItems = (group: Record<string, unknown>) => {
+  const items = (group.items as readonly Record<string, unknown>[] | undefined) ?? [];
+
+  return group.title === "Reviewer" ? sortReviewerItems(items) : items;
+};
+
 const withNestedServiceUids = (
   groups: readonly Record<string, unknown>[],
 ): ServiceGroup[] =>
@@ -32,7 +57,7 @@ const withNestedServiceUids = (
     ...(group as Omit<ServiceGroup, "uid" | "items">),
     uid: `service-${groupIndex + 1}`,
     items: withUid(
-      (group.items as readonly Record<string, unknown>[] | undefined) ?? [],
+      getServiceItems(group),
       `service-${groupIndex + 1}-item`,
     ) as unknown as ServiceItem[],
   }));

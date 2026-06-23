@@ -13,7 +13,7 @@ import NewsList from "../components/NewsList.vue";
 import PublicationCard from "../components/PublicationCard.vue";
 import QuickLinks from "../components/QuickLinks.vue";
 import TimelineColumn from "../components/TimelineColumn.vue";
-import { siteData } from "../data";
+import { siteData } from "../utils/site-data";
 import { escapeHtml } from "../utils/html";
 import {
   filterPublications,

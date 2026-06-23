@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { siteData } from "../data";
+import { siteData } from "../utils/site-data";
 import {
   getFeaturedPublications,
   sortPublications,

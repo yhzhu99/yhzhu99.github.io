@@ -39,6 +39,8 @@ const tabs = [
   { name: "Honors & Service", id: "awards" },
 ] satisfies TabItem[];
 
+const cvUrl = "/YinghaoZhu_CV.pdf";
+
 const reviewerPreview = [
   "npj Digital Medicine",
   "NeurIPS",
@@ -451,26 +453,55 @@ watch(activeTab, () => {
                     class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover"
                   />
                 </div>
-                <RouterLink
-                  to="/world"
-                  class="interactive-element flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
-                  aria-label="Open 3D workspace"
-                >
-                  <span>3D Workspace</span>
-                  <svg
-                    class="h-3.5 w-3.5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+                <div class="grid grid-cols-2 gap-2">
+                  <a
+                    :href="cvUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                    aria-label="Open CV PDF"
                   >
-                    <path d="M7 17 17 7" />
-                    <path d="M7 7h10v10" />
-                  </svg>
-                </RouterLink>
+                    <span>CV</span>
+                    <svg
+                      class="h-3.5 w-3.5 flex-shrink-0"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+                      />
+                      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                      <path d="M10 9H8" />
+                      <path d="M16 13H8" />
+                      <path d="M16 17H8" />
+                    </svg>
+                  </a>
+                  <RouterLink
+                    to="/world"
+                    class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                    aria-label="Open 3D workspace"
+                  >
+                    <span>3D Workspace</span>
+                    <svg
+                      class="h-3.5 w-3.5 flex-shrink-0"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 17 17 7" />
+                      <path d="M7 7h10v10" />
+                    </svg>
+                  </RouterLink>
+                </div>
               </div>
             </section>
 
@@ -568,26 +599,55 @@ watch(activeTab, () => {
                       class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover"
                     />
                   </div>
-                  <RouterLink
-                    to="/world"
-                    class="interactive-element mt-3 flex w-full items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
-                    aria-label="Open 3D workspace"
-                  >
-                    <span>3D Workspace</span>
-                    <svg
-                      class="h-4 w-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
+                  <div class="mt-3 grid grid-cols-2 gap-2">
+                    <a
+                      :href="cvUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                      aria-label="Open CV PDF"
                     >
-                      <path d="M7 17 17 7" />
-                      <path d="M7 7h10v10" />
-                    </svg>
-                  </RouterLink>
+                      <span>CV</span>
+                      <svg
+                        class="h-4 w-4 flex-shrink-0"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+                        />
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                        <path d="M10 9H8" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                      </svg>
+                    </a>
+                    <RouterLink
+                      to="/world"
+                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                      aria-label="Open 3D workspace"
+                    >
+                      <span>3D Workspace</span>
+                      <svg
+                        class="h-4 w-4 flex-shrink-0"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M7 17 17 7" />
+                        <path d="M7 7h10v10" />
+                      </svg>
+                    </RouterLink>
+                  </div>
                 </div>
                 <QuickLinks :links="quickLinks" :icons="quickLinkIcons" />
                 <div class="mt-6">

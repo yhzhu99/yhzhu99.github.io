@@ -55,27 +55,27 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \newcommand{\sectiontitle}[1]{%
     \par\vspace{2.6mm}%
     \noindent{\Large\textbf{#1}}\par
-    \vspace{0.55mm}%
+    \vspace{0.9mm}%
     \hrule width \textwidth height 0.36pt
-    \vspace{0.8mm}%
+    \vspace{1.85mm}%
 }
 
 \newcommand{\categorytitle}[1]{%
     \par\vspace{1.7mm}%
     \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
-    \vspace{0.18mm}%
+    \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{0.55mm}%
+    \vspace{1.15mm}%
 }
 
 \newcommand{\pubcategorytitle}[1]{%
     \par\vspace{1.35mm}%
     \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
-    \vspace{0.18mm}%
+    \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{0.55mm}%
+    \vspace{0.9mm}%
 }
 
 \newcommand{\entryhead}[2]{

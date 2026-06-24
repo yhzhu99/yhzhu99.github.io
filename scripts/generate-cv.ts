@@ -40,6 +40,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \definecolor{darkred}{RGB}{153,0,0}
 \definecolor{textgray}{RGB}{55,65,81}
 \definecolor{mutedgray}{RGB}{100,116,139}
+\newlength{\pubcategorywidth}
 
 \hypersetup{
     colorlinks=true,
@@ -51,19 +52,30 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 }
 \urlstyle{same}
 
-\newcommand{\sectiontitle}[1]{
-    \vspace{2.2mm}
-    {\large\textbf{#1}}
-    \vspace{0.6mm}
-    \hrule
-    \vspace{1.4mm}
+\newcommand{\sectiontitle}[1]{%
+    \par\vspace{2.6mm}%
+    \noindent{\Large\textbf{#1}}\par
+    \vspace{0.55mm}%
+    \hrule width \textwidth height 0.36pt
+    \vspace{0.8mm}%
 }
 
-\newcommand{\categorytitle}[1]{
-    \vspace{1.2mm}
-    {\normalsize\textcolor{darkred}{\textbf{#1}}}
-    \par
-    \vspace{0.4mm}
+\newcommand{\categorytitle}[1]{%
+    \par\vspace{1.7mm}%
+    \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
+    \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
+    \vspace{0.18mm}%
+    {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
+    \vspace{0.55mm}%
+}
+
+\newcommand{\pubcategorytitle}[1]{%
+    \par\vspace{1.35mm}%
+    \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
+    \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
+    \vspace{0.18mm}%
+    {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
+    \vspace{0.55mm}%
 }
 
 \newcommand{\entryhead}[2]{
@@ -86,11 +98,11 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 
 \newcommand{\pubentry}[5]{
     \noindent
-    \begin{minipage}[t]{0.17\textwidth}
+    \begin{minipage}[t]{0.145\textwidth}
     \raggedright\small\textbf{#1}
     \end{minipage}
     \hfill
-    \begin{minipage}[t]{0.815\textwidth}
+    \begin{minipage}[t]{0.84\textwidth}
     {\small\textbf{\textcolor{black}{#2}}}\\[-0.1mm]
     {\footnotesize #3}\\[-0.1mm]
     {\footnotesize\textit{#4}, #5}
@@ -98,18 +110,25 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \par\vspace{1.35mm}
 }
 
+\newcommand{\cvmarker}{
+    \makebox[0.018\textwidth][l]{\raisebox{0.36ex}{\textcolor{darkred}{\scriptsize$\triangleright$}}}%
+}
+
 \newcommand{\cvitem}[3]{
     \noindent
-    \begin{minipage}[t]{0.018\textwidth}
-    \textcolor{darkred}{\scriptsize$\triangleright$}
-    \end{minipage}
-    \begin{minipage}[t]{0.79\textwidth}
-    {\small\textbf{#1}#2}
-    \end{minipage}
+    \cvmarker
+    \begin{minipage}[t]{0.855\textwidth}{\small\textbf{#1}#2}\end{minipage}
     \hfill
-    \begin{minipage}[t]{0.17\textwidth}
-    \raggedleft\small\textcolor{mutedgray}{#3}
-    \end{minipage}
+    \makebox[0.105\textwidth][r]{\small\textcolor{mutedgray}{#3}}
+    \par\vspace{0.6mm}
+}
+
+\newcommand{\serviceitem}[3]{
+    \noindent
+    \cvmarker
+    \begin{minipage}[t]{0.695\textwidth}{\small\textbf{#1}#2}\end{minipage}
+    \hfill
+    \makebox[0.265\textwidth][r]{\small\textcolor{mutedgray}{#3}}
     \par\vspace{0.6mm}
 }
 
@@ -121,11 +140,12 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \begin{document}
 
 \begin{center}
-{\huge\textbf{${tex(siteData.profile.name)}}}\\[-0.2mm]
+{\huge\textbf{${tex(siteData.profile.name)}}}\\
+\vspace{1.2mm}
 \textbf{E-mail:} \href{mailto:${href(siteData.profile.email)}}{${tex(siteData.profile.email)}}\hspace{5mm}
 \textbf{Homepage:} \href{${href(HOMEPAGE_URL)}}{${tex(HOMEPAGE_URL)}}
 \end{center}
-\vspace{-1mm}
+\vspace{-0.4mm}
 
 \sectiontitle{Research Interest}
 {\small My research focuses on \textbf{AI for Healthcare}, with a particular emphasis on:\par}
@@ -167,7 +187,7 @@ async function main() {
 
 function groupPublications(publications: Publication[]) {
   const sortedPublications = sortPublications(
-    publications.filter((publication) => !isPreprint(publication)),
+    publications.filter((publication) => !isExcludedCvPublication(publication)),
   );
   const orderedTags = [
     ...publicationTagOrder,
@@ -244,7 +264,7 @@ function formatPublicationGroup(group: {
   title: string;
   publications: Publication[];
 }) {
-  return `\\categorytitle{${tex(group.title)}}
+  return `\\pubcategorytitle{${tex(group.title)}}
 
 ${group.publications.map(formatPublication).join("\n")}`;
 }
@@ -280,15 +300,18 @@ function formatTalk(item: AwardItem) {
 
 function formatServiceGroup(group: ServiceGroup) {
   const items = group.items
-    .map((item) => `\\cvitem{${tex(item.content)}}{}{${tex(item.year)}}`)
+    .map((item) => `\\serviceitem{${tex(item.content)}}{}{${tex(item.year)}}`)
     .join("\n");
 
   return `\\categorytitle{${tex(group.title)}}
 ${items}`;
 }
 
-function isPreprint(publication: Publication) {
-  return /\bpreprint\b|arxiv/i.test(publication.venue);
+function isExcludedCvPublication(publication: Publication) {
+  return (
+    /\bpreprint\b|arxiv/i.test(publication.venue) ||
+    /\b(workshop|summit|abstract|poster|demo)\b/i.test(publication.venue)
+  );
 }
 
 function splitUnitAndPlace(location = "") {

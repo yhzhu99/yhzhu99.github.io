@@ -30,7 +30,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \IfFileExists{cmbright.sty}{\usepackage{cmbright}}{\usepackage{helvet}\renewcommand{\familydefault}{\sfdefault}}
-\usepackage{microtype}
+\usepackage[protrusion=true,expansion=false]{microtype}
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{parskip}

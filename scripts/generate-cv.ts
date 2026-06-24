@@ -7,7 +7,10 @@ import type {
   ServiceGroup,
   TimelineItem,
 } from "../src/types";
-import { sortPublications } from "../src/utils/publications";
+import {
+  publicationTagOrder,
+  sortPublications,
+} from "../src/utils/publications";
 import { siteData } from "../src/utils/site-data";
 
 const DEFAULT_OUTPUT_PATH = "build/cv/YinghaoZhu_CV.tex";
@@ -19,22 +22,6 @@ const outputPath = resolve(
   process.argv[2] ?? DEFAULT_OUTPUT_PATH,
 );
 
-const publicationGroups = [
-  {
-    title: "Healthcare Benchmarks, Toolkits, and Protocols",
-    tags: ["Healthcare Benchmark", "Toolkits & Platforms"],
-  },
-  {
-    title: "Large Language Models for Healthcare",
-    tags: ["LLM Agents for Healthcare", "LLM for Healthcare"],
-  },
-  { title: "Healthcare Modeling", tags: ["Healthcare Modeling"] },
-  { title: "Trustworthy AI", tags: ["Trustworthy AI"] },
-  { title: "Software Engineering", tags: ["Software Engineering"] },
-  { title: "Surveys and Book Chapters", tags: ["Survey", "Book Chapters"] },
-  { title: "Others", tags: ["Other Topics"] },
-];
-
 const groupedPublications = groupPublications(siteData.publications);
 
 const cv = String.raw`\documentclass[10pt,a4paper]{article}
@@ -42,8 +29,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \usepackage[left=0.48in,right=0.48in,top=0.45in,bottom=0.48in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[scaled=0.92]{helvet}
-\renewcommand{\familydefault}{\sfdefault}
+\IfFileExists{cmbright.sty}{\usepackage{cmbright}}{\usepackage{helvet}\renewcommand{\familydefault}{\sfdefault}}
 \usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{enumitem}
@@ -76,6 +62,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \newcommand{\categorytitle}[1]{
     \vspace{1.2mm}
     {\normalsize\textcolor{darkred}{\textbf{#1}}}
+    \par
     \vspace{0.4mm}
 }
 
@@ -93,32 +80,37 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 
 \newcommand{\compactentry}[3]{
     \entryhead{#1}{#2}
-    {\footnotesize #3\par}
-    \vspace{0.8mm}
+    {\small #3\par}
+    \vspace{1mm}
 }
 
 \newcommand{\pubentry}[5]{
     \noindent
     \begin{minipage}[t]{0.17\textwidth}
-    \raggedright\footnotesize\textbf{#1}
+    \raggedright\small\textbf{#1}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.815\textwidth}
-    {\footnotesize\textbf{#2}}\\[-0.2mm]
-    {\scriptsize #3}\\[-0.2mm]
-    {\scriptsize\textit{#4}, #5}
+    {\small\textbf{\textcolor{black}{#2}}}\\[-0.1mm]
+    {\footnotesize #3}\\[-0.1mm]
+    {\footnotesize\textit{#4}, #5}
     \end{minipage}
-    \par\vspace{1.2mm}
+    \par\vspace{1.35mm}
 }
 
-\newenvironment{cvlist}{
-  \begin{itemize}[leftmargin=1.15em,label=\textcolor{darkred}{\scriptsize$\triangleright$},topsep=0.4mm,itemsep=0.55mm,parsep=0pt]
-}{
-  \end{itemize}
-}
-
-\newcommand{\listentry}[3]{
-    \item {\footnotesize\textbf{#1}#2\hspace{0.4em}\textcolor{mutedgray}{#3}}
+\newcommand{\cvitem}[3]{
+    \noindent
+    \begin{minipage}[t]{0.018\textwidth}
+    \textcolor{darkred}{\scriptsize$\triangleright$}
+    \end{minipage}
+    \begin{minipage}[t]{0.79\textwidth}
+    {\small\textbf{#1}#2}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.17\textwidth}
+    \raggedleft\small\textcolor{mutedgray}{#3}
+    \end{minipage}
+    \par\vspace{0.6mm}
 }
 
 \setlength{\parindent}{0pt}
@@ -136,11 +128,10 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \vspace{-1mm}
 
 \sectiontitle{Research Interest}
-{\footnotesize
-My research focuses on \textbf{AI for Healthcare}: ${siteData.profile.interests
-  .map(formatInterestPhrase)
-  .join("; ")}.
-\par}
+{\small My research focuses on \textbf{AI for Healthcare}, with a particular emphasis on:\par}
+\begin{enumerate}[label=(\arabic*),leftmargin=1.6em,topsep=0.5mm,itemsep=0.35mm,parsep=0pt]
+${siteData.profile.interests.map(formatInterestItem).join("\n")}
+\end{enumerate}
 
 \sectiontitle{Education}
 ${siteData.education.map(formatEducation).join("\n")}
@@ -152,14 +143,10 @@ ${siteData.experience.map(formatExperience).join("\n")}
 ${groupedPublications.map(formatPublicationGroup).join("\n")}
 
 \sectiontitle{Selected Honors and Awards}
-\begin{cvlist}
 ${siteData.awards.map(formatAward).join("\n")}
-\end{cvlist}
 
 \sectiontitle{Invited Talks}
-\begin{cvlist}
 ${siteData.talks.map(formatTalk).join("\n")}
-\end{cvlist}
 
 \sectiontitle{Services}
 ${siteData.services.map(formatServiceGroup).join("\n")}
@@ -179,41 +166,47 @@ async function main() {
 }
 
 function groupPublications(publications: Publication[]) {
-  const sortedPublications = sortPublications(publications);
-  const groupedTags = new Set(publicationGroups.flatMap((group) => group.tags));
-  const groups = publicationGroups
-    .map((group) => ({
-      title: group.title,
-      publications: sortedPublications.filter((publication) =>
-        group.tags.includes(publication.tag ?? ""),
+  const sortedPublications = sortPublications(
+    publications.filter((publication) => !isPreprint(publication)),
+  );
+  const orderedTags = [
+    ...publicationTagOrder,
+    ...getAdditionalTags(sortedPublications),
+  ];
+
+  return orderedTags
+    .map((tag) => ({
+      title: tag,
+      publications: sortedPublications.filter(
+        (publication) => publication.tag === tag,
       ),
     }))
     .filter((group) => group.publications.length > 0);
-
-  const ungroupedPublications = sortedPublications.filter(
-    (publication) => !groupedTags.has(publication.tag ?? ""),
-  );
-
-  if (ungroupedPublications.length > 0) {
-    groups.push({
-      title: "Additional Publications",
-      publications: ungroupedPublications,
-    });
-  }
-
-  return groups;
 }
 
-function formatInterestPhrase(interest: {
+function getAdditionalTags(publications: Publication[]) {
+  const orderedTags = new Set(publicationTagOrder);
+  const tags = publications
+    .map((publication) => publication.tag)
+    .filter((tag): tag is string => Boolean(tag) && !orderedTags.has(tag));
+
+  return [...new Set(tags)].sort((a, b) => {
+    if (a === "Other Topics") return 1;
+    if (b === "Other Topics") return -1;
+
+    return a.localeCompare(b);
+  });
+}
+
+function formatInterestItem(interest: {
   title: string;
   description?: string;
   desc?: string;
 }) {
   const description = interest.description ?? interest.desc ?? "";
+  const suffix = description ? `: ${tex(description)}` : "";
 
-  return description
-    ? `\\textbf{${tex(interest.title)}} (${tex(description)})`
-    : `\\textbf{${tex(interest.title)}}`;
+  return `\\item {\\small\\textbf{${tex(interest.title)}}${suffix}}`;
 }
 
 function formatEducation(item: TimelineItem) {
@@ -259,7 +252,7 @@ ${group.publications.map(formatPublication).join("\n")}`;
 function formatPublication(publication: Publication) {
   const paperUrl = getPaperUrl(publication.links);
   const title = paperUrl
-    ? `\\href{${href(paperUrl)}}{${tex(publication.title)}}`
+    ? `\\begingroup\\hypersetup{hidelinks}\\href{${href(paperUrl)}}{${tex(publication.title)}}\\endgroup`
     : tex(publication.title);
   const venueShort = getVenueShort(publication.venue);
   const venue = stripYear(publication.venue, publication.year);
@@ -276,24 +269,26 @@ function formatAward(item: AwardItem) {
     ? `, \\textit{${tex(item.organization)}}`
     : "";
 
-  return `\\listentry{${tex(item.title)}}{${organization}}{${tex(item.year)}}`;
+  return `\\cvitem{${tex(item.title)}}{${organization}}{${tex(item.year)}}`;
 }
 
 function formatTalk(item: AwardItem) {
   const venue = item.venue ? `, \\textit{${tex(item.venue)}}` : "";
 
-  return `\\listentry{${tex(item.title)}}{${venue}}{${tex(item.year)}}`;
+  return `\\cvitem{${tex(item.title)}}{${venue}}{${tex(item.year)}}`;
 }
 
 function formatServiceGroup(group: ServiceGroup) {
   const items = group.items
-    .map((item) => `\\listentry{${tex(item.content)}}{}{${tex(item.year)}}`)
+    .map((item) => `\\cvitem{${tex(item.content)}}{}{${tex(item.year)}}`)
     .join("\n");
 
   return `\\categorytitle{${tex(group.title)}}
-\\begin{cvlist}
-${items}
-\\end{cvlist}`;
+${items}`;
+}
+
+function isPreprint(publication: Publication) {
+  return /\bpreprint\b|arxiv/i.test(publication.venue);
 }
 
 function splitUnitAndPlace(location = "") {
@@ -394,9 +389,19 @@ function getVenueShort(venue = "") {
     { pattern: /British Journal of Radiology/i, value: "BJR" },
     { pattern: /Pediatric Radiology/i, value: "Pediatr Radiol" },
     { pattern: /Translational Pediatrics/i, value: "TP" },
-    { pattern: /Chinese Journal of Evidence-Based Pediatrics/i, value: "CJEBP" },
-    { pattern: /Asian and Oceanic Society for Paediatric Radiology|AOSPR/i, value: "AOSPR" },
-    { pattern: /International Conference on Industrial Artificial Intelligence|IAI/i, value: "IAI" },
+    {
+      pattern: /Chinese Journal of Evidence-Based Pediatrics/i,
+      value: "CJEBP",
+    },
+    {
+      pattern: /Asian and Oceanic Society for Paediatric Radiology|AOSPR/i,
+      value: "AOSPR",
+    },
+    {
+      pattern:
+        /International Conference on Industrial Artificial Intelligence|IAI/i,
+      value: "IAI",
+    },
     { pattern: /Journal of Guangxi Medical University/i, value: "JGMU" },
     { pattern: /China Machine Press/i, value: "Book" },
     { pattern: /Tsinghua University Press/i, value: "Book" },

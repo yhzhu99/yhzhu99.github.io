@@ -310,7 +310,10 @@ ${items}`;
 function isExcludedCvPublication(publication: Publication) {
   return (
     /\bpreprint\b|arxiv/i.test(publication.venue) ||
-    /\b(workshop|summit|abstract|poster|demo)\b/i.test(publication.venue)
+    /\b(workshop|summit|abstract|poster|demo)\b/i.test(publication.venue) ||
+    /British Journal of Radiolog(?:y)?|Pediatric Radiology|Translational Pediatrics|Chinese Journal of Evidence-Based Pediatrics|Journal of Guangxi Medical University|International Conference on Industrial Artificial Intelligence|\bIAI\b/i.test(
+      publication.venue,
+    )
   );
 }
 

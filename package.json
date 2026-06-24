@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "cv:tex": "tsx scripts/generate-cv.ts",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "vue-tsc --noEmit",
     "lint": "oxlint .",
@@ -14,6 +15,7 @@
     "oxlint": "1.70.0",
     "prettier": "3.8.4",
     "tailwindcss": "4.3.1",
+    "tsx": "^4.22.4",
     "typescript": "6.0.3",
     "vite": "8.0.16",
     "vue-tsc": "3.3.5"

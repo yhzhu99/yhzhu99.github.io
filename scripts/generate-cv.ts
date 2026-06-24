@@ -119,19 +119,19 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \newcommand{\cvitem}[3]{
     \noindent
     \cvmarker
-    \begin{minipage}[t]{0.855\textwidth}{\small\textbf{#1}#2}\end{minipage}
+    \begin{minipage}[t]{0.855\textwidth}{\small\strut\textbf{#1}#2}\end{minipage}
     \hfill
-    \makebox[0.105\textwidth][r]{\small\textcolor{mutedgray}{#3}}
-    \par\vspace{1.05mm}
+    \makebox[0.105\textwidth][r]{\small\strut\textcolor{mutedgray}{#3}}
+    \par\vspace{0.82mm}
 }
 
 \newcommand{\serviceitem}[3]{
     \noindent
     \cvmarker
-    \begin{minipage}[t]{0.695\textwidth}{\small\textbf{#1}#2}\end{minipage}
+    \begin{minipage}[t]{0.695\textwidth}{\small\strut\textbf{#1}#2}\end{minipage}
     \hfill
-    \makebox[0.265\textwidth][r]{\small\textcolor{mutedgray}{#3}}
-    \par\vspace{1.05mm}
+    \makebox[0.265\textwidth][r]{\small\strut\textcolor{mutedgray}{#3}}
+    \par\vspace{0.82mm}
 }
 
 \setlength{\parindent}{0pt}

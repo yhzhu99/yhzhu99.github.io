@@ -66,7 +66,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
     \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{1.15mm}%
+    \vspace{1.3mm}%
 }
 
 \newcommand{\pubcategorytitle}[1]{%
@@ -75,7 +75,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
     \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{0.9mm}%
+    \vspace{1.3mm}%
 }
 
 \newcommand{\entryhead}[2]{

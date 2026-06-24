@@ -5,9 +5,10 @@ import type {
   LinkItem,
   Publication,
   ServiceGroup,
+  TimelineItem,
 } from "../src/types";
-import { siteData } from "../src/utils/site-data";
 import { sortPublications } from "../src/utils/publications";
+import { siteData } from "../src/utils/site-data";
 
 const DEFAULT_OUTPUT_PATH = "build/cv/YinghaoZhu_CV.tex";
 const HOMEPAGE_URL = "https://yhzhu99.github.io/";
@@ -18,21 +19,41 @@ const outputPath = resolve(
   process.argv[2] ?? DEFAULT_OUTPUT_PATH,
 );
 
-const featuredPublications = sortPublications(
-  siteData.publications.filter((publication) => publication.featured),
-);
+const publicationGroups = [
+  {
+    title: "Healthcare Benchmarks, Toolkits, and Protocols",
+    tags: ["Healthcare Benchmark", "Toolkits & Platforms"],
+  },
+  {
+    title: "Large Language Models for Healthcare",
+    tags: ["LLM Agents for Healthcare", "LLM for Healthcare"],
+  },
+  { title: "Healthcare Modeling", tags: ["Healthcare Modeling"] },
+  { title: "Trustworthy AI", tags: ["Trustworthy AI"] },
+  { title: "Software Engineering", tags: ["Software Engineering"] },
+  { title: "Surveys and Book Chapters", tags: ["Survey", "Book Chapters"] },
+  { title: "Others", tags: ["Other Topics"] },
+];
+
+const groupedPublications = groupPublications(siteData.publications);
 
 const cv = String.raw`\documentclass[10pt,a4paper]{article}
 
-\usepackage[left=0.5in,right=0.5in,top=0.5in,bottom=0.5in]{geometry}
+\usepackage[left=0.48in,right=0.48in,top=0.45in,bottom=0.48in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{enumitem}
-\usepackage[T1]{fontenc}
 \usepackage{parskip}
 \usepackage{xcolor}
 \pagenumbering{gobble}
 
 \definecolor{darkred}{RGB}{153,0,0}
+\definecolor{textgray}{RGB}{55,65,81}
+\definecolor{mutedgray}{RGB}{100,116,139}
 
 \hypersetup{
     colorlinks=true,
@@ -42,77 +63,106 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     pdfauthor={Yinghao Zhu},
     pageanchor=false
 }
+\urlstyle{same}
 
 \newcommand{\sectiontitle}[1]{
-    \vspace{4mm}
+    \vspace{2.2mm}
     {\large\textbf{#1}}
-    \vspace{1mm}
+    \vspace{0.6mm}
     \hrule
-    \vspace{3mm}
+    \vspace{1.4mm}
+}
+
+\newcommand{\categorytitle}[1]{
+    \vspace{1.2mm}
+    {\normalsize\textcolor{darkred}{\textbf{#1}}}
+    \vspace{0.4mm}
 }
 
 \newcommand{\entryhead}[2]{
     \noindent
-    \begin{minipage}[t]{0.76\textwidth}
-    #1
+    \begin{minipage}[t]{0.82\textwidth}
+    \raggedright #1
     \end{minipage}
     \hfill
-    \begin{minipage}[t]{0.22\textwidth}
-    \raggedleft #2
+    \begin{minipage}[t]{0.16\textwidth}
+    \raggedleft\footnotesize\textcolor{mutedgray}{#2}
     \end{minipage}
     \par
 }
 
+\newcommand{\compactentry}[3]{
+    \entryhead{#1}{#2}
+    {\footnotesize #3\par}
+    \vspace{0.8mm}
+}
+
 \newcommand{\pubentry}[5]{
     \noindent
-    \begin{minipage}[t]{0.19\textwidth}
-    \raggedright\textbf{#1}
+    \begin{minipage}[t]{0.17\textwidth}
+    \raggedright\footnotesize\textbf{#1}
     \end{minipage}
-    \begin{minipage}[t]{0.80\textwidth}
-    \textbf{#2}\\
-    #3\\
-    \textit{#4}, #5
+    \hfill
+    \begin{minipage}[t]{0.815\textwidth}
+    {\footnotesize\textbf{#2}}\\[-0.2mm]
+    {\scriptsize #3}\\[-0.2mm]
+    {\scriptsize\textit{#4}, #5}
     \end{minipage}
-    \vspace{2mm}
+    \par\vspace{1.2mm}
+}
+
+\newenvironment{cvlist}{
+  \begin{itemize}[leftmargin=1.15em,label=\textcolor{darkred}{\scriptsize$\triangleright$},topsep=0.4mm,itemsep=0.55mm,parsep=0pt]
+}{
+  \end{itemize}
+}
+
+\newcommand{\listentry}[3]{
+    \item {\footnotesize\textbf{#1}#2\hspace{0.4em}\textcolor{mutedgray}{#3}}
 }
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.5mm}
-\setlist[itemize]{leftmargin=*,topsep=2pt,itemsep=1pt,parsep=0pt}
+\setlength{\parskip}{0pt}
+\setlist[itemize]{leftmargin=1.1em,topsep=0.3mm,itemsep=0.35mm,parsep=0pt}
 \sloppy
 
 \begin{document}
 
 \begin{center}
-{\huge\textbf{${tex(siteData.profile.name)}}}\\
-\vspace{2mm}
+{\huge\textbf{${tex(siteData.profile.name)}}}\\[-0.2mm]
 \textbf{E-mail:} \href{mailto:${href(siteData.profile.email)}}{${tex(siteData.profile.email)}}\hspace{5mm}
 \textbf{Homepage:} \href{${href(HOMEPAGE_URL)}}{${tex(HOMEPAGE_URL)}}
 \end{center}
+\vspace{-1mm}
 
 \sectiontitle{Research Interest}
-My research focuses on \textbf{AI for Healthcare}, with a particular emphasis on the following areas:
-\begin{itemize}
-${siteData.profile.interests.map(formatInterest).join("\n")}
-\end{itemize}
+{\footnotesize
+My research focuses on \textbf{AI for Healthcare}: ${siteData.profile.interests
+  .map(formatInterestPhrase)
+  .join("; ")}.
+\par}
 
 \sectiontitle{Education}
-${siteData.education.map(formatEducation).join("\n\n")}
+${siteData.education.map(formatEducation).join("\n")}
 
 \sectiontitle{Professional Experience}
-${siteData.experience.map(formatExperience).join("\n\n")}
+${siteData.experience.map(formatExperience).join("\n")}
 
-\sectiontitle{Featured Publications \href{${href(SCHOLAR_URL)}}{\textcolor{darkred}{[Google Scholar]}} {\normalfont\small ($^{\ast}$ indicates equal contribution; $^{\dagger}$ indicates corresponding author)}}
-${featuredPublications.map(formatPublication).join("\n\n")}
+\sectiontitle{Publications \href{${href(SCHOLAR_URL)}}{\textcolor{darkred}{[Google Scholar]}} {\normalfont\small ($^{\ast}$ indicates equal contribution; $^{\dagger}$ indicates corresponding author)}}
+${groupedPublications.map(formatPublicationGroup).join("\n")}
 
 \sectiontitle{Selected Honors and Awards}
+\begin{cvlist}
 ${siteData.awards.map(formatAward).join("\n")}
+\end{cvlist}
 
 \sectiontitle{Invited Talks}
+\begin{cvlist}
 ${siteData.talks.map(formatTalk).join("\n")}
+\end{cvlist}
 
 \sectiontitle{Services}
-${siteData.services.map(formatServiceGroup).join("\n\n")}
+${siteData.services.map(formatServiceGroup).join("\n")}
 
 \end{document}
 `;
@@ -128,54 +178,82 @@ async function main() {
   console.log(`Generated ${outputPath}`);
 }
 
-function formatInterest(interest: {
+function groupPublications(publications: Publication[]) {
+  const sortedPublications = sortPublications(publications);
+  const groupedTags = new Set(publicationGroups.flatMap((group) => group.tags));
+  const groups = publicationGroups
+    .map((group) => ({
+      title: group.title,
+      publications: sortedPublications.filter((publication) =>
+        group.tags.includes(publication.tag ?? ""),
+      ),
+    }))
+    .filter((group) => group.publications.length > 0);
+
+  const ungroupedPublications = sortedPublications.filter(
+    (publication) => !groupedTags.has(publication.tag ?? ""),
+  );
+
+  if (ungroupedPublications.length > 0) {
+    groups.push({
+      title: "Additional Publications",
+      publications: ungroupedPublications,
+    });
+  }
+
+  return groups;
+}
+
+function formatInterestPhrase(interest: {
   title: string;
   description?: string;
   desc?: string;
 }) {
   const description = interest.description ?? interest.desc ?? "";
-  const suffix = description ? `: ${tex(description)}` : "";
 
-  return `    \\item \\textbf{${tex(interest.title)}}${suffix}`;
+  return description
+    ? `\\textbf{${tex(interest.title)}} (${tex(description)})`
+    : `\\textbf{${tex(interest.title)}}`;
 }
 
-function formatEducation(item: {
-  institution?: string;
-  location?: string;
-  period?: string;
-  degree?: string;
-  details?: string;
+function formatEducation(item: TimelineItem) {
+  const { unit, place } = splitUnitAndPlace(item.location);
+  const title = `\\textbf{${tex(item.institution)}}${formatPlace(place)}`;
+  const detail = compactDetail([item.degree, unit], item.details);
+
+  return `\\compactentry{${title}}{${tex(item.period)}}{${detail}}`;
+}
+
+function formatExperience(item: TimelineItem) {
+  const { unit, place } = splitUnitAndPlace(item.location);
+  const title = `\\textbf{${tex(item.organization)}}${formatPlace(place)}`;
+  const detail = compactDetail([item.position, unit], item.details);
+
+  return `\\compactentry{${title}}{${tex(item.period)}}{${detail}}`;
+}
+
+function compactDetail(parts: Array<string | undefined>, parenthetical = "") {
+  const base = parts.filter(Boolean).map(tex).join(", ");
+  const note = htmlToText(parenthetical);
+
+  if (!base && !note) {
+    return "";
+  }
+
+  if (!note) {
+    return base;
+  }
+
+  return base ? `${base} (${tex(note)})` : `(${tex(note)})`;
+}
+
+function formatPublicationGroup(group: {
+  title: string;
+  publications: Publication[];
 }) {
-  return formatTimelineEntry(
-    `\\textbf{${tex(item.institution)}}${formatLocation(item.location)}`,
-    item.period,
-    [item.degree, item.details ? htmlToText(item.details) : ""],
-  );
-}
+  return `\\categorytitle{${tex(group.title)}}
 
-function formatExperience(item: {
-  organization?: string;
-  location?: string;
-  period?: string;
-  position?: string;
-  details?: string;
-}) {
-  return formatTimelineEntry(
-    `\\textbf{${tex(item.organization)}}${formatLocation(item.location)}`,
-    item.period,
-    [item.position, item.details ? htmlToText(item.details) : ""],
-  );
-}
-
-function formatTimelineEntry(title: string, period = "", lines: string[] = []) {
-  const details = lines
-    .filter(Boolean)
-    .map((line) => `${tex(line)}\\\\`)
-    .join("\n");
-
-  return [`\\entryhead{${title}}{${tex(period)}}`, details, "\\vspace{2mm}"]
-    .filter(Boolean)
-    .join("\n");
+${group.publications.map(formatPublication).join("\n")}`;
 }
 
 function formatPublication(publication: Publication) {
@@ -198,28 +276,51 @@ function formatAward(item: AwardItem) {
     ? `, \\textit{${tex(item.organization)}}`
     : "";
 
-  return `\\entryhead{${tex(item.title)}${organization}}{${tex(item.year)}}`;
+  return `\\listentry{${tex(item.title)}}{${organization}}{${tex(item.year)}}`;
 }
 
 function formatTalk(item: AwardItem) {
   const venue = item.venue ? `, \\textit{${tex(item.venue)}}` : "";
 
-  return `\\entryhead{${tex(item.title)}${venue}}{${tex(item.year)}}`;
+  return `\\listentry{${tex(item.title)}}{${venue}}{${tex(item.year)}}`;
 }
 
 function formatServiceGroup(group: ServiceGroup) {
   const items = group.items
-    .map((item) => `\\entryhead{${tex(item.content)}}{${tex(item.year)}}`)
+    .map((item) => `\\listentry{${tex(item.content)}}{}{${tex(item.year)}}`)
     .join("\n");
 
-  return `\\textcolor{darkred}{\\textbf{${tex(group.title)}}}
-\\vspace{1mm}
-
-${items}`;
+  return `\\categorytitle{${tex(group.title)}}
+\\begin{cvlist}
+${items}
+\\end{cvlist}`;
 }
 
-function formatLocation(location = "") {
-  return location ? `, ${tex(location)}` : "";
+function splitUnitAndPlace(location = "") {
+  const parts = location
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 2) {
+    return { unit: "", place: location };
+  }
+
+  if (parts.at(-1)?.toLowerCase() === "remote") {
+    return {
+      unit: parts.slice(0, -1).join(", "),
+      place: parts.at(-1) ?? "",
+    };
+  }
+
+  return {
+    unit: parts.slice(0, -2).join(", "),
+    place: parts.slice(-2).join(", "),
+  };
+}
+
+function formatPlace(place = "") {
+  return place ? `, ${tex(place)}` : "";
 }
 
 function formatAuthors(publication: Publication) {
@@ -282,11 +383,23 @@ function getVenueShort(venue = "") {
     { pattern: /\bAMIA\b/i, value: "AMIA" },
     { pattern: /\bSAIL\b/i, value: "SAIL" },
     { pattern: /\bBIBM\b/i, value: "BIBM" },
+    { pattern: /\bTOSEM\b/i, value: "TOSEM" },
+    { pattern: /\bMIDL\b/i, value: "MIDL" },
     { pattern: /npj Digital Medicine/i, value: "npj Digital Medicine" },
     { pattern: /Cell Patterns|Patterns/i, value: "Cell Patterns" },
     { pattern: /STAR Protocols/i, value: "Cell Protocols" },
     { pattern: /The Innovation/i, value: "The Innovation" },
-    { pattern: /Health Data Science/i, value: "Health Data Science" },
+    { pattern: /Health Data Science/i, value: "HDS" },
+    { pattern: /Journal of Pharmaceutical Analysis/i, value: "JPA" },
+    { pattern: /British Journal of Radiology/i, value: "BJR" },
+    { pattern: /Pediatric Radiology/i, value: "Pediatr Radiol" },
+    { pattern: /Translational Pediatrics/i, value: "TP" },
+    { pattern: /Chinese Journal of Evidence-Based Pediatrics/i, value: "CJEBP" },
+    { pattern: /Asian and Oceanic Society for Paediatric Radiology|AOSPR/i, value: "AOSPR" },
+    { pattern: /International Conference on Industrial Artificial Intelligence|IAI/i, value: "IAI" },
+    { pattern: /Journal of Guangxi Medical University/i, value: "JGMU" },
+    { pattern: /China Machine Press/i, value: "Book" },
+    { pattern: /Tsinghua University Press/i, value: "Book" },
     { pattern: /Preprint|arXiv/i, value: "Preprint" },
   ];
 

@@ -37,6 +37,18 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends latexmk texlive-latex-extra texlive-fonts-recommended
+
+      - name: Build CV PDF
+        run: |
+          npm run cv:tex
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -output-directory=build/cv build/cv/YinghaoZhu_CV.tex
+          cp build/cv/YinghaoZhu_CV.pdf dist/YinghaoZhu_CV.pdf
+          test -s dist/YinghaoZhu_CV.pdf
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:

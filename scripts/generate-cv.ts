@@ -104,8 +104,8 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \hfill
     \begin{minipage}[t]{0.84\textwidth}
     {\small\textbf{\textcolor{black}{#2}}}\\[-0.1mm]
-    {\footnotesize #3}\\[-0.1mm]
-    {\footnotesize\textit{#4}, #5}
+    {\small #3}\\[-0.1mm]
+    {\small\textit{#4}, #5}
     \end{minipage}
     \par\vspace{1.35mm}
 }
@@ -300,6 +300,7 @@ function formatTalk(item: AwardItem) {
 
 function formatServiceGroup(group: ServiceGroup) {
   const items = group.items
+    .filter((item) => !isExcludedCvServiceItem(group, item))
     .map((item) => `\\serviceitem{${tex(item.content)}}{}{${tex(item.year)}}`)
     .join("\n");
 
@@ -307,8 +308,20 @@ function formatServiceGroup(group: ServiceGroup) {
 ${items}`;
 }
 
+function isExcludedCvServiceItem(
+  group: ServiceGroup,
+  item: ServiceGroup["items"][number],
+) {
+  return (
+    group.title === "Reviewer" &&
+    (/\bWorkshop\b/i.test(item.content) ||
+      item.content === "PeerJ Computer Science")
+  );
+}
+
 function isExcludedCvPublication(publication: Publication) {
   return (
+    publication.tag === "Book Chapters" ||
     /\bpreprint\b|arxiv/i.test(publication.venue) ||
     /\b(workshop|summit|abstract|poster|demo)\b/i.test(publication.venue) ||
     /British Journal of Radiolog(?:y)?|Pediatric Radiology|Translational Pediatrics|Chinese Journal of Evidence-Based Pediatrics|Journal of Guangxi Medical University|International Conference on Industrial Artificial Intelligence|\bIAI\b/i.test(

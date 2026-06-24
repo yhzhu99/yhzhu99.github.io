@@ -66,7 +66,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
     \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{1.3mm}%
+    \vspace{1.65mm}%
 }
 
 \newcommand{\pubcategorytitle}[1]{%
@@ -75,7 +75,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
     \vspace{0.45mm}%
     {\color{darkred}\hrule width \pubcategorywidth height 0.32pt}
-    \vspace{1.3mm}%
+    \vspace{1.65mm}%
 }
 
 \newcommand{\entryhead}[2]{
@@ -114,13 +114,15 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \makebox[0.018\textwidth][l]{\raisebox{0.36ex}{\textcolor{darkred}{\scriptsize$\triangleright$}}}%
 }
 
+\newcommand{\cvdetail}[1]{\textnormal{\textcolor{textgray}{#1}}}
+
 \newcommand{\cvitem}[3]{
     \noindent
     \cvmarker
     \begin{minipage}[t]{0.855\textwidth}{\small\textbf{#1}#2}\end{minipage}
     \hfill
     \makebox[0.105\textwidth][r]{\small\textcolor{mutedgray}{#3}}
-    \par\vspace{0.6mm}
+    \par\vspace{1.05mm}
 }
 
 \newcommand{\serviceitem}[3]{
@@ -129,7 +131,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \begin{minipage}[t]{0.695\textwidth}{\small\textbf{#1}#2}\end{minipage}
     \hfill
     \makebox[0.265\textwidth][r]{\small\textcolor{mutedgray}{#3}}
-    \par\vspace{0.6mm}
+    \par\vspace{1.05mm}
 }
 
 \setlength{\parindent}{0pt}
@@ -286,14 +288,14 @@ function formatPublication(publication: Publication) {
 
 function formatAward(item: AwardItem) {
   const organization = item.organization
-    ? `, \\textit{${tex(item.organization)}}`
+    ? `, \\cvdetail{${tex(item.organization)}}`
     : "";
 
   return `\\cvitem{${tex(item.title)}}{${organization}}{${tex(item.year)}}`;
 }
 
 function formatTalk(item: AwardItem) {
-  const venue = item.venue ? `, \\textit{${tex(item.venue)}}` : "";
+  const venue = item.venue ? `, \\cvdetail{${tex(item.venue)}}` : "";
 
   return `\\cvitem{${tex(item.title)}}{${venue}}{${tex(item.year)}}`;
 }

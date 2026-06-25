@@ -14,7 +14,7 @@ import {
 import { siteData } from "../src/utils/site-data";
 
 const DEFAULT_OUTPUT_PATH = "build/cv/YinghaoZhu_CV.tex";
-const HOMEPAGE_URL = "https://yhzhu99.github.io/";
+const HOMEPAGE_URL = "https://yhzhu99.github.io";
 const SCHOLAR_URL = "https://scholar.google.com/citations?user=LYrsSoEAAAAJ";
 
 const outputPath = resolve(

@@ -3,6 +3,7 @@ import { computed } from "vue";
 import type { Project, Publication } from "../types";
 import {
   formatAuthorsHtml,
+  formatVenueYear,
   getPublicationAuthorFields,
 } from "../utils/publications";
 
@@ -32,7 +33,7 @@ const authorsHtml = computed(() => {
       </h4>
       <p class="mb-1 text-xs text-text-gray" v-html="authorsHtml" />
       <p v-if="item.venue" class="mb-2 text-xs italic text-primary-blue">
-        {{ item.venue }}
+        {{ formatVenueYear(item.venue, item.year) }}
       </p>
       <div v-if="item.links?.length" class="flex flex-wrap gap-1.5">
         <a

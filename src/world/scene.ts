@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { siteData } from "../utils/site-data";
 import {
+  formatVenueYear,
   getFeaturedPublications,
   sortPublications,
 } from "../utils/publications";
@@ -619,7 +620,7 @@ export function mountWorldScene() {
 
       pubCtx.fillStyle = "#0369a1";
       pubCtx.font = 'italic 13px "Inter", sans-serif';
-      pubCtx.fillText(p.venue, 58, venueY);
+      pubCtx.fillText(formatVenueYear(p.venue, p.year), 58, venueY);
 
       pubCtx.fillStyle = "#475569";
       pubCtx.font = 'bold 12px "JetBrains Mono", monospace';

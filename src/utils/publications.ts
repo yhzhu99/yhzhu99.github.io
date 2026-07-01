@@ -57,6 +57,10 @@ export function comparePublications(a: Publication, b: Publication) {
   return a.title.localeCompare(b.title);
 }
 
+export function formatVenueYear(venue = "", year = "") {
+  return year ? `${venue}, ${year}` : venue;
+}
+
 export function getVenueTypePriority(venue = "") {
   const venueLower = venue.toLowerCase();
 

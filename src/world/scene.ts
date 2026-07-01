@@ -1681,7 +1681,7 @@ export function mountWorldScene() {
           (p) => `<div class="pub">
             <h4>${p.title}</h4>
             <div class="authors">${fmtAuthors(p.authors)}</div>
-            <div class="venue">${p.venue} · ${p.year}</div>
+            <div class="venue">${formatVenueYear(p.venue, p.year)}</div>
             <div class="links">${p.links.map((l) => `<a href="${l.url}" target="_blank" rel="noopener">${l.type}</a>`).join("")}</div>
         </div>`,
         )

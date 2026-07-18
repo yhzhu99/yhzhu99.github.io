@@ -44,21 +44,24 @@ export function mountWorldScene() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeaf4ef);
-  scene.fog = new THREE.Fog(0xeaf4ef, 12, 24);
+  scene.background = new THREE.Color(0xe7f0ea);
+  scene.fog = new THREE.Fog(0xe7f0ea, 11, 23);
 
   const camera = new THREE.PerspectiveCamera(
-    42,
+    window.innerWidth < 640 ? 48 : 42,
     window.innerWidth / window.innerHeight,
     0.1,
     100,
   );
+  const isCompact = window.innerWidth < 640;
   const CAM_START = new THREE.Vector3(4.0, 2.28, 4.0);
-  const CAM_REST = new THREE.Vector3(2.75, 1.72, 2.65);
+  const CAM_REST = isCompact
+    ? new THREE.Vector3(3.3, 1.84, 3.2)
+    : new THREE.Vector3(2.75, 1.72, 2.65);
   camera.position.copy(CAM_START);
 
   const controls = new OrbitControls(camera, canvas);
@@ -76,9 +79,9 @@ export function mountWorldScene() {
   controls.zoomSpeed = 0.7;
 
   /* ============================ LIGHTING ============================ */
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8c7aa, 1.2));
+  scene.add(new THREE.HemisphereLight(0xfffdf5, 0xc8d8cd, 1.25));
 
-  const sun = new THREE.DirectionalLight(0xfff7df, 1.45);
+  const sun = new THREE.DirectionalLight(0xfff7df, 1.3);
   sun.position.set(-3.5, 6.5, 4);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -92,13 +95,13 @@ export function mountWorldScene() {
   sun.shadow.normalBias = 0.02;
   scene.add(sun);
 
-  const deskLamp = new THREE.PointLight(0xffdfa8, 0.65, 6, 1.6);
+  const deskLamp = new THREE.PointLight(0xffdfa8, 0.58, 6, 1.6);
   deskLamp.position.set(1.25, 1.55, -0.55);
   deskLamp.castShadow = true;
   deskLamp.shadow.mapSize.set(512, 512);
   scene.add(deskLamp);
 
-  const screenGlow = new THREE.PointLight(0x8fc7ff, 0.45, 3.5, 2);
+  const screenGlow = new THREE.PointLight(0x9fd4dc, 0.38, 3.5, 2);
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
 
@@ -1524,12 +1527,15 @@ export function mountWorldScene() {
   /* ============================ HOTSPOT MARKERS ============================ */
   const hotspotsEl = document.getElementById("hotspots");
   const hotspotMarkers = interactables.map((it) => {
-    const el = document.createElement("div");
+    const el = document.createElement("button");
+    el.type = "button";
     el.className = "ping";
-    const label = document.createElement("div");
+    el.setAttribute("aria-label", `Open ${it.userData.config.label}`);
+    const label = document.createElement("span");
     label.className = "label";
     label.textContent = it.userData.config.label;
     el.appendChild(label);
+    el.addEventListener("click", () => openPanel(it.userData.config));
     hotspotsEl.appendChild(el);
     return { obj: it, el, offset: it.userData.config.hotspot };
   });
@@ -1620,9 +1626,10 @@ export function mountWorldScene() {
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closePanel();
   });
-  document.addEventListener("keydown", (e) => {
+  const handleKeydown = (e) => {
     if (e.key === "Escape") closePanel();
-  });
+  };
+  document.addEventListener("keydown", handleKeydown);
 
   const ICONS = {
     about:
@@ -1737,16 +1744,22 @@ export function mountWorldScene() {
     panelBody.innerHTML = renderPanel(config.id);
     panelTitle.textContent = config.label;
     overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
     controls.enabled = false;
+    document.getElementById("panel-close")?.focus();
   }
   function closePanel() {
     overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
     controls.enabled = true;
   }
 
   /* ============================ ANIMATION LOOP ============================ */
   let introT = 0;
-  const introDuration = 1.8;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const introDuration = reduceMotion ? 0.01 : 1.8;
   let introDone = false;
   const clock = new THREE.Clock();
   let cursorPhase = 0;
@@ -1828,6 +1841,7 @@ export function mountWorldScene() {
 
   function handleResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
+    camera.fov = window.innerWidth < 640 ? 48 : 42;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
@@ -1836,14 +1850,29 @@ export function mountWorldScene() {
 
   animate();
 
-  const loaderTimer = window.setTimeout(() => {
-    document.getElementById("loader")?.classList.add("hide");
-  }, 500);
+  const loaderTimer = window.setTimeout(
+    () => {
+      document.getElementById("loader")?.classList.add("hide");
+    },
+    reduceMotion ? 50 : 650,
+  );
+
+  const discoveryTimer = window.setTimeout(() => {
+    hotspotMarkers
+      .slice(0, 2)
+      .forEach(({ el }) => el.classList.add("is-discovering"));
+  }, 2100);
+  const discoveryEndTimer = window.setTimeout(() => {
+    hotspotMarkers.forEach(({ el }) => el.classList.remove("is-discovering"));
+  }, 4700);
 
   return () => {
     window.clearTimeout(loaderTimer);
+    window.clearTimeout(discoveryTimer);
+    window.clearTimeout(discoveryEndTimer);
     window.cancelAnimationFrame(animationFrame);
     window.removeEventListener("resize", handleResize);
+    document.removeEventListener("keydown", handleKeydown);
     renderer.dispose();
   };
 }

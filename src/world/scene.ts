@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { siteData } from "../utils/site-data";
 import {
   formatVenueYear,
@@ -44,12 +45,12 @@ export function mountWorldScene() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
+  renderer.toneMappingExposure = 1.1;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xe7f0ea);
-  scene.fog = new THREE.Fog(0xe7f0ea, 11, 23);
+  scene.background = new THREE.Color(0xf1f5f4);
+  scene.fog = new THREE.Fog(0xf1f5f4, 13, 27);
 
   const camera = new THREE.PerspectiveCamera(
     window.innerWidth < 640 ? 48 : 42,
@@ -79,10 +80,10 @@ export function mountWorldScene() {
   controls.zoomSpeed = 0.7;
 
   /* ============================ LIGHTING ============================ */
-  scene.add(new THREE.HemisphereLight(0xfffdf5, 0xc8d8cd, 1.25));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xe2d3bd, 1.48));
 
-  const sun = new THREE.DirectionalLight(0xfff7df, 1.3);
-  sun.position.set(-3.5, 6.5, 4);
+  const sun = new THREE.DirectionalLight(0xfff4d6, 1.68);
+  sun.position.set(-4.2, 7, 4.8);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.left = -5;
@@ -105,7 +106,7 @@ export function mountWorldScene() {
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
 
-  const ceilingGlow = new THREE.PointLight(0xffffff, 1.2, 7.5, 1.3);
+  const ceilingGlow = new THREE.PointLight(0xffffff, 1.38, 7.5, 1.3);
   ceilingGlow.position.set(0, 2.85, -0.55);
   scene.add(ceilingGlow);
 
@@ -126,6 +127,25 @@ export function mountWorldScene() {
     const m = box(w, h, d, mat, x, y, z);
     parent.add(m);
     return m;
+  };
+  const addRoundedBox = (
+    w,
+    h,
+    d,
+    radius,
+    mat,
+    x = 0,
+    y = 0,
+    z = 0,
+    parent = scene,
+  ) => {
+    const mesh = new THREE.Mesh(
+      new RoundedBoxGeometry(w, h, d, 4, radius),
+      mat,
+    );
+    mesh.position.set(x, y, z);
+    parent.add(mesh);
+    return mesh;
   };
   const setShadow = (obj, cast = true, receive = false) => {
     obj.traverse((o) => {
@@ -160,15 +180,102 @@ export function mountWorldScene() {
     parent.add(mesh);
     return mesh;
   };
+  const capsuleBetween = (
+    from,
+    to,
+    radius,
+    mat,
+    parent = scene,
+    radialSegments = 12,
+  ) => {
+    const start = new THREE.Vector3(...from);
+    const end = new THREE.Vector3(...to);
+    const mid = start.clone().add(end).multiplyScalar(0.5);
+    const dir = end.clone().sub(start);
+    const mesh = new THREE.Mesh(
+      new THREE.CapsuleGeometry(
+        radius,
+        Math.max(0.01, dir.length() - radius * 2),
+        6,
+        radialSegments,
+      ),
+      mat,
+    );
+    mesh.position.copy(mid);
+    mesh.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 1, 0),
+      dir.normalize(),
+    );
+    parent.add(mesh);
+    return mesh;
+  };
   /* ============================ ROOM ============================ */
   const ROOM = new THREE.Group();
   scene.add(ROOM);
 
-  const floorMat = std(0xd8c8aa, { roughness: 0.64 });
+  function makeFloorTexture() {
+    const c = document.createElement("canvas");
+    c.width = 1024;
+    c.height = 1024;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#d9ccb2";
+    ctx.fillRect(0, 0, c.width, c.height);
+    for (let y = 0; y < c.height; y += 128) {
+      ctx.fillStyle =
+        y % 256 === 0 ? "rgba(255,255,255,.035)" : "rgba(78,62,38,.025)";
+      ctx.fillRect(0, y, c.width, 128);
+      ctx.strokeStyle = "rgba(90,72,44,.12)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(c.width, y);
+      ctx.stroke();
+      for (let x = -40; x < c.width; x += 220) {
+        ctx.strokeStyle = "rgba(101,79,48,.045)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 34);
+        ctx.bezierCurveTo(x + 52, y + 26, x + 110, y + 44, x + 184, y + 31);
+        ctx.stroke();
+      }
+    }
+    const texture = new THREE.CanvasTexture(c);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(2.6, 2.2);
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return texture;
+  }
+
+  const floorMat = new THREE.MeshStandardMaterial({
+    map: makeFloorTexture(),
+    color: 0xe2d6bf,
+    roughness: 0.76,
+    metalness: 0,
+  });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 10), floorMat);
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   ROOM.add(floor);
+
+  const rug = new THREE.Mesh(
+    new RoundedBoxGeometry(3.75, 0.018, 2.55, 8, 0.16),
+    new THREE.MeshStandardMaterial({
+      color: 0xc8d2c5,
+      roughness: 1,
+      metalness: 0,
+    }),
+  );
+  rug.position.set(0.05, 0.018, -0.45);
+  rug.receiveShadow = true;
+  ROOM.add(rug);
+  const rugInset = new THREE.Mesh(
+    new RoundedBoxGeometry(3.53, 0.006, 2.33, 8, 0.13),
+    new THREE.MeshStandardMaterial({ color: 0xd7ded3, roughness: 1 }),
+  );
+  rugInset.position.set(0.05, 0.031, -0.45);
+  rugInset.receiveShadow = true;
+  ROOM.add(rugInset);
 
   const wallColor = 0xf2eadb;
   const wallMat = std(wallColor, { roughness: 0.98 });
@@ -329,22 +436,36 @@ export function mountWorldScene() {
   DESK.position.set(0, 0, -1.55);
   scene.add(DESK);
 
-  const deskMat = std(0xd9d2bf, { roughness: 0.58 });
-  const deskTop = addBox(3.0, 0.07, 1.25, deskMat, 0, 0.78, 0, DESK);
+  const deskMat = std(0xe2dac8, { roughness: 0.48 });
+  const deskTop = addRoundedBox(
+    3.0,
+    0.09,
+    1.25,
+    0.035,
+    deskMat,
+    0,
+    0.78,
+    0,
+    DESK,
+  );
   deskTop.castShadow = true;
   deskTop.receiveShadow = true;
-  const deskLegMat = std(0xc8b99d, { roughness: 0.55, metalness: 0.1 });
+  const deskLegMat = std(0xb8ad98, { roughness: 0.42, metalness: 0.18 });
   addBox(0.06, 0.78, 0.06, deskLegMat, -1.45, 0.39, -0.55, DESK);
   addBox(0.06, 0.78, 0.06, deskLegMat, 1.45, 0.39, -0.55, DESK);
   addBox(0.06, 0.78, 0.06, deskLegMat, -1.45, 0.39, 0.55, DESK);
   addBox(0.06, 0.78, 0.06, deskLegMat, 1.45, 0.39, 0.55, DESK);
 
   /* ---- Monitor riser / stand shelf ---- */
-  const monitorRiserMat = std(0xd4c6ad, { roughness: 0.6, metalness: 0.04 });
-  const monitorRiser = addBox(
+  const monitorRiserMat = std(0xd5c8b0, {
+    roughness: 0.48,
+    metalness: 0.04,
+  });
+  const monitorRiser = addRoundedBox(
     2.18,
     0.08,
     0.36,
+    0.025,
     monitorRiserMat,
     0,
     1.02,
@@ -354,9 +475,32 @@ export function mountWorldScene() {
   monitorRiser.castShadow = true;
   monitorRiser.receiveShadow = true;
   [-0.92, 0.92].forEach((x) => {
-    const leg = addBox(0.1, 0.32, 0.26, monitorRiserMat, x, 0.86, -0.39, DESK);
+    const leg = addRoundedBox(
+      0.1,
+      0.32,
+      0.26,
+      0.02,
+      monitorRiserMat,
+      x,
+      0.86,
+      -0.39,
+      DESK,
+    );
     leg.castShadow = true;
   });
+
+  const deskPad = addRoundedBox(
+    1.42,
+    0.012,
+    0.58,
+    0.035,
+    std(0x73837c, { roughness: 0.94 }),
+    0.05,
+    0.838,
+    0.18,
+    DESK,
+  );
+  deskPad.receiveShadow = true;
 
   /* ---- Desktop tower under desk ---- */
   const tower = addBox(
@@ -1216,31 +1360,67 @@ export function mountWorldScene() {
 
   /* ============================ PLANT ============================ */
   const plant = new THREE.Group();
+  const planterMat = new THREE.MeshStandardMaterial({
+    color: 0xd8c4a8,
+    roughness: 0.86,
+    metalness: 0,
+  });
   const pot = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.13, 0.1, 0.2, 20),
-    std(0xb5532a, { roughness: 0.7 }),
+    new RoundedBoxGeometry(0.27, 0.2, 0.27, 5, 0.035),
+    planterMat,
   );
   pot.castShadow = true;
+  pot.receiveShadow = true;
   plant.add(pot);
-  const soil = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.115, 0.115, 0.02, 20),
-    std(0x2a1a0e),
+  const potRim = new THREE.Mesh(
+    new RoundedBoxGeometry(0.3, 0.045, 0.3, 5, 0.035),
+    new THREE.MeshStandardMaterial({
+      color: 0xe2d2bb,
+      roughness: 0.8,
+    }),
   );
-  soil.position.y = 0.09;
+  potRim.position.y = 0.09;
+  potRim.castShadow = true;
+  plant.add(potRim);
+  const soil = new THREE.Mesh(
+    new RoundedBoxGeometry(0.235, 0.018, 0.235, 4, 0.025),
+    std(0x34271c, { roughness: 1 }),
+  );
+  soil.position.y = 0.116;
   plant.add(soil);
-  const stemMat = std(0x2f6b34, { roughness: 0.72 });
-  const leafMat = new THREE.MeshStandardMaterial({
-    color: 0x3f8f3d,
-    roughness: 0.7,
+  const potFootMat = std(0xb9a589, { roughness: 0.88 });
+  [-0.095, 0.095].forEach((x) => {
+    [-0.095, 0.095].forEach((z) => {
+      addRoundedBox(0.045, 0.025, 0.045, 0.01, potFootMat, x, -0.112, z, plant);
+    });
   });
-  const petalMat = new THREE.MeshStandardMaterial({
-    color: 0xffc928,
-    roughness: 0.62,
+
+  const stemMat = std(0x49784a, { roughness: 0.8 });
+  const leafMat = new THREE.MeshStandardMaterial({
+    color: 0x4e8a52,
+    roughness: 0.82,
+  });
+  const petalOuterMat = new THREE.MeshStandardMaterial({
+    color: 0xe8a92c,
+    roughness: 0.72,
+    side: THREE.DoubleSide,
+  });
+  const petalInnerMat = new THREE.MeshStandardMaterial({
+    color: 0xf5bf3f,
+    roughness: 0.7,
+    side: THREE.DoubleSide,
   });
   const centerMat = new THREE.MeshStandardMaterial({
-    color: 0x5b3217,
-    roughness: 0.78,
+    color: 0x59412b,
+    roughness: 0.92,
   });
+  const seedMat = std(0x2f241c, { roughness: 1 });
+
+  const petalShape = new THREE.Shape();
+  petalShape.moveTo(0, 0);
+  petalShape.bezierCurveTo(-0.032, 0.034, -0.038, 0.082, 0, 0.118);
+  petalShape.bezierCurveTo(0.038, 0.082, 0.032, 0.034, 0, 0);
+  const petalGeometry = new THREE.ShapeGeometry(petalShape, 5);
 
   function addSunflower(x: number, z: number, height: number, tilt = 0) {
     const flower = new THREE.Group();
@@ -1273,71 +1453,160 @@ export function mountWorldScene() {
 
     const head = new THREE.Group();
     head.position.set(Math.sin(tilt) * height * 0.42, height + 0.015, 0);
-    head.rotation.set(-0.08, 0.42, -tilt * 0.5);
+    head.rotation.set(-0.04, 0.34, -tilt * 0.45);
     flower.add(head);
 
-    for (let i = 0; i < 14; i++) {
-      const petal = new THREE.Mesh(
-        new THREE.SphereGeometry(0.034, 12, 8),
-        petalMat,
-      );
-      const a = (i / 14) * Math.PI * 2;
-      petal.scale.set(0.72, 1.85, 0.16);
-      petal.position.set(Math.cos(a) * 0.072, Math.sin(a) * 0.072, 0);
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      const petal = new THREE.Mesh(petalGeometry, petalOuterMat);
+      petal.position.set(Math.cos(a) * 0.045, Math.sin(a) * 0.045, -0.006);
       petal.rotation.z = a;
+      petal.scale.set(0.82, 0.9, 1);
+      petal.castShadow = true;
+      head.add(petal);
+    }
+
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2 + Math.PI / 12;
+      const petal = new THREE.Mesh(petalGeometry, petalInnerMat);
+      petal.position.set(Math.cos(a) * 0.034, Math.sin(a) * 0.034, 0.004);
+      petal.rotation.z = a;
+      petal.scale.set(0.72, 0.66, 1);
       petal.castShadow = true;
       head.add(petal);
     }
 
     const center = new THREE.Mesh(
-      new THREE.SphereGeometry(0.052, 18, 12),
+      new THREE.CylinderGeometry(0.057, 0.062, 0.025, 32),
       centerMat,
     );
-    center.scale.set(1, 1, 0.35);
+    center.rotation.x = Math.PI / 2;
+    center.position.z = 0.018;
     center.castShadow = true;
     head.add(center);
+
+    for (let i = 0; i < 18; i++) {
+      const radius = 0.014 + (i % 3) * 0.014;
+      const angle = i * 2.39996;
+      const seed = new THREE.Mesh(
+        new THREE.SphereGeometry(0.004, 6, 4),
+        seedMat,
+      );
+      seed.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(angle) * radius,
+        0.034,
+      );
+      head.add(seed);
+    }
   }
 
-  addSunflower(-0.035, 0, 0.46, -0.08);
-  addSunflower(0.05, 0.03, 0.38, 0.11);
-  addSunflower(0.01, -0.05, 0.32, 0.04);
-  plant.position.set(-2.25, 0.21, -1.08);
-  plant.scale.set(2.1, 2.1, 2.1);
+  addSunflower(-0.04, 0.01, 0.47, -0.07);
+  addSunflower(0.055, 0.025, 0.39, 0.09);
+  addSunflower(0.005, -0.045, 0.32, 0.025);
+  plant.position.set(-2.18, 0.24, -1.12);
+  plant.scale.set(1.72, 1.72, 1.72);
   scene.add(plant);
 
   /* ============================ CHAIR ============================ */
   const chair = new THREE.Group();
-  const chairMat = std(0xd6d0c5, { roughness: 0.58 });
-  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.5), chairMat);
+  const chairMat = std(0xc9cec8, { roughness: 0.72 });
+  const chairInsetMat = std(0xaeb9b3, { roughness: 0.9 });
+  const chairMetalMat = std(0xa9aca8, { metalness: 0.38, roughness: 0.4 });
+  const seat = new THREE.Mesh(
+    new RoundedBoxGeometry(0.55, 0.1, 0.52, 5, 0.06),
+    chairMat,
+  );
   seat.position.y = 0.5;
   seat.castShadow = true;
   chair.add(seat);
   const backRest = new THREE.Mesh(
-    new THREE.BoxGeometry(0.5, 0.55, 0.06),
+    new RoundedBoxGeometry(0.53, 0.58, 0.075, 6, 0.065),
     chairMat,
   );
   backRest.position.set(0, 0.82, 0.24);
+  backRest.rotation.x = -0.08;
   backRest.castShadow = true;
   chair.add(backRest);
+  const backInset = new THREE.Mesh(
+    new RoundedBoxGeometry(0.42, 0.45, 0.012, 5, 0.055),
+    chairInsetMat,
+  );
+  backInset.position.set(0, 0.83, 0.198);
+  backInset.rotation.x = -0.08;
+  chair.add(backInset);
   const pole = new THREE.Mesh(
     new THREE.CylinderGeometry(0.03, 0.03, 0.5, 12),
-    std(0xc8c1b6, { metalness: 0.2, roughness: 0.45 }),
+    chairMetalMat,
   );
   pole.position.y = 0.25;
   chair.add(pole);
+  [-1, 1].forEach((side) => {
+    capsuleBetween(
+      [side * 0.27, 0.52, 0.06],
+      [side * 0.31, 0.73, -0.02],
+      0.018,
+      chairMetalMat,
+      chair,
+    );
+    const armPad = addRoundedBox(
+      0.09,
+      0.035,
+      0.28,
+      0.018,
+      chairMat,
+      side * 0.31,
+      0.75,
+      -0.12,
+      chair,
+    );
+    armPad.castShadow = true;
+  });
   const chairBase = new THREE.Group();
+  const hub = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.09, 0.11, 0.075, 20),
+    chairMetalMat,
+  );
+  hub.position.y = 0.075;
+  hub.castShadow = true;
+  chairBase.add(hub);
   for (let i = 0; i < 5; i++) {
-    const leg = new THREE.Mesh(
-      new THREE.BoxGeometry(0.32, 0.04, 0.06),
-      std(0xc8c1b6, { metalness: 0.15, roughness: 0.48 }),
+    const angle = (i / 5) * Math.PI * 2;
+    const start = [Math.cos(angle) * 0.055, 0.065, Math.sin(angle) * 0.055];
+    const end = [Math.cos(angle) * 0.32, 0.042, Math.sin(angle) * 0.32];
+    const leg = capsuleBetween(start, end, 0.026, chairMetalMat, chairBase, 10);
+    leg.castShadow = true;
+
+    const caster = new THREE.Group();
+    caster.position.set(
+      Math.cos(angle) * 0.345,
+      0.018,
+      Math.sin(angle) * 0.345,
     );
-    leg.position.set(
-      Math.cos((i / 5) * Math.PI * 2) * 0.16,
-      0.04,
-      Math.sin((i / 5) * Math.PI * 2) * 0.16,
+    caster.rotation.y = -angle;
+    const fork = addRoundedBox(
+      0.045,
+      0.055,
+      0.06,
+      0.012,
+      chairMetalMat,
+      0,
+      0.035,
+      0,
+      caster,
     );
-    leg.rotation.y = (i / 5) * Math.PI * 2;
-    chairBase.add(leg);
+    fork.castShadow = true;
+    [-0.027, 0.027].forEach((z) => {
+      const wheel = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.028, 0.028, 0.018, 14),
+        std(0x4c5351, { roughness: 0.76 }),
+      );
+      wheel.position.set(0, 0, z);
+      wheel.rotation.x = Math.PI / 2;
+      wheel.castShadow = true;
+      caster.add(wheel);
+    });
+    chairBase.add(caster);
   }
   chair.add(chairBase);
   chair.position.set(0.05, 0, -0.48);
@@ -1346,18 +1615,62 @@ export function mountWorldScene() {
 
   const person = new THREE.Group();
   const skinMat = std(0xf0c7a5, { roughness: 0.62 });
-  const shirtMat = std(0x1f6f8b, { roughness: 0.7 });
+  const shirtMat = std(0x2d788d, { roughness: 0.78 });
+  const shirtAccentMat = std(0x1e596c, { roughness: 0.82 });
   const trouserMat = std(0x26333f, { roughness: 0.72 });
   const shoeMat = std(0x111827, { roughness: 0.55 });
-  const hairMat = std(0x171412, { roughness: 0.75 });
+  const hairMat = std(0x28231f, { roughness: 0.88 });
 
-  const torso = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.19, 0.23, 0.48, 24),
-    shirtMat,
-  );
-  torso.position.set(0, 0.86, -0.06);
-  torso.rotation.x = -0.1;
+  const torsoShape = new THREE.Shape();
+  torsoShape.moveTo(-0.12, -0.25);
+  torsoShape.bezierCurveTo(-0.18, -0.22, -0.21, -0.14, -0.205, -0.03);
+  torsoShape.lineTo(-0.195, 0.12);
+  torsoShape.bezierCurveTo(-0.19, 0.2, -0.12, 0.24, 0, 0.25);
+  torsoShape.bezierCurveTo(0.12, 0.24, 0.19, 0.2, 0.195, 0.12);
+  torsoShape.lineTo(0.205, -0.03);
+  torsoShape.bezierCurveTo(0.21, -0.14, 0.18, -0.22, 0.12, -0.25);
+  torsoShape.closePath();
+  const torsoGeometry = new THREE.ExtrudeGeometry(torsoShape, {
+    depth: 0.24,
+    bevelEnabled: true,
+    bevelThickness: 0.025,
+    bevelSize: 0.025,
+    bevelSegments: 4,
+    curveSegments: 8,
+  });
+  torsoGeometry.translate(0, 0, -0.12);
+  const torso = new THREE.Mesh(torsoGeometry, shirtMat);
+  torso.position.set(0, 0.87, -0.055);
+  torso.rotation.x = -0.12;
+  torso.castShadow = true;
   person.add(torso);
+  capsuleBetween(
+    [-0.18, 1.04, -0.075],
+    [0.18, 1.04, -0.075],
+    0.075,
+    shirtMat,
+    person,
+    16,
+  );
+  const collar = new THREE.Mesh(
+    new THREE.TorusGeometry(0.078, 0.012, 8, 22, Math.PI * 1.55),
+    shirtAccentMat,
+  );
+  collar.position.set(0, 1.105, -0.115);
+  collar.rotation.set(Math.PI / 2, 0, 0.72);
+  person.add(collar);
+  const shirtHem = addRoundedBox(
+    0.25,
+    0.018,
+    0.245,
+    0.008,
+    shirtAccentMat,
+    0,
+    0.635,
+    -0.055,
+    person,
+  );
+  shirtHem.rotation.x = -0.12;
   const neck = new THREE.Mesh(
     new THREE.CylinderGeometry(0.045, 0.05, 0.08, 16),
     skinMat,
@@ -1366,34 +1679,56 @@ export function mountWorldScene() {
   person.add(neck);
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 18), skinMat);
   head.position.set(0, 1.27, -0.11);
+  head.scale.set(0.94, 1.08, 0.92);
+  head.rotation.x = -0.08;
+  head.castShadow = true;
   person.add(head);
   const hair = new THREE.Mesh(
-    new THREE.SphereGeometry(0.136, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.56),
+    new THREE.SphereGeometry(0.138, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.62),
     hairMat,
   );
-  hair.position.set(0, 1.31, -0.12);
+  hair.position.set(0, 1.31, -0.115);
+  hair.scale.set(0.98, 1.02, 0.95);
+  hair.rotation.x = -0.1;
+  hair.castShadow = true;
   person.add(hair);
+  [-1, 1].forEach((side) => {
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.024, 12, 8), skinMat);
+    ear.scale.set(0.42, 0.9, 0.55);
+    ear.position.set(side * 0.126, 1.265, -0.105);
+    person.add(ear);
+    const sideHair = new THREE.Mesh(
+      new THREE.SphereGeometry(0.035, 12, 8),
+      hairMat,
+    );
+    sideHair.scale.set(0.5, 1, 0.62);
+    sideHair.position.set(side * 0.112, 1.31, -0.105);
+    person.add(sideHair);
+  });
 
-  cylinderBetween(
+  capsuleBetween(
     [-0.18, 1.02, -0.1],
     [-0.28, 0.9, -0.61],
-    0.032,
+    0.042,
     shirtMat,
     person,
+    14,
   );
-  cylinderBetween(
+  capsuleBetween(
     [0.18, 1.02, -0.1],
-    [0.52, 0.88, -0.6],
-    0.032,
+    [0.4, 0.91, -0.45],
+    0.042,
     shirtMat,
     person,
+    14,
   );
-  cylinderBetween(
+  capsuleBetween(
     [-0.28, 0.9, -0.61],
     [-0.1, 0.905, -0.74],
-    0.025,
+    0.029,
     skinMat,
     person,
+    12,
   );
   const leftHand = new THREE.Mesh(
     new THREE.SphereGeometry(0.045, 14, 10),
@@ -1403,64 +1738,44 @@ export function mountWorldScene() {
   leftHand.position.set(-0.1, 0.91, -0.74);
   leftHand.rotation.set(0.04, -0.25, 0.1);
   person.add(leftHand);
-  cylinderBetween(
-    [0.52, 0.88, -0.6],
-    [0.58, 0.905, -0.82],
-    0.025,
+  capsuleBetween(
+    [0.4, 0.91, -0.45],
+    [0.58, 0.905, -0.76],
+    0.029,
     skinMat,
     person,
+    12,
   );
   const rightHand = new THREE.Mesh(
     new THREE.SphereGeometry(0.045, 14, 10),
     skinMat,
   );
   rightHand.scale.set(1.2, 0.34, 0.82);
-  rightHand.position.set(0.59, 0.905, -0.82);
+  rightHand.position.set(0.59, 0.905, -0.76);
   rightHand.rotation.set(0.1, 0.22, -0.16);
   person.add(rightHand);
-  cylinderBetween(
+  capsuleBetween(
     [-0.11, 0.52, -0.02],
     [-0.28, 0.25, -0.43],
-    0.045,
+    0.052,
     trouserMat,
     person,
+    14,
   );
-  cylinderBetween(
+  capsuleBetween(
     [0.11, 0.52, -0.02],
     [0.28, 0.25, -0.43],
-    0.045,
+    0.052,
     trouserMat,
     person,
+    14,
   );
-  addBox(0.18, 0.055, 0.09, shoeMat, -0.32, 0.16, -0.52, person);
-  addBox(0.18, 0.055, 0.09, shoeMat, 0.32, 0.16, -0.52, person);
+  addRoundedBox(0.19, 0.06, 0.1, 0.025, shoeMat, -0.32, 0.16, -0.52, person);
+  addRoundedBox(0.19, 0.06, 0.1, 0.025, shoeMat, 0.32, 0.16, -0.52, person);
   person.position.set(0.05, 0, -0.48);
   person.rotation.y = 0.02;
   setShadow(person, true, false);
   scene.add(person);
-
-  /* ============================ DUST MOTES ============================ */
-  const dustGeo = new THREE.BufferGeometry();
-  const dustCount = 220;
-  const dustPos = new Float32Array(dustCount * 3);
-  for (let i = 0; i < dustCount; i++) {
-    dustPos[i * 3] = (Math.random() - 0.5) * 6;
-    dustPos[i * 3 + 1] = Math.random() * 3;
-    dustPos[i * 3 + 2] = (Math.random() - 0.5) * 5 - 0.5;
-  }
-  dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-  const dust = new THREE.Points(
-    dustGeo,
-    new THREE.PointsMaterial({
-      color: 0xfff1d6,
-      size: 0.018,
-      transparent: true,
-      opacity: 0.5,
-      depthWrite: false,
-      sizeAttenuation: true,
-    }),
-  );
-  scene.add(dust);
 
   /* ============================ INTERACTABLES ============================ */
   const interactables = [];
@@ -1792,21 +2107,11 @@ export function mountWorldScene() {
       aboutTex.needsUpdate = true;
     }
 
-    const dpos = dust.geometry.attributes.position;
-    for (let i = 0; i < dustCount; i++) {
-      dpos.array[i * 3 + 1] += dt * 0.04 * (0.5 + (i % 5) * 0.1);
-      dpos.array[i * 3] += Math.sin(t * 0.3 + i) * dt * 0.01;
-      if (dpos.array[i * 3 + 1] > 3) dpos.array[i * 3 + 1] = 0;
-    }
-    dpos.needsUpdate = true;
-
     if (hovered && hovered.userData.scaleBase !== undefined) {
       const s =
         hovered.userData.scaleBase * (1 + Math.sin(t * 6) * 0.005 + 0.02);
       hovered.scale.set(s, s, s);
     }
-
-    trophyGroup.rotation.y = -0.28 + Math.sin(t * 0.5) * 0.05;
 
     controls.update();
 

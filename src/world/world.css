@@ -10,7 +10,7 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: #e7f0ea;
+  background: #f1f5f4;
   font-family:
     Inter,
     system-ui,
@@ -25,11 +25,11 @@
   z-index: 20;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(233, 243, 237, 0.2) 0%, transparent 26%),
+    linear-gradient(180deg, rgba(255, 252, 241, 0.12) 0%, transparent 30%),
     radial-gradient(
       circle at 50% 48%,
-      transparent 50%,
-      rgba(32, 63, 54, 0.1) 120%
+      transparent 64%,
+      rgba(45, 63, 63, 0.045) 130%
     );
   content: "";
   pointer-events: none;
@@ -71,7 +71,7 @@
       rgba(255, 255, 255, 0.96),
       transparent 34%
     ),
-    linear-gradient(145deg, #f4f8f2 0%, #e4eee8 100%);
+    linear-gradient(145deg, #fbfcf8 0%, #edf3f2 100%);
   color: var(--ink);
   transition:
     opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,

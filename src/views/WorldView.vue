@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from "vue";
 import { RouterLink } from "vue-router";
+import ThemeToggle from "../components/ThemeToggle.vue";
 import { mountWorldScene } from "../world/scene";
 import "../world/world.css";
 
@@ -49,20 +50,23 @@ onBeforeUnmount(() => {
           <div class="sub">A quiet corner at BUAA</div>
         </div>
       </div>
-      <RouterLink id="back-btn" to="/">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
-        <span>Homepage</span>
-      </RouterLink>
+      <div class="topbar-actions">
+        <ThemeToggle class="world-theme-toggle" />
+        <RouterLink id="back-btn" to="/">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          <span>Homepage</span>
+        </RouterLink>
+      </div>
     </div>
 
     <div id="hotspots" aria-label="Interactive objects"></div>

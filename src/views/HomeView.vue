@@ -12,6 +12,7 @@ import ModalDialog from "../components/ModalDialog.vue";
 import NewsList from "../components/NewsList.vue";
 import PublicationCard from "../components/PublicationCard.vue";
 import QuickLinks from "../components/QuickLinks.vue";
+import ThemeToggle from "../components/ThemeToggle.vue";
 import TimelineColumn from "../components/TimelineColumn.vue";
 import { siteData } from "../utils/site-data";
 import { escapeHtml } from "../utils/html";
@@ -291,7 +292,7 @@ watch(activeTab, () => {
     class="grid h-dvh grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-bg-light font-academic text-text-gray"
   >
     <header
-      class="sticky top-0 z-50 flex-shrink-0 border-b border-slate-200/70 bg-white/90 backdrop-blur-md transition-all duration-300"
+      class="sticky top-0 z-50 flex-shrink-0 border-b border-slate-200/70 bg-surface/90 backdrop-blur-md transition-all duration-300"
     >
       <div class="mx-auto max-w-screen-2xl px-4 py-1.5 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between">
@@ -314,7 +315,7 @@ watch(activeTab, () => {
               >朱英豪</span
             >
             <img
-              src="/assets/hku-logo.jpg"
+              src="/assets/hku-crest.svg"
               alt="HKU Logo"
               class="h-9 w-auto opacity-80 transition-opacity hover:opacity-100"
             />
@@ -326,7 +327,7 @@ watch(activeTab, () => {
           >
             <span
               aria-hidden="true"
-              class="pointer-events-none absolute bottom-1 left-0 top-1 rounded-full bg-white shadow-soft ring-1 ring-slate-900/5"
+              class="pointer-events-none absolute bottom-1 left-0 top-1 rounded-full bg-surface shadow-soft ring-1 ring-slate-900/5"
               :class="
                 navIndicatorReady ? 'transition-all duration-300 ease-out' : ''
               "
@@ -351,56 +352,59 @@ watch(activeTab, () => {
             </button>
           </nav>
 
-          <div class="relative md:hidden">
-            <button
-              type="button"
-              class="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100"
-              aria-label="Toggle navigation menu"
-              :aria-expanded="showMobileNav"
-              aria-controls="mobile-navigation"
-              @click="showMobileNav = !showMobileNav"
-            >
-              <svg
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  v-if="!showMobileNav"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-                <path
-                  v-else
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <div
-              v-if="showMobileNav"
-              id="mobile-navigation"
-              class="absolute right-0 top-11 z-50 w-52 rounded-xl border border-slate-200/70 bg-white py-2 shadow-card"
-            >
+          <div class="flex items-center gap-2">
+            <ThemeToggle />
+            <div class="relative md:hidden">
               <button
-                v-for="tab in tabs"
-                :key="tab.id"
                 type="button"
-                class="w-full px-4 py-2.5 text-left text-sm transition-colors"
-                :class="
-                  activeTab === tab.id
-                    ? 'bg-primary-blue/5 font-semibold text-primary-blue'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                "
-                @click="selectTab(tab.id)"
+                class="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100"
+                aria-label="Toggle navigation menu"
+                :aria-expanded="showMobileNav"
+                aria-controls="mobile-navigation"
+                @click="showMobileNav = !showMobileNav"
               >
-                {{ tab.name }}
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    v-if="!showMobileNav"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                  <path
+                    v-else
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
+              <div
+                v-if="showMobileNav"
+                id="mobile-navigation"
+                class="absolute right-0 top-11 z-50 w-52 rounded-xl border border-slate-200/70 bg-surface py-2 shadow-card"
+              >
+                <button
+                  v-for="tab in tabs"
+                  :key="tab.id"
+                  type="button"
+                  class="w-full px-4 py-2.5 text-left text-sm transition-colors"
+                  :class="
+                    activeTab === tab.id
+                      ? 'bg-primary-blue/5 font-semibold text-primary-blue'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  "
+                  @click="selectTab(tab.id)"
+                >
+                  {{ tab.name }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -561,7 +565,7 @@ watch(activeTab, () => {
             >
               <div class="mb-6 lg:hidden">
                 <div
-                  class="mb-4 rounded-lg border border-slate-200 bg-white p-4"
+                  class="mb-4 rounded-lg border border-slate-200 bg-surface p-4"
                 >
                   <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0 flex-1">
@@ -791,7 +795,7 @@ watch(activeTab, () => {
                         </span>
                         <button
                           type="button"
-                          class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-primary-blue/15 bg-white px-3 py-1.5 text-xs font-medium text-text-gray-light shadow-soft hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                          class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-primary-blue/15 bg-surface px-3 py-1.5 text-xs font-medium text-text-gray-light shadow-soft hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
                           aria-expanded="false"
                           @click="setFilterExpanded(true)"
                         >
@@ -832,11 +836,11 @@ watch(activeTab, () => {
                               v-model="searchQuery"
                               type="text"
                               placeholder="Search publications..."
-                              class="filter-control min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                              class="filter-control min-w-0 rounded-md border border-slate-200 bg-surface px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
                             />
                             <select
                               v-model="selectedYear"
-                              class="filter-control rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                              class="filter-control rounded-md border border-slate-200 bg-surface px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
                             >
                               <option value="">All Years</option>
                               <option
@@ -869,7 +873,7 @@ watch(activeTab, () => {
                             :class="
                               selectedTag === ''
                                 ? 'bg-primary-blue text-white'
-                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                                : 'bg-surface text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
                             "
                             @click="selectedTag = ''"
                           >
@@ -884,7 +888,7 @@ watch(activeTab, () => {
                             :class="
                               selectedTag === 'All'
                                 ? 'bg-primary-blue text-white'
-                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                                : 'bg-surface text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
                             "
                             @click="selectedTag = 'All'"
                           >
@@ -901,7 +905,7 @@ watch(activeTab, () => {
                             :class="
                               selectedTag === tag.name
                                 ? 'bg-primary-blue text-white'
-                                : 'bg-white text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
+                                : 'bg-surface text-text-gray ring-1 ring-inset ring-slate-900/5 hover:bg-primary-blue/10'
                             "
                             @click="selectPublicationTag(tag.name)"
                           >
@@ -912,7 +916,7 @@ watch(activeTab, () => {
                           </button>
                           <button
                             type="button"
-                            class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                            class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
                             aria-expanded="true"
                             @click="setFilterExpanded(false)"
                           >

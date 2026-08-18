@@ -11,8 +11,34 @@
     />
     <meta name="author" content="Yinghao Zhu" />
     <meta name="theme-color" content="#005bac" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          const dark = stored === "dark" || (stored !== "light" && prefersDark);
+          const root = document.documentElement;
 
-    <link rel="icon" type="image/jpeg" href="/assets/hku-logo.jpg" />
+          root.classList.toggle("dark", dark);
+          root.style.colorScheme = dark ? "dark" : "light";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", dark ? "#121214" : "#005bac");
+        } catch {
+          // Ignore storage/scripting edge cases; the app applies the theme again.
+        }
+      })();
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/assets/hku-crest.svg" />
+    <link rel="icon" href="/assets/favicon.ico" sizes="48x48" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/hku-apple-touch-icon.png"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

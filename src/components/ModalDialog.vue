@@ -18,12 +18,14 @@ defineEmits<{
     >
       <Transition name="scale" appear>
         <section
-          class="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-white shadow-card"
+          class="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-surface shadow-card"
           role="dialog"
           aria-modal="true"
           :aria-label="title"
         >
-          <header class="flex items-center justify-between border-b p-4">
+          <header
+            class="flex items-center justify-between border-b border-slate-200 p-4"
+          >
             <h3 class="text-lg font-bold text-text-gray">{{ title }}</h3>
             <button
               type="button"

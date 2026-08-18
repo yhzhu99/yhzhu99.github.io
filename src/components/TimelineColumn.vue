@@ -32,7 +32,7 @@ defineProps<{
         "
       >
         <div
-          class="interactive-element rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
+          class="interactive-element rounded-xl border border-slate-200 bg-surface p-3 transition-colors hover:border-slate-300"
         >
           <div>
             <div class="flex items-start justify-between gap-3">

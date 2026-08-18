@@ -48,9 +48,94 @@ export function mountWorldScene() {
   renderer.toneMappingExposure = 1.1;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
+  const LIGHT_PALETTE = {
+    sceneBg: "#f1f5f4",
+    floorBase: "#d9ccb2",
+    surface: "#ffffff",
+    chromeBar: "#e5e7eb",
+    text: "#0f172a",
+    textStrong: "#334155",
+    textMuted: "#475569",
+    textFaint: "#64748b",
+    iconMuted: "#94a3b8",
+    border: "#e2e8f0",
+    borderStrong: "#cbd5e1",
+    sidebar: "#f1f5f9",
+    explorer: "#eef2f7",
+    activeBg: "#dbeafe",
+    panelMuted: "#f8fafc",
+    accent: "#005bac",
+    accentBlue: "#007acc",
+    syntaxBlue: "#569cd6",
+    syntaxInfo: "#0369a1",
+    syntaxOrange: "#9a3412",
+    syntaxGreen: "#047857",
+    syntaxGreenDeep: "#15803d",
+    syntaxPurple: "#7e22ce",
+    syntaxComment: "#6a9955",
+    green: "#16a34a",
+    boardGreen: "#2aa876",
+    milestoneBg: "#fbf7ef",
+    milestoneText: "#2f4052",
+    gold: "#c6a978",
+    goldSoft: "#bfa56e",
+    goldDark: "#9a7d4f",
+    goldLine: "#d8c6a3",
+    whiteboardBg: "#fbfcfb",
+    whiteboardBorder: "#d8e1e7",
+    cursorOff: "#ffffff",
+    cursorOn: "#1e1e1e",
+  };
+
+  const DARK_PALETTE = {
+    sceneBg: "#0a1113",
+    floorBase: "#4a4238",
+    surface: "#1a1a1d",
+    chromeBar: "#232327",
+    text: "#e9e9ec",
+    textStrong: "#d7d7dc",
+    textMuted: "#a4a4ab",
+    textFaint: "#787881",
+    iconMuted: "#71717a",
+    border: "#2b2b31",
+    borderStrong: "#3e3e46",
+    sidebar: "#1c1c20",
+    explorer: "#202024",
+    activeBg: "#2b3c50",
+    panelMuted: "#1d1d21",
+    accent: "#6ea0d8",
+    accentBlue: "#4f8fc8",
+    syntaxBlue: "#7aa2f7",
+    syntaxInfo: "#38bdf8",
+    syntaxOrange: "#fb923c",
+    syntaxGreen: "#34d399",
+    syntaxGreenDeep: "#4ade80",
+    syntaxPurple: "#c084fc",
+    syntaxComment: "#9ccb7e",
+    green: "#4ade80",
+    boardGreen: "#34d399",
+    milestoneBg: "#222226",
+    milestoneText: "#d7d7dc",
+    gold: "#c6a978",
+    goldSoft: "#d0b488",
+    goldDark: "#b08d5f",
+    goldLine: "#8a734f",
+    whiteboardBg: "#1e1e22",
+    whiteboardBorder: "#34343a",
+    cursorOff: "#0d0d0f",
+    cursorOn: "#e9e9ec",
+  };
+
+  let darkTheme = document.documentElement.classList.contains("dark");
+  renderer.toneMappingExposure = darkTheme ? 1.05 : 1.1;
+  const P: Record<string, string> = darkTheme
+    ? { ...DARK_PALETTE }
+    : { ...LIGHT_PALETTE };
+  const redrawTextures: Array<() => void> = [];
+
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf1f5f4);
-  scene.fog = new THREE.Fog(0xf1f5f4, 13, 27);
+  scene.background = new THREE.Color(P.sceneBg);
+  scene.fog = new THREE.Fog(P.sceneBg, 13, 27);
 
   const camera = new THREE.PerspectiveCamera(
     window.innerWidth < 640 ? 48 : 42,
@@ -80,9 +165,17 @@ export function mountWorldScene() {
   controls.zoomSpeed = 0.7;
 
   /* ============================ LIGHTING ============================ */
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xe2d3bd, 1.48));
+  const hemisphereLight = new THREE.HemisphereLight(
+    0xffffff,
+    0xe2d3bd,
+    darkTheme ? 0.62 : 1.48,
+  );
+  scene.add(hemisphereLight);
 
-  const sun = new THREE.DirectionalLight(0xfff4d6, 1.68);
+  const sun = new THREE.DirectionalLight(
+    darkTheme ? 0x9fb8d0 : 0xfff4d6,
+    darkTheme ? 0.78 : 1.68,
+  );
   sun.position.set(-4.2, 7, 4.8);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -96,17 +189,32 @@ export function mountWorldScene() {
   sun.shadow.normalBias = 0.02;
   scene.add(sun);
 
-  const deskLamp = new THREE.PointLight(0xffdfa8, 0.58, 6, 1.6);
+  const deskLamp = new THREE.PointLight(
+    0xffdfa8,
+    darkTheme ? 1.05 : 0.58,
+    6,
+    1.6,
+  );
   deskLamp.position.set(1.25, 1.55, -0.55);
   deskLamp.castShadow = true;
   deskLamp.shadow.mapSize.set(512, 512);
   scene.add(deskLamp);
 
-  const screenGlow = new THREE.PointLight(0x9fd4dc, 0.38, 3.5, 2);
+  const screenGlow = new THREE.PointLight(
+    0x9fd4dc,
+    darkTheme ? 0.55 : 0.38,
+    3.5,
+    2,
+  );
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
 
-  const ceilingGlow = new THREE.PointLight(0xffffff, 1.38, 7.5, 1.3);
+  const ceilingGlow = new THREE.PointLight(
+    0xffffff,
+    darkTheme ? 0.62 : 1.38,
+    7.5,
+    1.3,
+  );
   ceilingGlow.position.set(0, 2.85, -0.55);
   scene.add(ceilingGlow);
 
@@ -218,32 +326,39 @@ export function mountWorldScene() {
     c.width = 1024;
     c.height = 1024;
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#d9ccb2";
-    ctx.fillRect(0, 0, c.width, c.height);
-    for (let y = 0; y < c.height; y += 128) {
-      ctx.fillStyle =
-        y % 256 === 0 ? "rgba(255,255,255,.035)" : "rgba(78,62,38,.025)";
-      ctx.fillRect(0, y, c.width, 128);
-      ctx.strokeStyle = "rgba(90,72,44,.12)";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(c.width, y);
-      ctx.stroke();
-      for (let x = -40; x < c.width; x += 220) {
-        ctx.strokeStyle = "rgba(101,79,48,.045)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x, y + 34);
-        ctx.bezierCurveTo(x + 52, y + 26, x + 110, y + 44, x + 184, y + 31);
-        ctx.stroke();
-      }
-    }
     const texture = new THREE.CanvasTexture(c);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(2.6, 2.2);
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    function redraw() {
+      ctx.fillStyle = P.floorBase;
+      ctx.fillRect(0, 0, c.width, c.height);
+      for (let y = 0; y < c.height; y += 128) {
+        ctx.fillStyle =
+          y % 256 === 0 ? "rgba(255,255,255,.035)" : "rgba(78,62,38,.025)";
+        ctx.fillRect(0, y, c.width, 128);
+        ctx.strokeStyle = "rgba(90,72,44,.12)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(c.width, y);
+        ctx.stroke();
+        for (let x = -40; x < c.width; x += 220) {
+          ctx.strokeStyle = "rgba(101,79,48,.045)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x, y + 34);
+          ctx.bezierCurveTo(x + 52, y + 26, x + 110, y + 44, x + 184, y + 31);
+          ctx.stroke();
+        }
+      }
+      texture.needsUpdate = true;
+    }
+
+    redraw();
+    redrawTextures.push(redraw);
     return texture;
   }
 
@@ -541,10 +656,10 @@ export function mountWorldScene() {
   }
 
   function drawEditorShell(ctx, W, H, filename, folder) {
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = P.surface;
     ctx.fillRect(0, 0, W, H);
 
-    ctx.fillStyle = "#e5e7eb";
+    ctx.fillStyle = P.chromeBar;
     ctx.fillRect(0, 0, W, 30);
 
     const dotCols = ["#ff5f57", "#febc2e", "#28c840"];
@@ -555,31 +670,31 @@ export function mountWorldScene() {
       ctx.fill();
     });
 
-    ctx.fillStyle = "#475569";
+    ctx.fillStyle = P.textMuted;
     ctx.font = '13px "JetBrains Mono", monospace';
     ctx.textBaseline = "middle";
     ctx.fillText("Visual Studio Code", W / 2 - 60, 15);
 
-    ctx.fillStyle = "#f1f5f9";
+    ctx.fillStyle = P.sidebar;
     ctx.fillRect(0, 30, 54, H - 30);
 
     const actIcons = ["\u{1F4C1}", "\u{1F50D}", "\u{1F37E}", "\u{1F4DE}"];
     actIcons.forEach((ic, i) => {
-      ctx.fillStyle = i === 0 ? "#005bac" : "#94a3b8";
+      ctx.fillStyle = i === 0 ? P.accent : P.iconMuted;
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(ic, 27, 70 + i * 50);
     });
     ctx.textAlign = "left";
 
-    ctx.fillStyle = "#eef2f7";
+    ctx.fillStyle = P.explorer;
     ctx.fillRect(54, 30, 220, H - 30);
 
-    ctx.fillStyle = "#334155";
+    ctx.fillStyle = P.textStrong;
     ctx.font = 'bold 12px "Inter", sans-serif';
     ctx.fillText(folder || "EXPLORER", 68, 52);
 
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = P.textFaint;
     ctx.font = '12px "JetBrains Mono", monospace';
     const tree = [
       ">  YINGHAO",
@@ -588,7 +703,7 @@ export function mountWorldScene() {
       "   >  personal",
     ];
     tree.forEach((t, i) => {
-      ctx.fillStyle = i === 0 ? "#334155" : "#64748b";
+      ctx.fillStyle = i === 0 ? P.textStrong : P.textFaint;
       ctx.fillText(t, 68, 86 + i * 22);
     });
 
@@ -600,33 +715,33 @@ export function mountWorldScene() {
     ];
     files.forEach((f, i) => {
       if (f.active) {
-        ctx.fillStyle = "#dbeafe";
+        ctx.fillStyle = P.activeBg;
         ctx.fillRect(56, fileY + i * 22 - 12, 216, 22);
-        ctx.fillStyle = "#0f172a";
+        ctx.fillStyle = P.text;
       } else {
-        ctx.fillStyle = "#64748b";
+        ctx.fillStyle = P.textFaint;
       }
       ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillText("\u{1F4C4} " + f.n, 64, fileY + i * 22);
     });
 
-    ctx.fillStyle = "#e2e8f0";
+    ctx.fillStyle = P.border;
     ctx.fillRect(274, 30, W - 274, 35);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = P.surface;
     ctx.fillRect(274, 40, 200, 25);
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = P.text;
     ctx.font = '12px "JetBrains Mono", monospace';
     ctx.fillText(filename, 286, 53);
-    ctx.fillStyle = "#64748b";
+    ctx.fillStyle = P.textFaint;
     ctx.fillText("notes.md", 484, 53);
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = P.surface;
     ctx.fillRect(274, 65, W - 274, H - 65);
 
-    ctx.fillStyle = "#007acc";
+    ctx.fillStyle = P.accentBlue;
     ctx.fillRect(274, 65, 3, H - 65);
 
-    ctx.fillStyle = "#94a3b8";
+    ctx.fillStyle = P.iconMuted;
     ctx.font = '13px "JetBrains Mono", monospace';
     for (let i = 1; i <= 22; i++) {
       ctx.fillText(String(i), 290, 86 + (i - 1) * 22);
@@ -640,38 +755,50 @@ export function mountWorldScene() {
       lh = 22;
 
     const line = (text: string, color: string, y: number, bold = false) => {
-      ctx.fillStyle = color || "#334155";
+      ctx.fillStyle = color || P.textStrong;
       ctx.font = (bold ? "bold " : "") + '13px "JetBrains Mono", monospace';
       ctx.fillText(text, x, y);
     };
 
-    line("# Yinghao Zhu  (朱英豪)", "#569cd6", y0, true);
-    line("PhD Student · The University of Hong Kong", "#0369a1", y0 + lh);
-    line("AI for Healthcare · Medical LLMs · Agents", "#9a3412", y0 + lh * 2);
-    line("", "#334155", y0 + lh * 3);
+    line("# Yinghao Zhu  (朱英豪)", P.syntaxBlue, y0, true);
+    line("PhD Student · The University of Hong Kong", P.syntaxInfo, y0 + lh);
+    line(
+      "AI for Healthcare · Medical LLMs · Agents",
+      P.syntaxOrange,
+      y0 + lh * 2,
+    );
+    line("", P.textStrong, y0 + lh * 3);
 
-    line("## Research Interests", "#569cd6", y0 + lh * 4, true);
-    line("- Autonomous & collaborative AI agents", "#334155", y0 + lh * 5);
-    line("- Medical large language models (LLMs)", "#334155", y0 + lh * 6);
-    line("- Benchmarks, toolkits & platforms", "#334155", y0 + lh * 7);
-    line("- Human-agent collaboration in healthcare", "#334155", y0 + lh * 8);
-    line("", "#334155", y0 + lh * 9);
+    line("## Research Interests", P.syntaxBlue, y0 + lh * 4, true);
+    line("- Autonomous & collaborative AI agents", P.textStrong, y0 + lh * 5);
+    line("- Medical large language models (LLMs)", P.textStrong, y0 + lh * 6);
+    line("- Benchmarks, toolkits & platforms", P.textStrong, y0 + lh * 7);
+    line(
+      "- Human-agent collaboration in healthcare",
+      P.textStrong,
+      y0 + lh * 8,
+    );
+    line("", P.textStrong, y0 + lh * 9);
 
-    line("## Advisors", "#569cd6", y0 + lh * 10, true);
-    line("Prof. Lequan Yu  (HKU)", "#047857", y0 + lh * 11);
-    line("Prof. Liantao Ma (Peking Univ.)", "#047857", y0 + lh * 12);
-    line("", "#334155", y0 + lh * 13);
+    line("## Advisors", P.syntaxBlue, y0 + lh * 10, true);
+    line("Prof. Lequan Yu  (HKU)", P.syntaxGreen, y0 + lh * 11);
+    line("Prof. Liantao Ma (Peking Univ.)", P.syntaxGreen, y0 + lh * 12);
+    line("", P.textStrong, y0 + lh * 13);
 
-    line("## Contact", "#569cd6", y0 + lh * 14, true);
-    line("yhzhu99@gmail.com", "#7e22ce", y0 + lh * 15);
-    line("scholar.google.com  ·  github.com/yhzhu99", "#15803d", y0 + lh * 16);
-    line("", "#334155", y0 + lh * 17);
+    line("## Contact", P.syntaxBlue, y0 + lh * 14, true);
+    line("yhzhu99@gmail.com", P.syntaxPurple, y0 + lh * 15);
+    line(
+      "scholar.google.com  ·  github.com/yhzhu99",
+      P.syntaxGreenDeep,
+      y0 + lh * 16,
+    );
+    line("", P.textStrong, y0 + lh * 17);
 
-    line("// click this monitor to read more", "#6a9955", y0 + lh * 19);
-    line("// or explore the desk & shelves", "#6a9955", y0 + lh * 20);
+    line("// click this monitor to read more", P.syntaxComment, y0 + lh * 19);
+    line("// or explore the desk & shelves", P.syntaxComment, y0 + lh * 20);
 
     const cy = y0 + lh * 21.6;
-    ctx.fillStyle = "#0f172a";
+    ctx.fillStyle = P.text;
     ctx.fillRect(x, cy - 11, 8, 16);
   });
 
@@ -683,6 +810,7 @@ export function mountWorldScene() {
     aboutTex.needsUpdate = true;
   }
   redrawAbout();
+  redrawTextures.push(redrawAbout);
 
   /* Publications: fixed screen canvas */
   const pubW = 1024,
@@ -692,9 +820,9 @@ export function mountWorldScene() {
   pubCanvas.height = pubH;
   const pubCtx = pubCanvas.getContext("2d");
   function drawPubScreen() {
-    pubCtx.fillStyle = "#ffffff";
+    pubCtx.fillStyle = P.surface;
     pubCtx.fillRect(0, 0, pubW, pubH);
-    pubCtx.fillStyle = "#e5e7eb";
+    pubCtx.fillStyle = P.chromeBar;
     pubCtx.fillRect(0, 0, pubW, 30);
     ["#ff5f57", "#febc2e", "#28c840"].forEach((c, i) => {
       pubCtx.fillStyle = c;
@@ -702,16 +830,16 @@ export function mountWorldScene() {
       pubCtx.arc(20 + i * 20, 15, 6, 0, Math.PI * 2);
       pubCtx.fill();
     });
-    pubCtx.fillStyle = "#475569";
+    pubCtx.fillStyle = P.textMuted;
     pubCtx.font = '13px "JetBrains Mono", monospace';
     pubCtx.textBaseline = "middle";
     pubCtx.fillText("publications.md  -  featured works", pubW / 2 - 110, 15);
 
-    pubCtx.fillStyle = "#e2e8f0";
+    pubCtx.fillStyle = P.border;
     pubCtx.fillRect(0, 30, pubW, 35);
-    pubCtx.fillStyle = "#ffffff";
+    pubCtx.fillStyle = P.surface;
     pubCtx.fillRect(0, 40, 240, 25);
-    pubCtx.fillStyle = "#0f172a";
+    pubCtx.fillStyle = P.text;
     pubCtx.font = '12px "JetBrains Mono", monospace';
     pubCtx.fillText("publications.md", 16, 53);
 
@@ -738,38 +866,38 @@ export function mountWorldScene() {
       const authorY = titleY + titleLines.length * 24 + 8;
       const venueY = authorY + 22;
 
-      pubCtx.fillStyle = "#f8fafc";
-      pubCtx.strokeStyle = "#cbd5e1";
+      pubCtx.fillStyle = P.panelMuted;
+      pubCtx.strokeStyle = P.borderStrong;
       pubCtx.lineWidth = 1;
       pubCtx.beginPath();
       pubCtx.roundRect(36, y, pubW - 72, cardHeight, 14);
       pubCtx.fill();
       pubCtx.stroke();
 
-      pubCtx.fillStyle = "#005bac";
+      pubCtx.fillStyle = P.accent;
       pubCtx.font = 'bold 18px "Inter", sans-serif';
       pubCtx.fillText(String(i + 1).padStart(2, "0"), 58, headerY);
 
-      pubCtx.fillStyle = "#334155";
+      pubCtx.fillStyle = P.textStrong;
       pubCtx.font = 'bold 12px "JetBrains Mono", monospace';
       pubCtx.fillText(p.year + "  |  " + p.tag, 104, headerY);
 
-      pubCtx.fillStyle = "#0f172a";
+      pubCtx.fillStyle = P.text;
       pubCtx.font = 'bold 20px "Inter", sans-serif';
       titleLines.forEach((l, lineIndex) => {
         pubCtx.fillText(l, 58, titleY + lineIndex * 24);
       });
 
       const authLine = wrap(p.authors, 92)[0] || "";
-      pubCtx.fillStyle = "#334155";
+      pubCtx.fillStyle = P.textStrong;
       pubCtx.font = '14px "JetBrains Mono", monospace';
       pubCtx.fillText(authLine, 58, authorY);
 
-      pubCtx.fillStyle = "#0369a1";
+      pubCtx.fillStyle = P.syntaxInfo;
       pubCtx.font = 'italic 13px "Inter", sans-serif';
       pubCtx.fillText(formatVenueYear(p.venue, p.year), 58, venueY);
 
-      pubCtx.fillStyle = "#475569";
+      pubCtx.fillStyle = P.textMuted;
       pubCtx.font = 'bold 12px "JetBrains Mono", monospace';
       const links = p.links.map((l) => l.type).join("  ·  ");
       pubCtx.fillText("open: " + links, 760, venueY);
@@ -777,7 +905,7 @@ export function mountWorldScene() {
       y += cardHeight + 16;
     });
 
-    pubCtx.fillStyle = "#15803d";
+    pubCtx.fillStyle = P.syntaxGreenDeep;
     pubCtx.font = 'italic 13px "JetBrains Mono", monospace';
     pubCtx.fillText(
       "// static window - click monitor for full details",
@@ -785,10 +913,15 @@ export function mountWorldScene() {
       596,
     );
   }
-  drawPubScreen();
   const pubTex = new THREE.CanvasTexture(pubCanvas);
   pubTex.colorSpace = THREE.SRGBColorSpace;
   pubTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  function redrawPub() {
+    drawPubScreen();
+    pubTex.needsUpdate = true;
+  }
+  redrawPub();
+  redrawTextures.push(redrawPub);
 
   function buildMonitor(
     screenTex: THREE.Texture,
@@ -856,38 +989,44 @@ export function mountWorldScene() {
     c.width = 960;
     c.height = 600;
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#f8fafc";
-    ctx.fillRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "#e2e8f0";
-    ctx.fillRect(0, 0, c.width, 46);
-    ["#ff5f57", "#febc2e", "#28c840"].forEach((color, i) => {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(28 + i * 28, 23, 8, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    ctx.fillStyle = "#0f172a";
-    ctx.font = '700 34px "Inter", sans-serif';
-    ctx.fillText("Yinghao Zhu", 64, 132);
-    ctx.fillStyle = "#005bac";
-    ctx.font = '700 46px "Inter", sans-serif';
-    ctx.fillText("AI for Healthcare", 64, 206);
-    ctx.fillStyle = "#475569";
-    ctx.font = '24px "JetBrains Mono", monospace';
-    [
-      "medical LLMs",
-      "agentic workflows",
-      "clinical decision support",
-      "benchmarks and toolkits",
-    ].forEach((line, i) => {
-      ctx.fillText(`> ${line}`, 72, 292 + i * 46);
-    });
-    ctx.fillStyle = "#16a34a";
-    ctx.fillRect(64, 228, 360, 8);
-
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    function redraw() {
+      ctx.fillStyle = P.panelMuted;
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = P.border;
+      ctx.fillRect(0, 0, c.width, 46);
+      ["#ff5f57", "#febc2e", "#28c840"].forEach((color, i) => {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(28 + i * 28, 23, 8, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.fillStyle = P.text;
+      ctx.font = '700 34px "Inter", sans-serif';
+      ctx.fillText("Yinghao Zhu", 64, 132);
+      ctx.fillStyle = P.accent;
+      ctx.font = '700 46px "Inter", sans-serif';
+      ctx.fillText("AI for Healthcare", 64, 206);
+      ctx.fillStyle = P.textMuted;
+      ctx.font = '24px "JetBrains Mono", monospace';
+      [
+        "medical LLMs",
+        "agentic workflows",
+        "clinical decision support",
+        "benchmarks and toolkits",
+      ].forEach((line, i) => {
+        ctx.fillText(`> ${line}`, 72, 292 + i * 46);
+      });
+      ctx.fillStyle = P.green;
+      ctx.fillRect(64, 228, 360, 8);
+      tex.needsUpdate = true;
+    }
+
+    redraw();
+    redrawTextures.push(redraw);
     return tex;
   }
 
@@ -1236,53 +1375,60 @@ export function mountWorldScene() {
     c.width = 700;
     c.height = 920;
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#fbf7ef";
-    ctx.fillRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "#c6a978";
-    ctx.fillRect(0, 0, c.width, 22);
-    ctx.fillRect(0, c.height - 22, c.width, 22);
-    ctx.fillStyle = "#0f172a";
-    ctx.font = "700 44px Inter, sans-serif";
-    ctx.fillText(kind === "education" ? "Education" : "Experience", 64, 108);
-    ctx.fillStyle = "#005bac";
-    ctx.fillRect(64, 138, 118, 8);
-    ctx.font = "600 28px Inter, sans-serif";
-    ctx.fillStyle = "#2f4052";
-    const rows =
-      kind === "education"
-        ? [
-            "HKU · PhD",
-            "Beihang · M.Eng.",
-            "Polimi · Exchange",
-            "Beihang · B.Eng.",
-          ]
-        : [
-            "Peking University",
-            "Stanford",
-            "University of Zurich",
-            "Fudan Children's Hospital",
-          ];
-    rows.forEach((row, i) => {
-      const y = 230 + i * 132;
-      ctx.fillStyle = i === 0 ? "#005bac" : "#bfa56e";
-      ctx.beginPath();
-      ctx.arc(94, y - 8, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#2f4052";
-      ctx.fillText(row, 132, y);
-      ctx.fillStyle = "#9a7d4f";
-      ctx.fillRect(78, y + 24, 340 - i * 26, 10);
-      if (i < rows.length - 1) {
-        ctx.strokeStyle = "#d8c6a3";
-        ctx.lineWidth = 8;
-        ctx.beginPath();
-        ctx.moveTo(94, y + 20);
-        ctx.lineTo(94, y + 98);
-        ctx.stroke();
-      }
-    });
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
+
+    function redraw() {
+      ctx.fillStyle = P.milestoneBg;
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = P.gold;
+      ctx.fillRect(0, 0, c.width, 22);
+      ctx.fillRect(0, c.height - 22, c.width, 22);
+      ctx.fillStyle = P.text;
+      ctx.font = "700 44px Inter, sans-serif";
+      ctx.fillText(kind === "education" ? "Education" : "Experience", 64, 108);
+      ctx.fillStyle = P.accent;
+      ctx.fillRect(64, 138, 118, 8);
+      ctx.font = "600 28px Inter, sans-serif";
+      ctx.fillStyle = P.milestoneText;
+      const rows =
+        kind === "education"
+          ? [
+              "HKU · PhD",
+              "Beihang · M.Eng.",
+              "Polimi · Exchange",
+              "Beihang · B.Eng.",
+            ]
+          : [
+              "Peking University",
+              "Stanford",
+              "University of Zurich",
+              "Fudan Children's Hospital",
+            ];
+      rows.forEach((row, i) => {
+        const y = 230 + i * 132;
+        ctx.fillStyle = i === 0 ? P.accent : P.goldSoft;
+        ctx.beginPath();
+        ctx.arc(94, y - 8, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = P.milestoneText;
+        ctx.fillText(row, 132, y);
+        ctx.fillStyle = P.goldDark;
+        ctx.fillRect(78, y + 24, 340 - i * 26, 10);
+        if (i < rows.length - 1) {
+          ctx.strokeStyle = P.goldLine;
+          ctx.lineWidth = 8;
+          ctx.beginPath();
+          ctx.moveTo(94, y + 20);
+          ctx.lineTo(94, y + 98);
+          ctx.stroke();
+        }
+      });
+      tex.needsUpdate = true;
+    }
+
+    redraw();
+    redrawTextures.push(redraw);
     return tex;
   }
 
@@ -1322,39 +1468,45 @@ export function mountWorldScene() {
     c.width = 1024;
     c.height = 640;
     const ctx = c.getContext("2d");
-
-    ctx.fillStyle = "#fbfcfb";
-    ctx.fillRect(0, 0, c.width, c.height);
-    ctx.strokeStyle = "#d8e1e7";
-    ctx.lineWidth = 5;
-    ctx.strokeRect(18, 18, c.width - 36, c.height - 36);
-
-    ctx.fillStyle = "rgba(0, 91, 172, 0.055)";
-    for (let y = 120; y < 560; y += 72) {
-      ctx.fillRect(92, y, 840, 3);
-    }
-
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = '54px "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive';
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "rgba(0, 65, 125, 0.18)";
-    ctx.lineWidth = 7;
-    ctx.strokeText("AI for Healthcare", c.width / 2 + 3, c.height / 2 - 2);
-    ctx.fillStyle = "#005bac";
-    ctx.fillText("AI for Healthcare", c.width / 2, c.height / 2);
-
-    ctx.strokeStyle = "#2aa876";
-    ctx.lineWidth = 8;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(248, 406);
-    ctx.bezierCurveTo(384, 436, 646, 436, 782, 404);
-    ctx.stroke();
-
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    function redraw() {
+      ctx.fillStyle = P.whiteboardBg;
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.strokeStyle = P.whiteboardBorder;
+      ctx.lineWidth = 5;
+      ctx.strokeRect(18, 18, c.width - 36, c.height - 36);
+
+      ctx.fillStyle = "rgba(0, 91, 172, 0.055)";
+      for (let y = 120; y < 560; y += 72) {
+        ctx.fillRect(92, y, 840, 3);
+      }
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = '54px "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive';
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(0, 65, 125, 0.18)";
+      ctx.lineWidth = 7;
+      ctx.strokeText("AI for Healthcare", c.width / 2 + 3, c.height / 2 - 2);
+      ctx.fillStyle = P.accent;
+      ctx.fillText("AI for Healthcare", c.width / 2, c.height / 2);
+
+      ctx.strokeStyle = P.boardGreen;
+      ctx.lineWidth = 8;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(248, 406);
+      ctx.bezierCurveTo(384, 436, 646, 436, 782, 404);
+      ctx.stroke();
+
+      tex.needsUpdate = true;
+    }
+
+    redraw();
+    redrawTextures.push(redraw);
     return tex;
   }
 
@@ -2069,6 +2221,40 @@ export function mountWorldScene() {
     controls.enabled = true;
   }
 
+  /* ============================ THEME SYNC ============================ */
+  let themeObserver: MutationObserver | null = null;
+
+  function syncSceneTheme() {
+    const nextDarkTheme = document.documentElement.classList.contains("dark");
+
+    if (nextDarkTheme === darkTheme) {
+      return;
+    }
+
+    darkTheme = nextDarkTheme;
+    Object.assign(P, nextDarkTheme ? DARK_PALETTE : LIGHT_PALETTE);
+
+    scene.background = new THREE.Color(P.sceneBg);
+    scene.fog = new THREE.Fog(P.sceneBg, 13, 27);
+    renderer.toneMappingExposure = nextDarkTheme ? 1.05 : 1.1;
+    hemisphereLight.intensity = nextDarkTheme ? 0.62 : 1.48;
+    sun.intensity = nextDarkTheme ? 0.78 : 1.68;
+    sun.color = new THREE.Color(nextDarkTheme ? 0x9fb8d0 : 0xfff4d6);
+    deskLamp.intensity = nextDarkTheme ? 1.05 : 0.58;
+    screenGlow.intensity = nextDarkTheme ? 0.55 : 0.38;
+    ceilingGlow.intensity = nextDarkTheme ? 0.62 : 1.38;
+
+    redrawTextures.forEach((redraw) => redraw());
+  }
+
+  if ("MutationObserver" in window) {
+    themeObserver = new MutationObserver(syncSceneTheme);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
   /* ============================ ANIMATION LOOP ============================ */
   let introT = 0;
   const reduceMotion = window.matchMedia(
@@ -2102,7 +2288,7 @@ export function mountWorldScene() {
     if (cursorPhase > 0.53) {
       cursorPhase = 0;
       const ctx = aboutEditor.ctx;
-      ctx.fillStyle = Math.floor(t * 1.9) % 2 === 0 ? "#fff" : "#1e1e1e";
+      ctx.fillStyle = Math.floor(t * 1.9) % 2 === 0 ? P.cursorOff : P.cursorOn;
       ctx.fillRect(320, 88 + 22 * 21.6 - 11, 8, 16);
       aboutTex.needsUpdate = true;
     }
@@ -2178,6 +2364,7 @@ export function mountWorldScene() {
     window.cancelAnimationFrame(animationFrame);
     window.removeEventListener("resize", handleResize);
     document.removeEventListener("keydown", handleKeydown);
+    themeObserver?.disconnect();
     renderer.dispose();
   };
 }

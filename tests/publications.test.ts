@@ -94,3 +94,31 @@ test("all publication records have full authors and unique citation keys", () =>
   );
   assert.equal(ptbPublication?.featured, true);
 });
+
+test("records contribution roles from the two previously abbreviated papers", () => {
+  const foundationModels = siteData.publications.find((item) =>
+    item.title.startsWith(
+      "Foundation models and intelligent decision-making",
+    ),
+  );
+  const imagingX = siteData.publications.find((item) =>
+    item.title.startsWith("Project Imaging-X"),
+  );
+
+  assert.equal(
+    foundationModels?.firstAuthors,
+    "Jincai Huang, Yongjun Xu, Qi Wang, Qi (Cheems) Wang, Xingxing Liang, Fei Wang, Zhao Zhang, Wei Wei, Boxuan Zhang, Libo Huang, Jingru Chang, Liantao Ma, Ting Ma, Yuxuan Liang, Jie Zhang, Jian Guo, Xuhui Jiang, Xinxin Fan, Zhulin An, Tingting Li",
+  );
+  assert.equal(
+    foundationModels?.correspondingAuthors,
+    "Sihang Qiu, Yanjie Dong, Xiaolong Zheng, Gang Wang, Yu Zheng, Yuanzhuo Wang, Jiafeng Guo, Lizhe Wang, Xueqi Cheng, Yaonan Wang, Shanlin Yang, Mengyin Fu, Aiguo Fei",
+  );
+  assert.equal(
+    imagingX?.firstAuthors,
+    "Zhongying Deng, Cheng Tang, Ziyan Huang, Jiashi Lin, Ying Chen, Junzhi Ning, Chenglong Ma",
+  );
+  assert.equal(
+    imagingX?.correspondingAuthors,
+    "Ming Hu, Jin Ye, Zhifeng Li, Yirong Chen, Yu Qiao, Junjun He",
+  );
+});

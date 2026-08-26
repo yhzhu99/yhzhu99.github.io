@@ -56,7 +56,7 @@ async function copyBibtex() {
         {{ item.title }}
       </h4>
       <p
-        class="mb-1 truncate text-xs text-text-gray"
+        class="mb-1 line-clamp-3 text-xs text-text-gray"
         :title="item.authors"
         v-html="authorsHtml"
       />

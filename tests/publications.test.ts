@@ -79,6 +79,9 @@ test("shortens CV authors around Yinghao Zhu", () => {
 
 test("all publication records have full authors and unique citation keys", () => {
   const keys = siteData.publications.map(getBibtexCitationKey);
+  const ptbPublication = siteData.publications.find((item) =>
+    item.title.startsWith("Dynamic prediction of preterm birth"),
+  );
 
   assert.equal(
     siteData.publications.some((item) => /\bet al\./i.test(item.authors)),
@@ -89,4 +92,5 @@ test("all publication records have full authors and unique citation keys", () =>
     siteData.publications.every((item) => Boolean(formatBibtex(item))),
     true,
   );
+  assert.equal(ptbPublication?.featured, true);
 });

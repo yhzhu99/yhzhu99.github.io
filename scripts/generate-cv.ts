@@ -9,6 +9,7 @@ import type {
 } from "../src/types";
 import {
   getCvAuthorNames,
+  getCvVenueShort,
   publicationTagOrder,
   sortPublications,
 } from "../src/utils/publications";
@@ -17,6 +18,7 @@ import { siteData } from "../src/utils/site-data";
 const DEFAULT_OUTPUT_PATH = "build/cv/YinghaoZhu_CV.tex";
 const HOMEPAGE_URL = "https://yhzhu99.github.io";
 const SCHOLAR_URL = "https://scholar.google.com/citations?user=LYrsSoEAAAAJ";
+const ABBREVIATED_AUTHOR_COUNT = 8;
 
 const outputPath = resolve(
   process.cwd(),
@@ -34,6 +36,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \usepackage[protrusion=true,expansion=false]{microtype}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{needspace}
 \usepackage{parskip}
 \usepackage{xcolor}
 \pagenumbering{gobble}
@@ -42,6 +45,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \definecolor{textgray}{RGB}{55,65,81}
 \definecolor{mutedgray}{RGB}{100,116,139}
 \newlength{\pubcategorywidth}
+\newsavebox{\cvauthorbox}
 
 \hypersetup{
     colorlinks=true,
@@ -54,6 +58,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 \urlstyle{same}
 
 \newcommand{\sectiontitle}[1]{%
+    \Needspace{5\baselineskip}%
     \par\vspace{2.6mm}%
     \noindent{\Large\textbf{#1}}\par
     \vspace{0.9mm}%
@@ -62,6 +67,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 }
 
 \newcommand{\categorytitle}[1]{%
+    \Needspace{4\baselineskip}%
     \par\vspace{1.7mm}%
     \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
@@ -71,6 +77,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
 }
 
 \newcommand{\pubcategorytitle}[1]{%
+    \Needspace{6\baselineskip}%
     \par\vspace{1.35mm}%
     \settowidth{\pubcategorywidth}{{\normalsize\textbf{#1}}}%
     \noindent{\normalsize\textcolor{darkred}{\textbf{#1}}}\par
@@ -111,6 +118,18 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \par\vspace{1.35mm}
 }
 
+\newcommand{\cvauthors}[2]{%
+    \setbox\cvauthorbox=\vbox{%
+        \hsize=\linewidth
+        \small\noindent #1\par
+    }%
+    \ifdim\dimexpr\ht\cvauthorbox+\dp\cvauthorbox\relax>3\baselineskip
+        #2%
+    \else
+        #1%
+    \fi
+}
+
 \newcommand{\cvmarker}{
     \makebox[0.018\textwidth][l]{\raisebox{0.36ex}{\textcolor{darkred}{\scriptsize$\triangleright$}}}%
 }
@@ -132,7 +151,7 @@ const cv = String.raw`\documentclass[10pt,a4paper]{article}
     \begin{minipage}[t]{0.695\textwidth}{\small\strut\textbf{#1}#2}\end{minipage}
     \hfill
     \makebox[0.265\textwidth][r]{\small\strut\textcolor{mutedgray}{#3}}
-    \par\vspace{0.82mm}
+    \par\vspace{0.3mm}
 }
 
 \setlength{\parindent}{0pt}
@@ -277,12 +296,12 @@ function formatPublication(publication: Publication) {
   const title = paperUrl
     ? `\\begingroup\\hypersetup{hidelinks}\\href{${href(paperUrl)}}{${tex(publication.title)}}\\endgroup`
     : tex(publication.title);
-  const venueShort = getVenueShort(publication.venue);
+  const venueShort = getCvVenueShort(publication.venue);
   const venue = stripYear(publication.venue, publication.year);
 
   return `\\pubentry{[${tex(venueShort)} ${tex(publication.year)}]}
 {${title}}
-{${formatAuthors(publication)}}
+{\\cvauthors{${formatAuthors(publication)}}{${formatAuthors(publication, ABBREVIATED_AUTHOR_COUNT)}}}
 {${tex(venue)}}
 {${tex(publication.year)}}`;
 }
@@ -360,16 +379,22 @@ function formatPlace(place = "") {
   return place ? `, ${tex(place)}` : "";
 }
 
-function formatAuthors(publication: Publication) {
-  const authors = getCvAuthorNames(publication.authors);
+function formatAuthors(publication: Publication, maxAuthors = Infinity) {
+  const authors = getCvAuthorNames(publication.authors, maxAuthors);
   const firstAuthors = splitAuthors(publication.firstAuthors);
   const correspondingAuthors = splitAuthors(publication.correspondingAuthors);
   const hasCoFirstAuthors = firstAuthors.length > 1;
+  const highlightedAuthor = "Yinghao Zhu";
+  const wasAbbreviated = authors.at(-1) === "et al.";
 
-  return authors
+  const formattedAuthors = authors
     .map((author) => {
+      if (author === "et al.") return "\\textit{et al.}";
+
       let formatted =
-        author === "Yinghao Zhu" ? `\\textbf{${tex(author)}}` : tex(author);
+        author === highlightedAuthor
+          ? `\\textbf{${tex(author)}}`
+          : tex(author);
 
       if (hasCoFirstAuthors && firstAuthors.includes(author)) {
         formatted += "$^{\\ast}$";
@@ -382,6 +407,12 @@ function formatAuthors(publication: Publication) {
       return formatted;
     })
     .join(", ");
+
+  if (wasAbbreviated && !authors.includes(highlightedAuthor)) {
+    return `${formattedAuthors} (including \\textbf{${tex(highlightedAuthor)}})`;
+  }
+
+  return formattedAuthors;
 }
 
 function splitAuthors(value = "") {
@@ -398,66 +429,6 @@ function getPaperUrl(links: LinkItem[]) {
     links[0]?.url ??
     ""
   );
-}
-
-function getVenueShort(venue = "") {
-  const candidates = [
-    {
-      pattern: /\bNeurIPS\b|Neural Information Processing Systems/i,
-      value: "NeurIPS",
-    },
-    { pattern: /\bWWW\b|World Wide Web|TheWebConf/i, value: "WWW" },
-    { pattern: /\bAAAI\b/i, value: "AAAI" },
-    { pattern: /\bCHI\b|Human Factors in Computing Systems/i, value: "CHI" },
-    { pattern: /\bCIKM\b/i, value: "CIKM" },
-    { pattern: /\bKDD\b|SIGKDD/i, value: "KDD" },
-    { pattern: /\bACL\b/i, value: "ACL" },
-    { pattern: /\bICLR\b/i, value: "ICLR" },
-    { pattern: /\bICML\b/i, value: "ICML" },
-    { pattern: /\bICSE\b/i, value: "ICSE" },
-    { pattern: /\bASE\b/i, value: "ASE" },
-    { pattern: /\bFSE\b|Foundations of Software Engineering/i, value: "FSE" },
-    { pattern: /\bAMIA\b/i, value: "AMIA" },
-    { pattern: /\bSAIL\b/i, value: "SAIL" },
-    { pattern: /\bBIBM\b/i, value: "BIBM" },
-    { pattern: /\bTOSEM\b/i, value: "TOSEM" },
-    { pattern: /\bMIDL\b/i, value: "MIDL" },
-    { pattern: /npj Digital Medicine/i, value: "npj Digital Medicine" },
-    { pattern: /Cell Patterns|Patterns/i, value: "Cell Patterns" },
-    { pattern: /STAR Protocols/i, value: "Cell Protocols" },
-    { pattern: /The Innovation/i, value: "The Innovation" },
-    { pattern: /Health Data Science/i, value: "HDS" },
-    { pattern: /Journal of Pharmaceutical Analysis/i, value: "JPA" },
-    { pattern: /British Journal of Radiology/i, value: "BJR" },
-    { pattern: /Pediatric Radiology/i, value: "Pediatr Radiol" },
-    { pattern: /Translational Pediatrics/i, value: "TP" },
-    {
-      pattern: /Chinese Journal of Evidence-Based Pediatrics/i,
-      value: "CJEBP",
-    },
-    {
-      pattern: /Asian and Oceanic Society for Paediatric Radiology|AOSPR/i,
-      value: "AOSPR",
-    },
-    {
-      pattern:
-        /International Conference on Industrial Artificial Intelligence|IAI/i,
-      value: "IAI",
-    },
-    { pattern: /Journal of Guangxi Medical University/i, value: "JGMU" },
-    { pattern: /China Machine Press/i, value: "Book" },
-    { pattern: /Tsinghua University Press/i, value: "Book" },
-    { pattern: /Preprint|arXiv/i, value: "Preprint" },
-  ];
-
-  return (
-    candidates.find((candidate) => candidate.pattern.test(venue))?.value ??
-    firstVenuePhrase(venue)
-  );
-}
-
-function firstVenuePhrase(venue = "") {
-  return stripYear(venue, "").split(",")[0]?.trim() || "Publication";
 }
 
 function stripYear(venue = "", year = "") {

@@ -6,6 +6,7 @@ import {
   formatBibtex,
   getBibtexCitationKey,
   getCvAuthorNames,
+  getCvVenueShort,
 } from "../src/utils/publications";
 
 function publication(overrides: Partial<Publication> = {}): Publication {
@@ -62,19 +63,35 @@ test("formats conference, preprint, and book-specific BibTeX fields", () => {
   assert.match(book, /publisher = \{Example University Press\}/);
 });
 
-test("shortens CV authors around Yinghao Zhu", () => {
+test("keeps full CV authors and abbreviates long lists with et al.", () => {
   assert.deepEqual(
     getCvAuthorNames("Yinghao Zhu, A One, B Two, C Three, D Four"),
-    ["Yinghao Zhu", "et al."],
+    ["Yinghao Zhu", "A One", "B Two", "C Three", "D Four"],
   );
   assert.deepEqual(
-    getCvAuthorNames("A One, B Two, Yinghao Zhu, C Three, D Four"),
-    ["A One", "B Two", "Yinghao Zhu", "et al."],
+    getCvAuthorNames(
+      "A One, B Two, C Three, D Four, E Five, Yinghao Zhu, F Six",
+      4,
+    ),
+    ["A One", "B Two", "C Three", "D Four", "et al."],
   );
-  assert.deepEqual(
-    getCvAuthorNames("A One, B Two, C Three, Yinghao Zhu, D Four"),
-    ["...", "Yinghao Zhu", "..."],
+});
+
+test("uses parenthetical acronyms for CV venue labels", () => {
+  assert.equal(
+    getCvVenueShort(
+      "The 2026 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+    ),
+    "EMNLP",
   );
+  assert.equal(
+    getCvVenueShort(
+      "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD-26) Hands-On Tutorials",
+    ),
+    "KDD",
+  );
+  assert.equal(getCvVenueShort("npj Digital Medicine"), "npj Digital Medicine");
+  assert.equal(getCvVenueShort(""), "Publication");
 });
 
 test("all publication records have full authors and unique citation keys", () => {

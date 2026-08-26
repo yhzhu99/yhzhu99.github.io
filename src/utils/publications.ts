@@ -215,25 +215,75 @@ export function formatAuthorsHtml({
     .join(", ");
 }
 
-export function getCvAuthorNames(
-  authors = "",
-  highlightedAuthor = "Yinghao Zhu",
-) {
+export function getCvAuthorNames(authors = "", maxAuthors = Infinity) {
   const authorList = splitAuthorList(authors);
 
-  if (authorList.length <= 4) return authorList;
+  if (authorList.length <= maxAuthors) return authorList;
 
-  const highlightedIndex = authorList.indexOf(highlightedAuthor);
+  return [...authorList.slice(0, maxAuthors), "et al."];
+}
 
-  if (highlightedIndex <= 2) {
-    return [...authorList.slice(0, highlightedIndex + 1), "et al."];
-  }
-
-  return [
-    "...",
-    highlightedAuthor,
-    ...(highlightedIndex < authorList.length - 1 ? ["..."] : []),
+export function getCvVenueShort(venue = "") {
+  const candidates = [
+    {
+      pattern: /\bNeurIPS\b|Neural Information Processing Systems/i,
+      value: "NeurIPS",
+    },
+    { pattern: /\bWWW\b|World Wide Web|TheWebConf/i, value: "WWW" },
+    { pattern: /\bAAAI\b/i, value: "AAAI" },
+    { pattern: /\bCHI\b|Human Factors in Computing Systems/i, value: "CHI" },
+    { pattern: /\bCIKM\b/i, value: "CIKM" },
+    { pattern: /\bKDD\b|SIGKDD/i, value: "KDD" },
+    { pattern: /\bACL\b/i, value: "ACL" },
+    { pattern: /\bICLR\b/i, value: "ICLR" },
+    { pattern: /\bICML\b/i, value: "ICML" },
+    { pattern: /\bICSE\b/i, value: "ICSE" },
+    { pattern: /\bASE\b/i, value: "ASE" },
+    { pattern: /\bFSE\b|Foundations of Software Engineering/i, value: "FSE" },
+    { pattern: /\bAMIA\b/i, value: "AMIA" },
+    { pattern: /\bSAIL\b/i, value: "SAIL" },
+    { pattern: /\bBIBM\b/i, value: "BIBM" },
+    { pattern: /\bTOSEM\b/i, value: "TOSEM" },
+    { pattern: /\bMIDL\b/i, value: "MIDL" },
+    { pattern: /npj Digital Medicine/i, value: "npj Digital Medicine" },
+    { pattern: /Cell Patterns|Patterns/i, value: "Cell Patterns" },
+    { pattern: /STAR Protocols/i, value: "Cell Protocols" },
+    { pattern: /The Innovation/i, value: "The Innovation" },
+    { pattern: /Health Data Science/i, value: "HDS" },
+    { pattern: /Journal of Pharmaceutical Analysis/i, value: "JPA" },
+    { pattern: /British Journal of Radiology/i, value: "BJR" },
+    { pattern: /Pediatric Radiology/i, value: "Pediatr Radiol" },
+    { pattern: /Translational Pediatrics/i, value: "TP" },
+    {
+      pattern: /Chinese Journal of Evidence-Based Pediatrics/i,
+      value: "CJEBP",
+    },
+    {
+      pattern: /Asian and Oceanic Society for Paediatric Radiology|AOSPR/i,
+      value: "AOSPR",
+    },
+    {
+      pattern:
+        /International Conference on Industrial Artificial Intelligence|IAI/i,
+      value: "IAI",
+    },
+    { pattern: /Journal of Guangxi Medical University/i, value: "JGMU" },
+    { pattern: /China Machine Press/i, value: "Book" },
+    { pattern: /Tsinghua University Press/i, value: "Book" },
+    { pattern: /Preprint|arXiv/i, value: "Preprint" },
   ];
+  const knownVenue = candidates.find((candidate) =>
+    candidate.pattern.test(venue),
+  )?.value;
+
+  if (knownVenue) return knownVenue;
+
+  const parentheticalAcronym = venue.match(/\(([A-Z][A-Z0-9-]{1,})\)/)?.[1];
+
+  return (
+    parentheticalAcronym ??
+    (venue.split(",")[0]?.trim() || "Publication")
+  );
 }
 
 export function formatBibtex(publication: Publication) {

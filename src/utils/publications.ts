@@ -1,4 +1,4 @@
-import type { Project, Publication } from "../types";
+import type { LinkItem, Project, Publication } from "../types";
 import { escapeHtml } from "./html";
 
 export const publicationTagOrder = [
@@ -30,6 +30,20 @@ export interface FormatAuthorsOptions {
   correspondingAuthors?: string;
   authorLinks?: Record<string, string>;
 }
+
+const bibtexEntryTypes = {
+  journal: "article",
+  conference: "inproceedings",
+  preprint: "misc",
+  book: "book",
+} as const;
+
+const bibtexVenueFields = {
+  journal: "journal",
+  conference: "booktitle",
+  preprint: "",
+  book: "publisher",
+} as const;
 
 export function getFeaturedPublications(publications: Publication[]) {
   return sortPublications(
@@ -201,6 +215,69 @@ export function formatAuthorsHtml({
     .join(", ");
 }
 
+export function getCvAuthorNames(
+  authors = "",
+  highlightedAuthor = "Yinghao Zhu",
+) {
+  const authorList = splitAuthorList(authors);
+
+  if (authorList.length <= 4) return authorList;
+
+  const highlightedIndex = authorList.indexOf(highlightedAuthor);
+
+  if (highlightedIndex <= 2) {
+    return [...authorList.slice(0, highlightedIndex + 1), "et al."];
+  }
+
+  return [
+    "...",
+    highlightedAuthor,
+    ...(highlightedIndex < authorList.length - 1 ? ["..."] : []),
+  ];
+}
+
+export function formatBibtex(publication: Publication) {
+  const citationUrl = getCitationUrl(publication.links);
+  const arxivId = getArxivId(citationUrl);
+  const doi = getDoi(citationUrl);
+  const venueField = bibtexVenueFields[publication.publicationType];
+  const fields = [
+    ["author", splitAuthorList(publication.authors).join(" and ")],
+    ["title", publication.title],
+    venueField ? [venueField, cleanBibtexVenue(publication.venue)] : undefined,
+    ["year", publication.year],
+    doi ? ["doi", doi] : undefined,
+    arxivId ? ["eprint", arxivId] : undefined,
+    arxivId ? ["archivePrefix", "arXiv"] : undefined,
+    publication.publicationType === "preprint"
+      ? ["note", "Preprint"]
+      : undefined,
+    citationUrl ? ["url", citationUrl] : undefined,
+  ].filter((field): field is string[] => Boolean(field));
+
+  const formattedFields = fields
+    .map(([name, value]) => `  ${name} = {${escapeBibtex(value)}},`)
+    .join("\n");
+
+  return `@${bibtexEntryTypes[publication.publicationType]}{${getBibtexCitationKey(publication)},\n${formattedFields}\n}`;
+}
+
+export function getBibtexCitationKey(publication: Publication) {
+  const firstAuthor = splitAuthorList(publication.authors)[0] ?? "publication";
+  const nameParts = firstAuthor.split(/\s+/);
+  const surname = nameParts[nameParts.length - 1] ?? firstAuthor;
+  const titleWord =
+    publication.title
+      .match(/[\p{L}\p{N}]+/gu)
+      ?.find((word) => !["a", "an", "the"].includes(word.toLowerCase())) ??
+    "work";
+
+  return `${surname}${publication.year}${titleWord}`
+    .normalize("NFKD")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
+}
+
 export function getPublicationAuthorFields(item: Publication | Project) {
   return "firstAuthors" in item
     ? {
@@ -216,8 +293,52 @@ export function getPublicationAuthorFields(item: Publication | Project) {
 function splitAuthorList(value = "") {
   return value
     .split(/,\s*/)
-    .map((author) => author.trim())
+    .map((author) => author.replace(/^and\s+/i, "").trim())
     .filter(Boolean);
+}
+
+function getCitationUrl(links: LinkItem[]) {
+  return (
+    links.find((link) => link.type.toLowerCase() === "paper")?.url ??
+    links.find((link) => link.type.toLowerCase() === "book")?.url ??
+    ""
+  );
+}
+
+function getArxivId(url = "") {
+  return url.match(
+    /arxiv\.org\/(?:abs|pdf)\/([^?#/]+?)(?:\.pdf)?(?:[?#]|$)/i,
+  )?.[1];
+}
+
+function getDoi(url = "") {
+  const decodedUrl = decodeURIComponent(url);
+  const match = decodedUrl.match(
+    /(?:doi\.org\/|\/doi\/(?:abs\/|full\/|pdf\/)?|\/article\/)(10\.\d{4,9}\/[^?#]+)/i,
+  );
+
+  if (!match) return "";
+
+  const doi = match[1].replace(/\/$/, "");
+
+  if (url.includes("academic.oup.com")) {
+    return doi.replace(/\/\d+$/, "");
+  }
+
+  return doi;
+}
+
+function cleanBibtexVenue(venue = "") {
+  return venue.replace(
+    /,\s*(?:best (?:poster|abstract nominee)|oral(?: abstract(?: track)?)?|poster|cover)\s*$/i,
+    "",
+  );
+}
+
+function escapeBibtex(value = "") {
+  return value
+    .replace(/\\/g, "\\textbackslash{}")
+    .replace(/([&%_$#])/g, "\\$1");
 }
 
 function comparePublicationTags(

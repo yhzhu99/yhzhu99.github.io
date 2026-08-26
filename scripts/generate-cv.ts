@@ -8,6 +8,7 @@ import type {
   TimelineItem,
 } from "../src/types";
 import {
+  getCvAuthorNames,
   publicationTagOrder,
   sortPublications,
 } from "../src/utils/publications";
@@ -360,7 +361,7 @@ function formatPlace(place = "") {
 }
 
 function formatAuthors(publication: Publication) {
-  const authors = splitAuthors(publication.authors);
+  const authors = getCvAuthorNames(publication.authors);
   const firstAuthors = splitAuthors(publication.firstAuthors);
   const correspondingAuthors = splitAuthors(publication.correspondingAuthors);
   const hasCoFirstAuthors = firstAuthors.length > 1;

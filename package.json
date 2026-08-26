@@ -4,6 +4,7 @@
     "build": "vite build",
     "cv:tex": "tsx scripts/generate-cv.ts",
     "preview": "vite preview --host 0.0.0.0",
+    "test": "tsx --test tests/publications.test.ts",
     "typecheck": "vue-tsc --noEmit",
     "lint": "oxlint .",
     "format": "prettier --write ."

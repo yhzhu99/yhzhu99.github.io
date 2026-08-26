@@ -46,6 +46,8 @@ export interface NewsItem {
   content: string;
 }
 
+export type PublicationType = "journal" | "conference" | "preprint" | "book";
+
 export interface Publication {
   uid: string;
   featured?: boolean;
@@ -56,6 +58,7 @@ export interface Publication {
   venue: string;
   year: string;
   tag?: string;
+  publicationType: PublicationType;
   links: LinkItem[];
 }
 

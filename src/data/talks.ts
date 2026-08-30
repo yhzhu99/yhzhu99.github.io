@@ -1,4 +1,5 @@
 export const talks = [
+  { year: "2026", title: "AI in Healthcare: Present and Future", venue: "2026 Chronic Kidney Disease and Peritoneal Dialysis Training Conference, hosted by the Inner Mongolia Medical Association, 2026.08.28" },
   { year: "2026", title: "Panel Discussion: The Future of AI Hospitals and Intelligent Healthcare", venue: "The 2026 SZ-HK Symposium on Intelligent Medical Technologies and Innovations, HKU-Shenzhen Hospital, 2026.06.13" },
   { year: "2026", title: "Building Practical, Accessible Medical AI in the Era of Large Language Models — AI Empowering Clinical Work and Medical Research", venue: "High-Quality Development of Medical AI and Medical Data Governance Application Seminar, Peking University, 2026.06.06" },
   { year: "2026", title: "From Large Language Models to Scientific Agents: Opportunities and Challenges of AI-Driven Scientific Discovery", venue: "Yongjiang Laboratory, 2026.03.27" },

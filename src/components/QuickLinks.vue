@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-1.5">
+  <div class="grid grid-cols-3 gap-1.5">
     <a
       v-for="link in links"
       :key="link.name"

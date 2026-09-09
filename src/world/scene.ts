@@ -64,7 +64,7 @@ export function mountWorldScene() {
     explorer: "#eef2f7",
     activeBg: "#dbeafe",
     panelMuted: "#f8fafc",
-    accent: "#005bac",
+    accent: "#0066d6",
     accentBlue: "#007acc",
     syntaxBlue: "#569cd6",
     syntaxInfo: "#0369a1",
@@ -74,7 +74,7 @@ export function mountWorldScene() {
     syntaxPurple: "#7e22ce",
     syntaxComment: "#6a9955",
     green: "#16a34a",
-    boardGreen: "#2aa876",
+    boardGreen: "#00a878",
     milestoneBg: "#fbf7ef",
     milestoneText: "#2f4052",
     gold: "#c6a978",
@@ -103,7 +103,7 @@ export function mountWorldScene() {
     explorer: "#202024",
     activeBg: "#2b3c50",
     panelMuted: "#1d1d21",
-    accent: "#6ea0d8",
+    accent: "#63b3ff",
     accentBlue: "#4f8fc8",
     syntaxBlue: "#7aa2f7",
     syntaxInfo: "#38bdf8",
@@ -113,7 +113,7 @@ export function mountWorldScene() {
     syntaxPurple: "#c084fc",
     syntaxComment: "#9ccb7e",
     green: "#4ade80",
-    boardGreen: "#34d399",
+    boardGreen: "#35f0b0",
     milestoneBg: "#222226",
     milestoneText: "#d7d7dc",
     gold: "#c6a978",
@@ -173,8 +173,8 @@ export function mountWorldScene() {
   scene.add(hemisphereLight);
 
   const sun = new THREE.DirectionalLight(
-    darkTheme ? 0x9fb8d0 : 0xfff4d6,
-    darkTheme ? 0.78 : 1.68,
+    darkTheme ? 0xffc98a : 0xffe7b0,
+    darkTheme ? 0.92 : 2.15,
   );
   sun.position.set(-4.2, 7, 4.8);
   sun.castShadow = true;
@@ -201,13 +201,14 @@ export function mountWorldScene() {
   scene.add(deskLamp);
 
   const screenGlow = new THREE.PointLight(
-    0x9fd4dc,
+    0xffc27d,
     darkTheme ? 0.55 : 0.38,
     3.5,
     2,
   );
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
+
 
   const ceilingGlow = new THREE.PointLight(
     0xffffff,
@@ -376,7 +377,7 @@ export function mountWorldScene() {
   const rug = new THREE.Mesh(
     new RoundedBoxGeometry(3.75, 0.018, 2.55, 8, 0.16),
     new THREE.MeshStandardMaterial({
-      color: 0xc8d2c5,
+      color: darkTheme ? 0x5a4633 : 0xe4c995,
       roughness: 1,
       metalness: 0,
     }),
@@ -386,13 +387,13 @@ export function mountWorldScene() {
   ROOM.add(rug);
   const rugInset = new THREE.Mesh(
     new RoundedBoxGeometry(3.53, 0.006, 2.33, 8, 0.13),
-    new THREE.MeshStandardMaterial({ color: 0xd7ded3, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: darkTheme ? 0x73583d : 0xf0ddb5, roughness: 1 }),
   );
   rugInset.position.set(0.05, 0.031, -0.45);
   rugInset.receiveShadow = true;
   ROOM.add(rugInset);
 
-  const wallColor = 0xf2eadb;
+  const wallColor = darkTheme ? 0x33281f : 0xf5ead8;
   const wallMat = std(wallColor, { roughness: 0.98 });
   const backWall = addBox(7.6, 3.1, 0.14, wallMat, 0, 1.55, -3.1, ROOM);
   backWall.receiveShadow = true;
@@ -445,6 +446,12 @@ export function mountWorldScene() {
   addBox(0.05, 0.12, 4.2, skirtingMat, -3.45, 0.06, -0.65, ROOM);
   addBox(0.05, 0.12, 4.2, skirtingMat, 3.45, 0.06, -0.65, ROOM);
 
+  // Architectural accents give the room a designed, lived-in silhouette.
+  const accentWall = addBox(2.9, 1.45, 0.025, std(darkTheme ? 0x4a3528 : 0xe8c99e, { roughness: 0.92 }), -0.55, 1.95, -3.018, ROOM);
+  accentWall.receiveShadow = true;
+  const wallArtFrame = addRoundedBox(1.25, 0.82, 0.035, 0.04, std(darkTheme ? 0xf0b35a : 0x176b87, { roughness: 0.38, metalness: 0.18 }), 0.25, 2.05, -3.055, ROOM);
+  const wallArt = addRoundedBox(1.08, 0.65, 0.012, 0.02, std(darkTheme ? 0x17223d : 0xfff4d6, { roughness: 0.8 }), 0.25, 2.05, -3.078, ROOM);
+
   /* ---- Right-front whiteboard on back wall ---- */
   addBox(2.15, 1.16, 0.08, std(0xffffff), 1.35, 1.86, -3.0, ROOM);
   const wallWhiteboardTex = makeWhiteboardTexture();
@@ -472,7 +479,7 @@ export function mountWorldScene() {
   winGlow.position.set(1.35, 1.86, -3.1);
   ROOM.add(winGlow);
 
-  const winLight = new THREE.PointLight(0xd6ecff, 0.8, 8, 2);
+  const winLight = new THREE.PointLight(0xffd39a, 1.15, 8, 2);
   winLight.position.set(1.7, 2.0, -2.0);
   scene.add(winLight);
 
@@ -678,7 +685,8 @@ export function mountWorldScene() {
     ctx.fillStyle = P.sidebar;
     ctx.fillRect(0, 30, 54, H - 30);
 
-    const actIcons = ["\u{1F4C1}", "\u{1F50D}", "\u{1F37E}", "\u{1F4DE}"];
+    // Keep the activity rail technical and workspace-focused; avoid the phone glyph.
+    const actIcons = ["\u{1F4C1}", "\u{1F50D}", "\u{1F37E}", ">_"];
     actIcons.forEach((ic, i) => {
       ctx.fillStyle = i === 0 ? P.accent : P.iconMuted;
       ctx.font = "20px sans-serif";
@@ -1766,9 +1774,10 @@ export function mountWorldScene() {
   scene.add(chair);
 
   const person = new THREE.Group();
+  person.scale.set(0.88, 1.04, 0.88);
   const skinMat = std(0xf0c7a5, { roughness: 0.62 });
-  const shirtMat = std(0x2d788d, { roughness: 0.78 });
-  const shirtAccentMat = std(0x1e596c, { roughness: 0.82 });
+  const shirtMat = std(0x2f73b8, { roughness: 0.7 });
+  const shirtAccentMat = std(0x194d86, { roughness: 0.78 });
   const trouserMat = std(0x26333f, { roughness: 0.72 });
   const shoeMat = std(0x111827, { roughness: 0.55 });
   const hairMat = std(0x28231f, { roughness: 0.88 });
@@ -1875,8 +1884,8 @@ export function mountWorldScene() {
     14,
   );
   capsuleBetween(
-    [-0.28, 0.9, -0.61],
-    [-0.1, 0.905, -0.74],
+    [-0.28, 0.94, -0.52],
+    [-0.1, 0.955, -0.62],
     0.029,
     skinMat,
     person,
@@ -1887,12 +1896,12 @@ export function mountWorldScene() {
     skinMat,
   );
   leftHand.scale.set(1.2, 0.24, 0.72);
-  leftHand.position.set(-0.1, 0.91, -0.74);
+  leftHand.position.set(-0.1, 0.955, -0.62);
   leftHand.rotation.set(0.04, -0.25, 0.1);
   person.add(leftHand);
   capsuleBetween(
-    [0.4, 0.91, -0.45],
-    [0.58, 0.905, -0.76],
+    [0.4, 0.94, -0.42],
+    [0.58, 0.955, -0.64],
     0.029,
     skinMat,
     person,
@@ -1903,7 +1912,7 @@ export function mountWorldScene() {
     skinMat,
   );
   rightHand.scale.set(1.2, 0.34, 0.82);
-  rightHand.position.set(0.59, 0.905, -0.76);
+  rightHand.position.set(0.59, 0.955, -0.64);
   rightHand.rotation.set(0.1, 0.22, -0.16);
   person.add(rightHand);
   capsuleBetween(

@@ -2,6 +2,7 @@ export { authorLinks } from "./authors";
 export { awards } from "./awards";
 export { education } from "./education";
 export { experience } from "./experience";
+export { grants } from "./grants";
 export { quickLinkIcons, quickLinks } from "./links";
 export { newsItems } from "./news";
 export { profile } from "./profile";

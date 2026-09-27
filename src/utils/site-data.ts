@@ -3,6 +3,7 @@ import {
   awards,
   education,
   experience,
+  grants,
   newsItems,
   profile,
   projects,
@@ -14,6 +15,7 @@ import {
 } from "../data";
 import type {
   AwardItem,
+  GrantItem,
   NewsItem,
   Project,
   Publication,
@@ -27,8 +29,7 @@ import { sortServiceItems } from "./services";
 const withUid = <T extends Record<string, unknown>>(
   items: readonly T[],
   prefix: string,
-) =>
-  items.map((item, index) => ({ ...item, uid: `${prefix}-${index + 1}` }));
+) => items.map((item, index) => ({ ...item, uid: `${prefix}-${index + 1}` }));
 
 const buildServiceGroups = (
   groups: readonly Record<string, unknown>[],
@@ -55,6 +56,7 @@ export const siteData: SiteData = {
   quickLinkIcons,
   publications: withUid(publications, "publication") as Publication[],
   projects: withUid(projects, "project") as Project[],
+  grants: withUid(grants, "grant") as GrantItem[],
   education: withUid(education, "education") as TimelineItem[],
   experience: withUid(experience, "experience") as TimelineItem[],
   awards: withUid(awards, "award") as AwardItem[],

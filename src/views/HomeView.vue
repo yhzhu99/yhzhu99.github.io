@@ -60,6 +60,7 @@ const {
   awards,
   education,
   experience,
+  grants,
   newsItems,
   profile,
   projects,
@@ -1100,6 +1101,36 @@ watch(activeTab, () => {
                   </div>
                 </section>
               </div>
+
+              <section class="pt-4">
+                <h3
+                  class="section-title mb-3 text-lg font-semibold tracking-tight text-text-gray"
+                >
+                  Grants
+                </h3>
+                <div class="space-y-2">
+                  <article
+                    v-for="grant in grants"
+                    :key="grant.uid"
+                    class="publication-card"
+                  >
+                    <div class="min-w-0 flex-1">
+                      <h4
+                        class="mb-1 text-sm font-semibold leading-tight text-text-gray"
+                      >
+                        {{ grant.title }}
+                      </h4>
+                      <p class="text-xs italic text-primary-blue">
+                        {{ grant.program }}
+                      </p>
+                      <p class="mt-1 text-xs text-text-gray-light">
+                        {{ grant.role }} · {{ grant.amount }}
+                      </p>
+                    </div>
+                    <span class="time-tag">{{ grant.year }}</span>
+                  </article>
+                </div>
+              </section>
 
               <section class="pt-4">
                 <h3

@@ -71,6 +71,15 @@ export interface Project {
   links: LinkItem[];
 }
 
+export interface GrantItem {
+  uid: string;
+  year: string;
+  title: string;
+  program: string;
+  role: string;
+  amount: string;
+}
+
 export interface TimelineItem {
   uid: string;
   institution?: string;
@@ -128,6 +137,7 @@ export interface SiteData {
   quickLinkIcons: Record<string, string>;
   publications: Publication[];
   projects: Project[];
+  grants: GrantItem[];
   education: TimelineItem[];
   experience: TimelineItem[];
   awards: AwardItem[];

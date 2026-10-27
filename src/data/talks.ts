@@ -1,4 +1,5 @@
 export const talks = [
+  { year: "2026", title: "From Predictive to Proactive Clinical AI", venue: "The University of Edinburgh, 2026.10.29" },
   { year: "2026", title: "Towards Trustworthy Biomedical AI Scientist", venue: "Zhangjiang Hi-Tech 895 Entrepreneurship Camp (Season 18), Shanghai–Hong Kong University Scientists Special Session, HKU Zhangjiang Campus; interviews with Oriental Finance, Ta Kung Pao & Hong Kong Wen Wei Po, 2026.09.16", links: [{ type: "Video", url: "https://m.yangshipin.cn/portrait_video?vid=k000072yqa2" }, { type: "Article", url: "https://www.wenweipo.com/a/202609/17/AP6aab8c83e4b01d54a2839896.html" }] },
   { year: "2026", title: "AI in Healthcare: Present and Future", venue: "2026 Chronic Kidney Disease and Peritoneal Dialysis Training Conference, Inner Mongolia Medical Association, 2026.08.28" },
   { year: "2026", title: "End-to-End Learning for Partially-Observed Time Series with PyPOTS", venue: "KDD 2026 Hands-on Tutorial, Jeju, Republic of Korea, 2026.08.09", links: [{ type: "Tutorial", url: "https://pypots.com/events/KDD2026Tutorial/" }] },

@@ -76,7 +76,6 @@ const filterExpanded = ref(true);
 const searchQuery = ref("");
 const selectedYear = ref("");
 const selectedTag = ref("");
-const showMobileNav = ref(false);
 const showNewsModal = ref(false);
 const selectedService = ref<ServiceModalState | null>(null);
 const desktopNav = ref<HTMLElement | null>(null);
@@ -110,8 +109,10 @@ const activePublicationFilterLabel = computed(() =>
 
 function selectTab(tabId: TabId) {
   activeTab.value = tabId;
-  showMobileNav.value = false;
-  nextTick(updateNavIndicator);
+  nextTick(() => {
+    updateNavIndicator();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
 function selectPublicationTag(tag: string) {
@@ -156,8 +157,8 @@ function setFilterExpanded(expanded: boolean) {
 }
 
 function openAllPublications() {
-  activeTab.value = "publications";
   selectedTag.value = "All";
+  selectTab("publications");
 }
 
 function openServiceModal(title: string) {
@@ -211,7 +212,6 @@ function updateNavIndicator() {
 function handleKeydown(event: KeyboardEvent) {
   if (event.key === "Escape") {
     closeModals();
-    showMobileNav.value = false;
   }
 }
 
@@ -289,41 +289,41 @@ watch(activeTab, () => {
 </script>
 
 <template>
-  <div
-    class="grid h-dvh grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-bg-light font-academic text-text-gray"
-  >
+  <div class="app-shell bg-bg-light font-academic text-text-gray">
     <header
       class="sticky top-0 z-50 flex-shrink-0 border-b border-slate-200/70 bg-surface/90 backdrop-blur-md transition-all duration-300"
     >
-      <div class="mx-auto max-w-screen-2xl px-4 py-1.5 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between">
+      <div class="mx-auto max-w-screen-2xl px-3 py-1.5 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between gap-2">
           <button
             type="button"
-            class="flex min-w-0 items-center gap-3 rounded-sm text-left transition-opacity hover:opacity-80"
+            class="flex min-w-0 items-center gap-2 rounded-sm text-left transition-opacity hover:opacity-80 sm:gap-3"
             aria-label="Show About section"
             @click="selectTab('about')"
           >
             <span
-              class="h-6 w-1 rounded-full bg-primary-blue"
+              class="h-5 w-1 flex-shrink-0 rounded-full bg-primary-blue sm:h-6"
               aria-hidden="true"
             />
             <span
-              class="truncate text-lg font-bold tracking-tight text-text-gray md:text-xl"
+              class="truncate text-base font-bold tracking-tight text-text-gray sm:text-lg md:text-xl"
             >
               Yinghao Zhu
             </span>
-            <span class="hidden text-xl text-text-gray-light sm:inline"
-              >朱英豪</span
+            <span
+              class="flex-shrink-0 text-sm text-text-gray-light sm:text-lg md:text-xl"
+              >{{ profile.cnName }}</span
             >
             <img
               src="/assets/hku-crest.svg"
               alt="HKU Logo"
-              class="h-9 w-auto opacity-80 transition-opacity hover:opacity-100"
+              class="h-7 w-auto flex-shrink-0 opacity-80 transition-opacity hover:opacity-100 sm:h-9"
             />
           </button>
 
           <nav
             ref="desktopNav"
+            aria-label="Primary navigation"
             class="relative hidden items-center gap-1 rounded-full bg-slate-900/[0.04] p-1 text-sm font-medium ring-1 ring-inset ring-slate-900/5 md:flex"
           >
             <span
@@ -353,73 +353,41 @@ watch(activeTab, () => {
             </button>
           </nav>
 
-          <div class="flex items-center gap-2">
+          <div class="flex flex-shrink-0 items-center gap-2">
             <ThemeToggle />
-            <div class="relative md:hidden">
-              <button
-                type="button"
-                class="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100"
-                aria-label="Toggle navigation menu"
-                :aria-expanded="showMobileNav"
-                aria-controls="mobile-navigation"
-                @click="showMobileNav = !showMobileNav"
-              >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    v-if="!showMobileNav"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                  <path
-                    v-else
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-              <div
-                v-if="showMobileNav"
-                id="mobile-navigation"
-                class="absolute right-0 top-11 z-50 w-52 rounded-xl border border-slate-200/70 bg-surface py-2 shadow-card"
-              >
-                <button
-                  v-for="tab in tabs"
-                  :key="tab.id"
-                  type="button"
-                  class="w-full px-4 py-2.5 text-left text-sm transition-colors"
-                  :class="
-                    activeTab === tab.id
-                      ? 'bg-primary-blue/5 font-semibold text-primary-blue'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  "
-                  @click="selectTab(tab.id)"
-                >
-                  {{ tab.name }}
-                </button>
-              </div>
-            </div>
           </div>
         </div>
+
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile section navigation"
+          class="no-scrollbar -mx-3 mt-1.5 flex items-center gap-1.5 overflow-x-auto border-t border-slate-200/60 px-3 pt-1.5 pb-0.5 md:hidden"
+        >
+          <button
+            v-for="tab in tabs"
+            :key="`mobile-${tab.id}`"
+            type="button"
+            class="flex-1 flex-shrink-0 rounded-full px-3 py-1.5 text-center text-xs font-medium whitespace-nowrap transition-colors"
+            :class="
+              activeTab === tab.id
+                ? 'bg-primary-blue text-white shadow-soft'
+                : 'bg-slate-900/[0.04] text-text-gray-light hover:bg-slate-900/[0.08] hover:text-text-gray'
+            "
+            :aria-current="activeTab === tab.id ? 'page' : undefined"
+            @click="selectTab(tab.id)"
+          >
+            {{ tab.name }}
+          </button>
+        </nav>
       </div>
     </header>
 
-    <main class="min-h-0 overflow-hidden">
+    <main class="app-main">
       <div
-        class="mx-auto h-full min-h-0 max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8"
+        class="app-main-container mx-auto max-w-screen-2xl px-3 py-3 sm:px-6 sm:py-4 lg:px-8"
       >
-        <div
-          class="grid h-full min-h-0 min-w-0 grid-cols-1 grid-rows-[minmax(0,1fr)] gap-4 lg:grid-cols-4"
-        >
-          <aside class="hidden min-h-0 flex-col gap-4 overflow-hidden lg:flex">
+        <div class="app-main-grid">
+          <aside class="app-sidebar">
             <section
               class="academic-card interactive-element flex-shrink-0 rounded-lg p-4"
             >
@@ -557,30 +525,31 @@ watch(activeTab, () => {
             </section>
           </aside>
 
-          <section
-            class="academic-card col-span-1 flex h-full min-h-0 min-w-0 flex-col overflow-hidden rounded-lg lg:col-span-3"
-          >
+          <section class="academic-card app-content-card rounded-lg">
             <div
               v-show="activeTab === 'about'"
-              class="panel-pane scrollable-container animate-scale-in flex h-full min-h-0 min-w-0 flex-col overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in flex min-w-0 flex-col p-3.5 sm:p-5 lg:p-6"
             >
-              <div class="mb-6 lg:hidden">
+              <div class="mobile-only-block mb-6 space-y-3">
                 <div
-                  class="mb-4 rounded-lg border border-slate-200 bg-surface p-4"
+                  class="rounded-lg border border-slate-200/80 bg-slate-50/40 p-3.5 sm:p-4"
                 >
                   <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0 flex-1">
                       <h2
-                        class="text-xl font-bold tracking-tight text-text-gray"
+                        class="flex flex-wrap items-baseline gap-2 text-lg font-bold tracking-tight text-text-gray sm:text-xl"
                       >
-                        {{ profile.name }}
+                        <span>{{ profile.name }}</span>
+                        <span class="text-base font-normal text-text-gray-light">
+                          {{ profile.cnName }}
+                        </span>
                       </h2>
                       <a
                         :href="`mailto:${profile.email}`"
-                        class="profile-contact mt-2 flex items-center gap-2 text-sm text-text-gray-light transition-colors hover:text-primary-blue"
+                        class="profile-contact mt-1.5 flex items-center gap-2 text-xs text-text-gray-light transition-colors hover:text-primary-blue sm:text-sm"
                       >
                         <svg
-                          class="h-4 w-4 flex-shrink-0"
+                          class="h-3.5 w-3.5 flex-shrink-0 sm:h-4 sm:w-4"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                           aria-hidden="true"
@@ -594,14 +563,16 @@ watch(activeTab, () => {
                         </svg>
                         <span>{{ profile.email }}</span>
                       </a>
-                      <p class="mt-1 text-sm font-medium text-text-gray-light">
+                      <p
+                        class="mt-1 text-xs font-medium text-text-gray-light sm:text-sm"
+                      >
                         {{ profile.affiliation }}
                       </p>
                     </div>
                     <img
                       :src="profile.photo"
                       :alt="profile.name"
-                      class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover"
+                      class="avatar-ring h-16 w-16 flex-shrink-0 rounded-full object-cover sm:h-18 sm:w-18"
                     />
                   </div>
                   <div class="mt-3 grid grid-cols-2 gap-2">
@@ -609,7 +580,7 @@ watch(activeTab, () => {
                       :href="cvUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10 sm:text-sm"
                       aria-label="Open CV PDF"
                     >
                       <span>CV</span>
@@ -634,7 +605,7 @@ watch(activeTab, () => {
                     </a>
                     <RouterLink
                       to="/world"
-                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-sm font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10"
+                      class="interactive-element flex min-w-0 items-center justify-between rounded-md border border-primary-blue/15 bg-primary-blue/[0.04] px-3 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/30 hover:bg-primary-blue/10 sm:text-sm"
                       aria-label="Open 3D workspace"
                     >
                       <span>3D Workspace</span>
@@ -654,9 +625,15 @@ watch(activeTab, () => {
                     </RouterLink>
                   </div>
                 </div>
+
                 <QuickLinks :links="quickLinks" :icons="quickLinkIcons" />
-                <div class="mt-6">
-                  <div class="mb-3 flex items-center justify-between">
+
+                <div
+                  class="rounded-lg border border-slate-200/80 bg-slate-50/40 p-3.5"
+                >
+                  <div
+                    class="mb-2 flex items-center justify-between border-b border-slate-200 pb-2"
+                  >
                     <h3
                       class="text-sm font-semibold tracking-tight text-text-gray"
                     >
@@ -664,15 +641,18 @@ watch(activeTab, () => {
                     </h3>
                     <button
                       type="button"
-                      class="view-all-btn"
+                      class="interactive-element inline-flex items-center gap-1 rounded-full border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/40 hover:bg-primary-blue/5 hover:text-primary-blue"
                       aria-label="View all news"
                       @click="showNewsModal = true"
                     >
+                      <span>All ({{ newsItems.length }})</span>
                       <svg
+                        class="h-3 w-3"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2"
+                        aria-hidden="true"
                       >
                         <polyline points="15 3 21 3 21 9" />
                         <polyline points="9 21 3 21 3 15" />
@@ -681,16 +661,16 @@ watch(activeTab, () => {
                       </svg>
                     </button>
                   </div>
-                  <NewsList :items="newsItems" :limit="3" />
+                  <NewsList :items="newsItems" :limit="4" />
                 </div>
               </div>
 
-              <div class="prose prose-sm max-w-none flex-shrink-0">
+              <div class="prose prose-sm max-w-none">
                 <p
-                  class="bio mb-4 leading-[1.5] text-text-gray"
+                  class="bio mb-4 text-sm leading-[1.6] text-text-gray"
                   v-html="profile.bio"
                 />
-                <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                   <article
                     v-for="area in profile.interests"
                     :key="area.uid"
@@ -705,16 +685,16 @@ watch(activeTab, () => {
                   </article>
                 </div>
                 <div
-                  class="featured-publications-section hidden items-center justify-between gap-3 border-b border-slate-200 pb-2 md:flex"
+                  class="featured-publications-section flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5"
                 >
                   <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
                     <h4
-                      class="text-lg font-semibold tracking-tight text-text-gray"
+                      class="text-base font-semibold tracking-tight text-text-gray sm:text-lg"
                     >
                       Featured Publications
                     </h4>
                     <div
-                      class="flex items-center gap-4 text-xs text-text-gray-light"
+                      class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-gray-light"
                     >
                       <span
                         ><sup class="font-bold">*</sup> Co-first author</span
@@ -727,28 +707,29 @@ watch(activeTab, () => {
                   </div>
                   <button
                     type="button"
-                    class="view-all-btn flex-shrink-0"
+                    class="interactive-element inline-flex flex-shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-surface px-3 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/40 hover:bg-primary-blue/5 hover:text-primary-blue"
                     aria-label="View all publications"
                     @click="openAllPublications"
                   >
+                    <span>All ({{ publications.length }})</span>
                     <svg
+                      class="h-3.5 w-3.5"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
                     >
-                      <polyline points="15 3 21 3 21 9" />
-                      <polyline points="9 21 3 21 3 15" />
-                      <line x1="21" y1="3" x2="14" y2="10" />
-                      <line x1="3" y1="21" x2="10" y2="14" />
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
                     </svg>
                   </button>
                 </div>
               </div>
 
-              <div
-                class="featured-publications-section scrollable-container min-h-0 flex-1 overflow-y-auto pt-3"
-              >
+              <div class="featured-publications-section pt-3">
                 <div class="space-y-2">
                   <PublicationCard
                     v-for="publication in featuredPublications"
@@ -758,12 +739,36 @@ watch(activeTab, () => {
                     show-tag
                   />
                 </div>
+                <div class="mt-4 flex justify-center">
+                  <button
+                    type="button"
+                    class="interactive-element inline-flex items-center gap-1.5 rounded-full border border-primary-blue/20 bg-primary-blue/[0.04] px-4 py-2 text-xs font-semibold text-primary-blue-dark hover:border-primary-blue/35 hover:bg-primary-blue/10"
+                    @click="openAllPublications"
+                  >
+                    <span
+                      >Explore all {{ publications.length }} publications</span
+                    >
+                    <svg
+                      class="h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
             <div
               v-show="activeTab === 'publications'"
-              class="panel-pane animate-scale-in flex h-full min-h-0 flex-col overflow-hidden"
+              class="publications-pane animate-scale-in flex flex-col"
             >
               <div class="flex-shrink-0 border-b border-slate-200">
                 <div class="px-3 py-3 lg:px-5">
@@ -958,7 +963,7 @@ watch(activeTab, () => {
               </div>
 
               <div
-                class="scrollable-container min-h-0 flex-1 overflow-y-auto p-4 pt-2 lg:p-6 lg:pt-2"
+                class="publications-list-pane scrollable-container p-3.5 pt-2 sm:p-5 sm:pt-2 lg:p-6 lg:pt-2"
               >
                 <div class="space-y-2">
                   <PublicationCard
@@ -980,7 +985,7 @@ watch(activeTab, () => {
 
             <div
               v-show="activeTab === 'experience'"
-              class="panel-pane scrollable-container animate-scale-in h-full min-h-0 flex-1 overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in flex-1 p-3.5 sm:p-5 lg:p-6"
             >
               <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <TimelineColumn
@@ -998,7 +1003,7 @@ watch(activeTab, () => {
 
             <div
               v-show="activeTab === 'awards'"
-              class="panel-pane scrollable-container animate-scale-in h-full min-h-0 flex-1 overflow-y-auto p-4 lg:p-6"
+              class="panel-pane scrollable-container animate-scale-in flex-1 p-3.5 sm:p-5 lg:p-6"
             >
               <div
                 class="grid grid-cols-1 gap-4 border-b border-slate-200 pb-4 lg:grid-cols-2"

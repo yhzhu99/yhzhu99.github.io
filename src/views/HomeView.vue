@@ -834,19 +834,20 @@ watch(activeTab, () => {
                         key="filter-expanded"
                         class="filter-panel-state"
                       >
-                        <div class="flex flex-wrap items-start gap-3">
+                        <div class="flex flex-wrap items-center gap-3">
                           <div
-                            class="grid min-w-[min(100%,28rem)] flex-1 grid-cols-1 gap-2 sm:grid-cols-[minmax(12rem,1fr)_auto]"
+                            class="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto] gap-2"
                           >
                             <input
                               v-model="searchQuery"
                               type="text"
                               placeholder="Search publications..."
-                              class="filter-control min-w-0 rounded-md border border-slate-200 bg-surface px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                              class="filter-control min-w-0 rounded-md border border-slate-200 bg-surface px-3 py-1.5 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue sm:py-2"
                             />
                             <select
                               v-model="selectedYear"
-                              class="filter-control rounded-md border border-slate-200 bg-surface px-3 py-2 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue"
+                              aria-label="Filter by publication year"
+                              class="filter-control rounded-md border border-slate-200 bg-surface px-2.5 py-1.5 text-sm transition-all focus:border-primary-blue focus:ring-1 focus:ring-primary-blue sm:px-3 sm:py-2"
                             >
                               <option value="">All Years</option>
                               <option
@@ -859,7 +860,7 @@ watch(activeTab, () => {
                             </select>
                           </div>
                           <div
-                            class="hidden shrink-0 pt-2 text-xs text-text-gray-light sm:flex sm:items-center sm:gap-4"
+                            class="hidden shrink-0 text-xs text-text-gray-light sm:flex sm:items-center sm:gap-4"
                           >
                             <span
                               ><sup class="font-bold">*</sup> Co-first
@@ -872,7 +873,9 @@ watch(activeTab, () => {
                           </div>
                         </div>
 
-                        <div class="mt-3 flex flex-wrap gap-1.5">
+                        <div
+                          class="no-scrollbar -mx-1 mt-2.5 flex items-center gap-1.5 overflow-x-auto px-1 pb-0.5 sm:mx-0 sm:mt-3 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+                        >
                           <button
                             type="button"
                             class="publication-filter-tab"
@@ -922,7 +925,7 @@ watch(activeTab, () => {
                           </button>
                           <button
                             type="button"
-                            class="filter-toggle interactive-element ml-auto inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                            class="filter-toggle interactive-element ml-auto hidden items-center gap-1.5 rounded-full border border-slate-200 bg-surface px-3 py-1.5 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark sm:inline-flex"
                             aria-expanded="true"
                             @click="setFilterExpanded(false)"
                           >
@@ -945,16 +948,40 @@ watch(activeTab, () => {
                         </div>
 
                         <div
-                          class="mt-2 text-xs text-text-gray-light sm:hidden"
+                          class="mt-2 flex items-center justify-between gap-2 text-xs text-text-gray-light sm:hidden"
                         >
-                          <span
-                            ><sup class="font-bold">*</sup> Co-first
-                            author</span
+                          <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                            <span
+                              ><sup class="font-bold">*</sup> Co-first
+                              author</span
+                            >
+                            <span
+                              ><sup class="font-bold">†</sup> Corresponding
+                              author</span
+                            >
+                          </div>
+                          <button
+                            type="button"
+                            class="filter-toggle interactive-element inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/30 hover:bg-primary-blue/5 hover:text-primary-blue-dark"
+                            aria-expanded="true"
+                            @click="setFilterExpanded(false)"
                           >
-                          <span
-                            ><sup class="font-bold">†</sup> Corresponding
-                            author</span
-                          >
+                            <svg
+                              class="h-3 w-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 15l7-7 7 7"
+                              />
+                            </svg>
+                            <span>Hide</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1006,11 +1033,11 @@ watch(activeTab, () => {
               class="panel-pane scrollable-container animate-scale-in flex-1 p-3.5 sm:p-5 lg:p-6"
             >
               <div
-                class="grid grid-cols-1 gap-4 border-b border-slate-200 pb-4 lg:grid-cols-2"
+                class="grid grid-cols-1 gap-6 border-b border-slate-200 pb-4 lg:grid-cols-2 lg:gap-4"
               >
                 <section>
                   <div
-                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-2 pb-2"
+                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-1 pb-2 sm:px-2"
                   >
                     <h3
                       class="text-lg font-semibold tracking-tight text-text-gray"
@@ -1019,15 +1046,18 @@ watch(activeTab, () => {
                     </h3>
                     <button
                       type="button"
-                      class="view-all-btn"
+                      class="interactive-element inline-flex items-center gap-1 rounded-full border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/40 hover:bg-primary-blue/5 hover:text-primary-blue"
                       aria-label="View all awards and honors"
                       @click="openServiceModal('Awards & Honors')"
                     >
+                      <span>All ({{ awards.length }})</span>
                       <svg
+                        class="h-3 w-3"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2"
+                        aria-hidden="true"
                       >
                         <polyline points="15 3 21 3 21 9" />
                         <polyline points="9 21 3 21 3 15" />
@@ -1037,12 +1067,12 @@ watch(activeTab, () => {
                     </button>
                   </div>
                   <div
-                    class="scrollable-container mask-fade-bottom max-h-[30vh] overflow-y-auto pr-1"
+                    class="scrollable-container pr-1 lg:mask-fade-bottom lg:max-h-[30vh] lg:overflow-y-auto"
                   >
                     <article
                       v-for="award in awards"
                       :key="award.uid"
-                      class="unified-item rounded px-2 transition-colors hover:bg-slate-50"
+                      class="unified-item rounded px-1 transition-colors hover:bg-slate-50 sm:px-2"
                     >
                       <div class="unified-item-content">
                         <h4 class="mb-0.5 text-xs font-semibold text-text-gray">
@@ -1051,6 +1081,27 @@ watch(activeTab, () => {
                         <p class="text-xs text-text-gray-light">
                           {{ award.organization }}
                         </p>
+                        <p
+                          v-if="award.authors"
+                          class="mt-0.5 text-[11px] text-text-gray-light/80"
+                        >
+                          Team: {{ award.authors }}
+                        </p>
+                        <div
+                          v-if="award.links?.length"
+                          class="mt-1.5 flex flex-wrap gap-1.5"
+                        >
+                          <a
+                            v-for="link in award.links"
+                            :key="`${award.uid}-${link.type}`"
+                            :href="link.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex rounded-full bg-slate-50 px-2 py-0.5 text-[11px] text-text-gray-light ring-1 ring-inset ring-slate-900/5 transition-colors hover:bg-primary-blue/10 hover:text-primary-blue-dark"
+                          >
+                            {{ link.type }}
+                          </a>
+                        </div>
                       </div>
                       <span class="time-tag">{{ award.year }}</span>
                     </article>
@@ -1059,7 +1110,7 @@ watch(activeTab, () => {
 
                 <section>
                   <div
-                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-2 pb-2"
+                    class="mb-3 flex items-center justify-between border-b border-slate-200 px-1 pb-2 sm:px-2"
                   >
                     <h3
                       class="text-lg font-semibold tracking-tight text-text-gray"
@@ -1068,15 +1119,18 @@ watch(activeTab, () => {
                     </h3>
                     <button
                       type="button"
-                      class="view-all-btn"
+                      class="interactive-element inline-flex items-center gap-1 rounded-full border border-slate-200 bg-surface px-2.5 py-1 text-xs font-medium text-text-gray-light hover:border-primary-blue/40 hover:bg-primary-blue/5 hover:text-primary-blue"
                       aria-label="View all talks and interviews"
                       @click="openServiceModal('Talks & Interviews')"
                     >
+                      <span>All ({{ talks.length }})</span>
                       <svg
+                        class="h-3 w-3"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2"
+                        aria-hidden="true"
                       >
                         <polyline points="15 3 21 3 21 9" />
                         <polyline points="9 21 3 21 3 15" />
@@ -1086,12 +1140,12 @@ watch(activeTab, () => {
                     </button>
                   </div>
                   <div
-                    class="scrollable-container mask-fade-bottom max-h-[30vh] overflow-y-auto pr-1"
+                    class="scrollable-container pr-1 lg:mask-fade-bottom lg:max-h-[30vh] lg:overflow-y-auto"
                   >
                     <article
                       v-for="talk in talks"
                       :key="talk.uid"
-                      class="unified-item rounded px-2 transition-colors hover:bg-slate-50"
+                      class="unified-item rounded px-1 transition-colors hover:bg-slate-50 sm:px-2"
                     >
                       <div class="unified-item-content">
                         <h4 class="mb-0.5 text-xs font-semibold text-text-gray">
@@ -1100,6 +1154,21 @@ watch(activeTab, () => {
                         <p class="text-xs text-text-gray-light">
                           {{ talk.venue }}
                         </p>
+                        <div
+                          v-if="talk.links?.length"
+                          class="mt-1.5 flex flex-wrap gap-1.5"
+                        >
+                          <a
+                            v-for="link in talk.links"
+                            :key="`${talk.uid}-${link.type}`"
+                            :href="link.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex rounded-full bg-slate-50 px-2 py-0.5 text-[11px] text-text-gray-light ring-1 ring-inset ring-slate-900/5 transition-colors hover:bg-primary-blue/10 hover:text-primary-blue-dark"
+                          >
+                            {{ link.type }}
+                          </a>
+                        </div>
                       </div>
                       <span class="time-tag">{{ talk.year }}</span>
                     </article>
@@ -1132,7 +1201,10 @@ watch(activeTab, () => {
                         {{ grant.role }} · {{ grant.amount }}
                       </p>
                     </div>
-                    <span class="time-tag">{{ grant.year }}</span>
+                    <span
+                      class="time-tag order-first self-start sm:order-none sm:self-auto"
+                      >{{ grant.year }}</span
+                    >
                   </article>
                 </div>
               </section>

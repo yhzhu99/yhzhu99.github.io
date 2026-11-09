@@ -540,7 +540,9 @@ watch(activeTab, () => {
                         class="flex flex-wrap items-baseline gap-2 text-lg font-bold tracking-tight text-text-gray sm:text-xl"
                       >
                         <span>{{ profile.name }}</span>
-                        <span class="text-base font-normal text-text-gray-light">
+                        <span
+                          class="text-base font-normal text-text-gray-light"
+                        >
                           {{ profile.cnName }}
                         </span>
                       </h2>
@@ -670,7 +672,9 @@ watch(activeTab, () => {
                   class="bio mb-4 text-sm leading-[1.6] text-text-gray"
                   v-html="profile.bio"
                 />
-                <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                <div
+                  class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+                >
                   <article
                     v-for="area in profile.interests"
                     :key="area.uid"
@@ -950,7 +954,9 @@ watch(activeTab, () => {
                         <div
                           class="mt-2 flex items-center justify-between gap-2 text-xs text-text-gray-light sm:hidden"
                         >
-                          <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                          <div
+                            class="flex flex-wrap items-center gap-x-3 gap-y-0.5"
+                          >
                             <span
                               ><sup class="font-bold">*</sup> Co-first
                               author</span

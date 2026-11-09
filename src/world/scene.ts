@@ -142,7 +142,10 @@ export function mountWorldScene() {
     const isPortrait = aspect < 0.85;
     const isCompact = width < 640 || isPortrait;
     const fov = isPortrait
-      ? Math.min(58, Math.max(48, Math.round(43 / Math.sqrt(Math.max(0.42, aspect)))))
+      ? Math.min(
+          58,
+          Math.max(48, Math.round(43 / Math.sqrt(Math.max(0.42, aspect)))),
+        )
       : width < 640
         ? 48
         : 42;
@@ -233,7 +236,6 @@ export function mountWorldScene() {
   );
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
-
 
   const ceilingGlow = new THREE.PointLight(
     0xffffff,
@@ -412,7 +414,10 @@ export function mountWorldScene() {
   ROOM.add(rug);
   const rugInset = new THREE.Mesh(
     new RoundedBoxGeometry(3.53, 0.006, 2.33, 8, 0.13),
-    new THREE.MeshStandardMaterial({ color: darkTheme ? 0x73583d : 0xf0ddb5, roughness: 1 }),
+    new THREE.MeshStandardMaterial({
+      color: darkTheme ? 0x73583d : 0xf0ddb5,
+      roughness: 1,
+    }),
   );
   rugInset.position.set(0.05, 0.031, -0.45);
   rugInset.receiveShadow = true;
@@ -472,10 +477,39 @@ export function mountWorldScene() {
   addBox(0.05, 0.12, 4.2, skirtingMat, 3.45, 0.06, -0.65, ROOM);
 
   // Architectural accents give the room a designed, lived-in silhouette.
-  const accentWall = addBox(2.9, 1.45, 0.025, std(darkTheme ? 0x4a3528 : 0xe8c99e, { roughness: 0.92 }), -0.55, 1.95, -3.018, ROOM);
+  const accentWall = addBox(
+    2.9,
+    1.45,
+    0.025,
+    std(darkTheme ? 0x4a3528 : 0xe8c99e, { roughness: 0.92 }),
+    -0.55,
+    1.95,
+    -3.018,
+    ROOM,
+  );
   accentWall.receiveShadow = true;
-  addRoundedBox(1.25, 0.82, 0.035, 0.04, std(darkTheme ? 0xf0b35a : 0x176b87, { roughness: 0.38, metalness: 0.18 }), 0.25, 2.05, -3.055, ROOM);
-  addRoundedBox(1.08, 0.65, 0.012, 0.02, std(darkTheme ? 0x17223d : 0xfff4d6, { roughness: 0.8 }), 0.25, 2.05, -3.078, ROOM);
+  addRoundedBox(
+    1.25,
+    0.82,
+    0.035,
+    0.04,
+    std(darkTheme ? 0xf0b35a : 0x176b87, { roughness: 0.38, metalness: 0.18 }),
+    0.25,
+    2.05,
+    -3.055,
+    ROOM,
+  );
+  addRoundedBox(
+    1.08,
+    0.65,
+    0.012,
+    0.02,
+    std(darkTheme ? 0x17223d : 0xfff4d6, { roughness: 0.8 }),
+    0.25,
+    2.05,
+    -3.078,
+    ROOM,
+  );
 
   /* ---- Right-front whiteboard on back wall ---- */
   addBox(2.15, 1.16, 0.08, std(0xffffff), 1.35, 1.86, -3.0, ROOM);
@@ -2388,10 +2422,7 @@ export function mountWorldScene() {
   }
 
   function handleResize() {
-    const nextView = getCameraViewConfig(
-      window.innerWidth,
-      window.innerHeight,
-    );
+    const nextView = getCameraViewConfig(window.innerWidth, window.innerHeight);
     CAM_REST.copy(nextView.restPos);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.fov = nextView.fov;

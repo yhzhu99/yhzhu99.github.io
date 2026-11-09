@@ -137,17 +137,45 @@ export function mountWorldScene() {
   scene.background = new THREE.Color(P.sceneBg);
   scene.fog = new THREE.Fog(P.sceneBg, 13, 27);
 
+  function getCameraViewConfig(width: number, height: number) {
+    const aspect = width / Math.max(height, 1);
+    const isPortrait = aspect < 0.85;
+    const isCompact = width < 640 || isPortrait;
+    const fov = isPortrait
+      ? Math.min(
+          58,
+          Math.max(48, Math.round(43 / Math.sqrt(Math.max(0.42, aspect)))),
+        )
+      : width < 640
+        ? 48
+        : 42;
+    const restPos = isPortrait
+      ? new THREE.Vector3(3.62, 1.92, 3.52)
+      : isCompact
+        ? new THREE.Vector3(3.3, 1.84, 3.2)
+        : new THREE.Vector3(2.75, 1.72, 2.65);
+
+    return {
+      fov,
+      restPos,
+      maxDistance: isPortrait ? 5.8 : 4.8,
+      minAzimuthAngle: isPortrait ? -0.52 : -0.38,
+      maxAzimuthAngle: isPortrait ? 0.98 : 0.86,
+    };
+  }
+
+  const initialView = getCameraViewConfig(
+    window.innerWidth,
+    window.innerHeight,
+  );
   const camera = new THREE.PerspectiveCamera(
-    window.innerWidth < 640 ? 48 : 42,
+    initialView.fov,
     window.innerWidth / window.innerHeight,
     0.1,
     100,
   );
-  const isCompact = window.innerWidth < 640;
   const CAM_START = new THREE.Vector3(4.0, 2.28, 4.0);
-  const CAM_REST = isCompact
-    ? new THREE.Vector3(3.3, 1.84, 3.2)
-    : new THREE.Vector3(2.75, 1.72, 2.65);
+  const CAM_REST = initialView.restPos.clone();
   camera.position.copy(CAM_START);
 
   const controls = new OrbitControls(camera, canvas);
@@ -156,11 +184,11 @@ export function mountWorldScene() {
   controls.dampingFactor = 0.07;
   controls.enablePan = false;
   controls.minDistance = 1.9;
-  controls.maxDistance = 4.8;
+  controls.maxDistance = initialView.maxDistance;
   controls.minPolarAngle = 1.18;
   controls.maxPolarAngle = Math.PI / 2 - 0.04;
-  controls.minAzimuthAngle = -0.38;
-  controls.maxAzimuthAngle = 0.86;
+  controls.minAzimuthAngle = initialView.minAzimuthAngle;
+  controls.maxAzimuthAngle = initialView.maxAzimuthAngle;
   controls.rotateSpeed = 0.65;
   controls.zoomSpeed = 0.7;
 
@@ -208,7 +236,6 @@ export function mountWorldScene() {
   );
   screenGlow.position.set(0, 1.3, -0.35);
   scene.add(screenGlow);
-
 
   const ceilingGlow = new THREE.PointLight(
     0xffffff,
@@ -387,7 +414,10 @@ export function mountWorldScene() {
   ROOM.add(rug);
   const rugInset = new THREE.Mesh(
     new RoundedBoxGeometry(3.53, 0.006, 2.33, 8, 0.13),
-    new THREE.MeshStandardMaterial({ color: darkTheme ? 0x73583d : 0xf0ddb5, roughness: 1 }),
+    new THREE.MeshStandardMaterial({
+      color: darkTheme ? 0x73583d : 0xf0ddb5,
+      roughness: 1,
+    }),
   );
   rugInset.position.set(0.05, 0.031, -0.45);
   rugInset.receiveShadow = true;
@@ -447,10 +477,39 @@ export function mountWorldScene() {
   addBox(0.05, 0.12, 4.2, skirtingMat, 3.45, 0.06, -0.65, ROOM);
 
   // Architectural accents give the room a designed, lived-in silhouette.
-  const accentWall = addBox(2.9, 1.45, 0.025, std(darkTheme ? 0x4a3528 : 0xe8c99e, { roughness: 0.92 }), -0.55, 1.95, -3.018, ROOM);
+  const accentWall = addBox(
+    2.9,
+    1.45,
+    0.025,
+    std(darkTheme ? 0x4a3528 : 0xe8c99e, { roughness: 0.92 }),
+    -0.55,
+    1.95,
+    -3.018,
+    ROOM,
+  );
   accentWall.receiveShadow = true;
-  const wallArtFrame = addRoundedBox(1.25, 0.82, 0.035, 0.04, std(darkTheme ? 0xf0b35a : 0x176b87, { roughness: 0.38, metalness: 0.18 }), 0.25, 2.05, -3.055, ROOM);
-  const wallArt = addRoundedBox(1.08, 0.65, 0.012, 0.02, std(darkTheme ? 0x17223d : 0xfff4d6, { roughness: 0.8 }), 0.25, 2.05, -3.078, ROOM);
+  addRoundedBox(
+    1.25,
+    0.82,
+    0.035,
+    0.04,
+    std(darkTheme ? 0xf0b35a : 0x176b87, { roughness: 0.38, metalness: 0.18 }),
+    0.25,
+    2.05,
+    -3.055,
+    ROOM,
+  );
+  addRoundedBox(
+    1.08,
+    0.65,
+    0.012,
+    0.02,
+    std(darkTheme ? 0x17223d : 0xfff4d6, { roughness: 0.8 }),
+    0.25,
+    2.05,
+    -3.078,
+    ROOM,
+  );
 
   /* ---- Right-front whiteboard on back wall ---- */
   addBox(2.15, 1.16, 0.08, std(0xffffff), 1.35, 1.86, -3.0, ROOM);
@@ -2230,6 +2289,29 @@ export function mountWorldScene() {
     controls.enabled = true;
   }
 
+  /* ============================ MOBILE QUICK NAV ============================ */
+  const quickNavEl = document.getElementById("world-quick-nav");
+  if (quickNavEl) {
+    const quickNavItems = [
+      { id: "about", label: "About Me" },
+      { id: "publications", label: "Featured Papers" },
+      { id: "books", label: "Full Library" },
+      { id: "awards", label: "Awards" },
+      { id: "education", label: "Journey" },
+      { id: "links", label: "Quick Links" },
+      { id: "rubiks", label: "Cubes" },
+    ];
+    quickNavEl.innerHTML = "";
+    quickNavItems.forEach((item) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "world-quick-chip";
+      btn.innerHTML = `${ICONS[item.id] || ""}<span>${item.label}</span>`;
+      btn.addEventListener("click", () => openPanel(item));
+      quickNavEl.appendChild(btn);
+    });
+  }
+
   /* ============================ THEME SYNC ============================ */
   let themeObserver: MutationObserver | null = null;
 
@@ -2340,8 +2422,13 @@ export function mountWorldScene() {
   }
 
   function handleResize() {
+    const nextView = getCameraViewConfig(window.innerWidth, window.innerHeight);
+    CAM_REST.copy(nextView.restPos);
     camera.aspect = window.innerWidth / window.innerHeight;
-    camera.fov = window.innerWidth < 640 ? 48 : 42;
+    camera.fov = nextView.fov;
+    controls.maxDistance = nextView.maxDistance;
+    controls.minAzimuthAngle = nextView.minAzimuthAngle;
+    controls.maxAzimuthAngle = nextView.maxAzimuthAngle;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }

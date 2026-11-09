@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-1.5">
+  <div class="grid grid-cols-3 gap-1.5 sm:grid-cols-6 lg:grid-cols-3">
     <a
       v-for="link in links"
       :key="link.name"
@@ -21,7 +21,7 @@ defineProps<{
         class="quick-link-icon text-text-gray-light transition-colors group-hover:text-primary-blue"
         v-html="icons[link.name]"
       />
-      <span>{{ link.name }}</span>
+      <span class="max-w-full truncate">{{ link.name }}</span>
     </a>
   </div>
 </template>

@@ -71,6 +71,8 @@ onBeforeUnmount(() => {
 
     <div id="hotspots" aria-label="Interactive objects"></div>
 
+    <nav id="world-quick-nav" aria-label="Quick room sections"></nav>
+
     <div id="scene-guide" aria-label="Scene controls">
       <span class="guide-status"><i></i> Explore the room</span>
       <span class="guide-divider"></span>

@@ -17,6 +17,7 @@ const props = defineProps<{
 const copyState = ref<"idle" | "copied" | "failed">("idle");
 const authorDetailsOpen = ref(false);
 const authorsTruncated = ref(false);
+const authorsExpanded = ref(false);
 const authorTrigger = ref<HTMLElement>();
 const authorTooltipStyle = ref<Record<string, string>>({});
 let copyStateTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -64,6 +65,14 @@ async function copyBibtex() {
 }
 
 function showAuthorDetails() {
+  if (
+    authorsExpanded.value ||
+    (typeof window !== "undefined" &&
+      window.matchMedia("(hover: none)").matches)
+  ) {
+    return;
+  }
+
   const trigger = authorTrigger.value;
 
   if (!trigger) return;
@@ -106,7 +115,20 @@ function hideAuthorDetails() {
   window.removeEventListener("scroll", hideAuthorDetails, true);
 }
 
+function toggleAuthorsExpanded() {
+  authorsExpanded.value = !authorsExpanded.value;
+  if (authorsExpanded.value) {
+    hideAuthorDetails();
+  } else {
+    nextTick(updateAuthorOverflow);
+  }
+}
+
 function updateAuthorOverflow() {
+  if (authorsExpanded.value) {
+    return;
+  }
+
   const trigger = authorTrigger.value;
 
   if (!trigger) return;
@@ -141,9 +163,12 @@ onBeforeUnmount(() => {
       </h4>
       <p
         ref="authorTrigger"
-        class="mb-1 line-clamp-3 rounded-sm text-xs text-text-gray outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/40"
-        :class="authorsTruncated ? 'cursor-help' : ''"
-        :tabindex="authorsTruncated ? 0 : undefined"
+        class="mb-1 rounded-sm text-xs text-text-gray outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/40"
+        :class="[
+          !authorsExpanded ? 'line-clamp-3' : '',
+          authorsTruncated && !authorsExpanded ? 'cursor-help' : '',
+        ]"
+        :tabindex="authorsTruncated && !authorsExpanded ? 0 : undefined"
         :aria-describedby="authorDetailsOpen ? authorTooltipId : undefined"
         @mouseenter="showAuthorDetails"
         @mouseleave="hideAuthorDetails"
@@ -152,6 +177,15 @@ onBeforeUnmount(() => {
         @keydown.esc="hideAuthorDetails"
         v-html="authorsHtml"
       />
+      <button
+        v-if="authorsTruncated || authorsExpanded"
+        type="button"
+        class="mb-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-primary-blue hover:underline"
+        :aria-expanded="authorsExpanded"
+        @click="toggleAuthorsExpanded"
+      >
+        {{ authorsExpanded ? "Show fewer authors" : "Show all authors" }}
+      </button>
       <p v-if="item.venue" class="mb-2 text-xs italic text-primary-blue">
         {{ formatVenueYear(item.venue, item.year) }}
       </p>
@@ -184,7 +218,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div
-      class="publication-meta flex flex-shrink-0 flex-col items-end gap-1 text-right"
+      class="publication-meta order-first flex flex-shrink-0 flex-row flex-wrap items-center gap-1.5 sm:order-none sm:flex-col sm:items-end sm:gap-1 sm:text-right"
     >
       <span class="time-tag">{{ item.year }}</span>
       <span v-if="showTag && 'tag' in item && item.tag" class="tag-chip">

@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import type { Publication } from "../src/types";
 import { siteData } from "../src/utils/site-data";
@@ -114,9 +116,7 @@ test("all publication records have full authors and unique citation keys", () =>
 
 test("records contribution roles from the two previously abbreviated papers", () => {
   const foundationModels = siteData.publications.find((item) =>
-    item.title.startsWith(
-      "Foundation models and intelligent decision-making",
-    ),
+    item.title.startsWith("Foundation models and intelligent decision-making"),
   );
   const imagingX = siteData.publications.find((item) =>
     item.title.startsWith("Project Imaging-X"),
@@ -138,4 +138,25 @@ test("records contribution roles from the two previously abbreviated papers", ()
     imagingX?.correspondingAuthors,
     "Ming Hu, Jin Ye, Zhifeng Li, Yirong Chen, Yu Qiao, Junjun He",
   );
+});
+
+test("keeps featured publications and publication metadata visible on mobile viewports", () => {
+  const styles = readFileSync(resolve(process.cwd(), "src/styles.css"), "utf8");
+  const homeView = readFileSync(
+    resolve(process.cwd(), "src/views/HomeView.vue"),
+    "utf8",
+  );
+  const publicationCard = readFileSync(
+    resolve(process.cwd(), "src/components/PublicationCard.vue"),
+    "utf8",
+  );
+
+  assert.doesNotMatch(
+    styles,
+    /\.featured-publications-section\s*\{\s*display:\s*none/s,
+  );
+  assert.doesNotMatch(styles, /\.publication-meta\s*\{\s*display:\s*none/s);
+  assert.doesNotMatch(homeView, /featured-publications-section[^"]*hidden/);
+  assert.match(homeView, /id="mobile-navigation"/);
+  assert.match(publicationCard, /Show all authors/);
 });

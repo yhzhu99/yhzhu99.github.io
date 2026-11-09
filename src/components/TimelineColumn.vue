@@ -35,13 +35,17 @@ defineProps<{
           class="interactive-element rounded-xl border border-slate-200 bg-surface p-3 transition-colors hover:border-slate-300"
         >
           <div>
-            <div class="flex items-start justify-between gap-3">
+            <div
+              class="flex flex-col items-start gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-3"
+            >
               <h4 class="min-w-0 flex-1 text-sm font-semibold text-text-gray">
                 {{
                   kind === "education" ? item.institution : item.organization
                 }}
               </h4>
-              <span class="time-tag">{{ item.period }}</span>
+              <span class="time-tag order-first sm:order-none">{{
+                item.period
+              }}</span>
             </div>
             <p class="mt-0.5 text-xs text-primary-blue">
               {{ kind === "education" ? item.degree : item.position }}

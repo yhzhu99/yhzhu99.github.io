@@ -186,14 +186,20 @@ onBeforeUnmount(() => {
       >
         {{ authorsExpanded ? "Show fewer authors" : "Show all authors" }}
       </button>
-      <p v-if="item.venue" class="mb-2 text-xs italic text-primary-blue">
+      <p
+        v-if="item.venue"
+        class="text-xs italic text-primary-blue"
+        :class="
+          'additionalVenue' in item && item.additionalVenue ? 'mb-1' : 'mb-2'
+        "
+      >
         {{ formatVenueYear(item.venue, item.year) }}
       </p>
       <p
-        v-if="'presentationNote' in item && item.presentationNote"
-        class="mb-2 text-xs text-text-gray-light"
+        v-if="'additionalVenue' in item && item.additionalVenue"
+        class="mb-2 text-xs italic text-primary-blue"
       >
-        {{ item.presentationNote }}
+        {{ item.additionalVenue }}
       </p>
       <div v-if="item.links?.length || bibtex" class="flex flex-wrap gap-1.5">
         <a

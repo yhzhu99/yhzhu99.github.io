@@ -297,18 +297,16 @@ function formatPublication(publication: Publication) {
     ? `\\begingroup\\hypersetup{hidelinks}\\href{${href(paperUrl)}}{${tex(publication.title)}}\\endgroup`
     : tex(publication.title);
   const venueShort = getCvVenueShort(publication.venue);
-  const venue = [
-    stripYear(publication.venue, publication.year),
-    publication.presentationNote,
-  ]
-    .filter(Boolean)
-    .join("; ");
+  const venue = stripYear(publication.venue, publication.year);
+  const additionalVenue = publication.additionalVenue
+    ? `\\newline\\textit{${tex(publication.additionalVenue)}}`
+    : "";
 
   return `\\pubentry{[${tex(venueShort)} ${tex(publication.year)}]}
 {${title}}
 {\\cvauthors{${formatAuthors(publication)}}{${formatAuthors(publication, ABBREVIATED_AUTHOR_COUNT)}}}
 {${tex(venue)}}
-{${tex(publication.year)}}`;
+{${tex(publication.year)}${additionalVenue}}`;
 }
 
 function formatAward(item: AwardItem) {

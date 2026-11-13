@@ -57,7 +57,7 @@ export interface Publication {
   correspondingAuthors?: string;
   venue: string;
   year: string;
-  presentationNote?: string;
+  additionalVenue?: string;
   tag?: string;
   publicationType: PublicationType;
   links: LinkItem[];

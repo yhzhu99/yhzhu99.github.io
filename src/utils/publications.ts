@@ -154,7 +154,7 @@ export function filterPublications(
       publication.title,
       publication.authors,
       publication.venue,
-      publication.presentationNote,
+      publication.additionalVenue,
       publication.tag,
     ]
       .join(" ")
@@ -235,6 +235,7 @@ export function getCvVenueShort(venue = "") {
     { pattern: /\bCHI\b|Human Factors in Computing Systems/i, value: "CHI" },
     { pattern: /\bCIKM\b/i, value: "CIKM" },
     { pattern: /\bKDD\b|SIGKDD/i, value: "KDD" },
+    { pattern: /\bEACL\b/i, value: "EACL" },
     { pattern: /\bACL\b/i, value: "ACL" },
     { pattern: /\bICLR\b/i, value: "ICLR" },
     { pattern: /\bICML\b/i, value: "ICML" },

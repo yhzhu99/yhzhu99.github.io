@@ -30,7 +30,12 @@ test("keeps MedMMV as one publication with its earlier workshop noted", () => {
   );
   assert.equal(entries.length, 1);
   assert.match(entries[0].venue, /EACL/);
-  assert.match(entries[0].presentationNote ?? "", /ICLR 2026.*Workshop/);
+  assert.match(entries[0].additionalVenue ?? "", /ICLR 2026.*Workshop/);
+  assert.deepEqual(
+    entries[0].links.map((link) => link.type),
+    ["Paper"],
+  );
+  assert.equal(getCvVenueShort(entries[0].venue), "EACL");
   assert.match(
     formatBibtex(entries[0]),
     /booktitle = \{Findings of the European Chapter of the Association for Computational Linguistics \(EACL\)\}/,
@@ -45,7 +50,7 @@ test("keeps the COVID-19 benchmark journal paper and earlier oral abstract toget
   );
   assert.equal(entries.length, 1);
   assert.equal(entries[0].venue, "Cell Patterns");
-  assert.match(entries[0].presentationNote ?? "", /AMIA 2023.*Oral/);
+  assert.match(entries[0].additionalVenue ?? "", /AMIA.*2023.*Oral/);
   assert.match(formatBibtex(entries[0]), /journal = \{Cell Patterns\}/);
 });
 

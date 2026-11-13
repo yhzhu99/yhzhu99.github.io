@@ -741,6 +741,7 @@ watch(activeTab, () => {
                     :item="publication"
                     :author-links="authorLinks"
                     show-tag
+                    show-image
                   />
                 </div>
                 <div class="mt-4 flex justify-center">

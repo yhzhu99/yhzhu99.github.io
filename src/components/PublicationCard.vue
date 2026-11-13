@@ -12,7 +12,14 @@ const props = defineProps<{
   item: Publication | Project;
   authorLinks: Record<string, string>;
   showTag?: boolean;
+  showImage?: boolean;
 }>();
+
+const imageUrl = computed(() =>
+  "image" in props.item && props.item.image
+    ? `${import.meta.env.BASE_URL}${props.item.image}`
+    : "",
+);
 
 const copyState = ref<"idle" | "copied" | "failed">("idle");
 const authorDetailsOpen = ref(false);
@@ -157,6 +164,20 @@ onBeforeUnmount(() => {
 
 <template>
   <article class="publication-card">
+    <a
+      v-if="showImage && imageUrl"
+      :href="imageUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="publication-image"
+      :aria-label="`View figure for ${item.title}`"
+    >
+      <img
+        :src="imageUrl"
+        :alt="`Overview figure for ${item.title}`"
+        loading="lazy"
+      />
+    </a>
     <div class="min-w-0 flex-1">
       <h4 class="mb-1 text-sm font-semibold leading-tight text-text-gray">
         {{ item.title }}

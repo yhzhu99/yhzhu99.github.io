@@ -51,6 +51,7 @@ export type PublicationType = "journal" | "conference" | "preprint" | "book";
 export interface Publication {
   uid: string;
   featured?: boolean;
+  image?: string;
   title: string;
   authors: string;
   firstAuthors?: string;

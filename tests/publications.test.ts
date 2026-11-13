@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 import type { Publication } from "../src/types";
@@ -23,6 +23,13 @@ function publication(overrides: Partial<Publication> = {}): Publication {
     ...overrides,
   };
 }
+
+test("featured publications have local overview figures", () => {
+  for (const item of siteData.publications.filter((entry) => entry.featured)) {
+    assert.ok(item.image, `${item.title} is missing an overview figure`);
+    assert.ok(existsSync(resolve("public", item.image)), item.image);
+  }
+});
 
 test("keeps MedMMV as one publication with its earlier workshop noted", () => {
   const entries = siteData.publications.filter((item) =>

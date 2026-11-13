@@ -297,7 +297,12 @@ function formatPublication(publication: Publication) {
     ? `\\begingroup\\hypersetup{hidelinks}\\href{${href(paperUrl)}}{${tex(publication.title)}}\\endgroup`
     : tex(publication.title);
   const venueShort = getCvVenueShort(publication.venue);
-  const venue = stripYear(publication.venue, publication.year);
+  const venue = [
+    stripYear(publication.venue, publication.year),
+    publication.presentationNote,
+  ]
+    .filter(Boolean)
+    .join("; ");
 
   return `\\pubentry{[${tex(venueShort)} ${tex(publication.year)}]}
 {${title}}
@@ -392,9 +397,7 @@ function formatAuthors(publication: Publication, maxAuthors = Infinity) {
       if (author === "et al.") return "\\textit{et al.}";
 
       let formatted =
-        author === highlightedAuthor
-          ? `\\textbf{${tex(author)}}`
-          : tex(author);
+        author === highlightedAuthor ? `\\textbf{${tex(author)}}` : tex(author);
 
       if (hasCoFirstAuthors && firstAuthors.includes(author)) {
         formatted += "$^{\\ast}$";

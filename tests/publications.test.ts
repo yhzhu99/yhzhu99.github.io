@@ -24,6 +24,19 @@ function publication(overrides: Partial<Publication> = {}): Publication {
   };
 }
 
+test("keeps MedMMV as one publication with its earlier workshop noted", () => {
+  const entries = siteData.publications.filter((item) =>
+    item.title.startsWith("MedMMV:"),
+  );
+  assert.equal(entries.length, 1);
+  assert.match(entries[0].venue, /EACL/);
+  assert.match(entries[0].presentationNote ?? "", /ICLR 2026.*Workshop/);
+  assert.match(
+    formatBibtex(entries[0]),
+    /booktitle = \{Findings of the European Chapter of the Association for Computational Linguistics \(EACL\)\}/,
+  );
+});
+
 test("formats journal BibTeX with complete authors, DOI, and escaped text", () => {
   const bibtex = formatBibtex(publication());
 

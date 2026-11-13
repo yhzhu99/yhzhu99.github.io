@@ -189,6 +189,12 @@ onBeforeUnmount(() => {
       <p v-if="item.venue" class="mb-2 text-xs italic text-primary-blue">
         {{ formatVenueYear(item.venue, item.year) }}
       </p>
+      <p
+        v-if="'presentationNote' in item && item.presentationNote"
+        class="mb-2 text-xs text-text-gray-light"
+      >
+        {{ item.presentationNote }}
+      </p>
       <div v-if="item.links?.length || bibtex" class="flex flex-wrap gap-1.5">
         <a
           v-for="link in item.links"

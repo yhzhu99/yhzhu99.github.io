@@ -154,6 +154,7 @@ export function filterPublications(
       publication.title,
       publication.authors,
       publication.venue,
+      publication.presentationNote,
       publication.tag,
     ]
       .join(" ")
@@ -280,10 +281,7 @@ export function getCvVenueShort(venue = "") {
 
   const parentheticalAcronym = venue.match(/\(([A-Z][A-Z0-9-]{1,})\)/)?.[1];
 
-  return (
-    parentheticalAcronym ??
-    (venue.split(",")[0]?.trim() || "Publication")
-  );
+  return parentheticalAcronym ?? (venue.split(",")[0]?.trim() || "Publication");
 }
 
 export function formatBibtex(publication: Publication) {

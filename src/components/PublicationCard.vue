@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Project, Publication } from "../types";
+import PublicationIllustration from "./PublicationIllustration.vue";
 import {
   formatBibtex,
   formatAuthorsHtml,
@@ -14,12 +15,6 @@ const props = defineProps<{
   showTag?: boolean;
   showImage?: boolean;
 }>();
-
-const imageUrl = computed(() =>
-  "image" in props.item && props.item.image
-    ? `${import.meta.env.BASE_URL}${props.item.image}`
-    : "",
-);
 
 const copyState = ref<"idle" | "copied" | "failed">("idle");
 const authorDetailsOpen = ref(false);
@@ -164,20 +159,12 @@ onBeforeUnmount(() => {
 
 <template>
   <article class="publication-card">
-    <a
-      v-if="showImage && imageUrl"
-      :href="imageUrl"
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
+      v-if="showImage && 'illustration' in item && item.illustration"
       class="publication-image"
-      :aria-label="`View figure for ${item.title}`"
     >
-      <img
-        :src="imageUrl"
-        :alt="`Overview figure for ${item.title}`"
-        loading="lazy"
-      />
-    </a>
+      <PublicationIllustration :name="item.illustration" />
+    </div>
     <div class="min-w-0 flex-1">
       <h4 class="mb-1 text-sm font-semibold leading-tight text-text-gray">
         {{ item.title }}

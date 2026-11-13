@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 import type { Publication } from "../src/types";
 import { siteData } from "../src/utils/site-data";
+import { publicationIllustrations } from "../src/data/publication-illustrations";
 import {
   formatBibtex,
   getBibtexCitationKey,
@@ -24,10 +25,10 @@ function publication(overrides: Partial<Publication> = {}): Publication {
   };
 }
 
-test("featured publications have local overview figures", () => {
+test("featured publications have a matching visual summary", () => {
   for (const item of siteData.publications.filter((entry) => entry.featured)) {
-    assert.ok(item.image, `${item.title} is missing an overview figure`);
-    assert.ok(existsSync(resolve("public", item.image)), item.image);
+    assert.ok(item.illustration, `${item.title} is missing a visual summary`);
+    assert.ok(publicationIllustrations[item.illustration], item.illustration);
   }
 });
 

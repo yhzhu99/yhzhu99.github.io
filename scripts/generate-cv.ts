@@ -298,15 +298,12 @@ function formatPublication(publication: Publication) {
     : tex(publication.title);
   const venueShort = getCvVenueShort(publication.venue);
   const venue = stripYear(publication.venue, publication.year);
-  const additionalVenue = publication.additionalVenue
-    ? `\\newline\\textit{${tex(publication.additionalVenue)}}`
-    : "";
 
   return `\\pubentry{[${tex(venueShort)} ${tex(publication.year)}]}
 {${title}}
 {\\cvauthors{${formatAuthors(publication)}}{${formatAuthors(publication, ABBREVIATED_AUTHOR_COUNT)}}}
 {${tex(venue)}}
-{${tex(publication.year)}${additionalVenue}}`;
+{${tex(publication.year)}}`;
 }
 
 function formatAward(item: AwardItem) {

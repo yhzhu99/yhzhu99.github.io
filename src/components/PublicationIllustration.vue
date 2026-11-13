@@ -14,14 +14,15 @@ const illustration = computed(() => publicationIllustrations[props.name]);
     role="img"
     :aria-label="illustration.description"
     :style="{
-      '--accent': illustration.color,
-      '--background': illustration.background,
+      '--accent-light': illustration.light,
+      '--accent-dark': illustration.dark,
+      '--background-dark': illustration.background,
     }"
   >
     <defs>
       <linearGradient :id="`surface-${name}`" x1="0" y1="0" x2="1" y2="1">
         <stop stop-color="var(--background)" />
-        <stop offset="1" stop-color="#101c35" />
+        <stop offset="1" stop-color="var(--surface-end)" />
       </linearGradient>
       <linearGradient :id="`glow-${name}`" x1="0" y1="0" x2="0" y2="1">
         <stop stop-color="var(--accent)" stop-opacity=".35" />
@@ -73,7 +74,7 @@ const illustration = computed(() => publicationIllustrations[props.name]);
       <circle cx="238" cy="100" r="4" fill="var(--accent)" />
       <circle cx="160" cy="143" r="4" fill="var(--accent)" />
       <circle cx="82" cy="100" r="4" fill="var(--accent)" />
-      <circle r="3" fill="#fff" class="orbit" />
+      <circle r="3" fill="var(--accent)" class="orbit" />
     </g>
 
     <!-- AICare: a clinician-facing chart with interactive evidence panels. -->
@@ -199,7 +200,7 @@ const illustration = computed(() => publicationIllustrations[props.name]);
       />
       <path
         d="M168 87v12m0 6v1"
-        stroke="#fff"
+        stroke="var(--ink)"
         stroke-width="3"
         stroke-linecap="round"
       />
@@ -218,7 +219,7 @@ const illustration = computed(() => publicationIllustrations[props.name]);
     <g v-else-if="name === 'clinicrealm'">
       <path
         d="M150 55v77M82 88h136M106 143h88"
-        stroke="#d9cfff"
+        stroke="var(--accent)"
         stroke-opacity=".55"
         stroke-width="2"
       />
@@ -275,7 +276,7 @@ const illustration = computed(() => publicationIllustrations[props.name]);
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      <g fill="#244c40" stroke="var(--accent)" stroke-width="1.5">
+      <g fill="var(--background)" stroke="var(--accent)" stroke-width="1.5">
         <circle cx="75" cy="61" r="16" />
         <circle cx="225" cy="61" r="16" />
         <circle cx="75" cy="139" r="16" />
@@ -428,22 +429,36 @@ const illustration = computed(() => publicationIllustrations[props.name]);
 
 <style scoped>
 .publication-illustration {
+  --accent: var(--accent-light);
+  --background: color-mix(in srgb, var(--accent) 11%, #ffffff);
+  --surface-end: #ffffff;
+  --ink: #263d54;
+  --glass-fill: #ffffff;
+  --glass-stroke: var(--accent);
   display: block;
   width: 100%;
   height: 100%;
+}
+:global(.dark .publication-illustration) {
+  --accent: var(--accent-dark);
+  --background: var(--background-dark);
+  --surface-end: #101c35;
+  --ink: #f2f7ff;
+  --glass-fill: var(--accent);
+  --glass-stroke: #ffffff;
 }
 .label {
   font:
     700 12px system-ui,
     sans-serif;
-  fill: #fff;
+  fill: var(--ink);
   letter-spacing: 1.2px;
 }
 .small-label {
   font:
     700 9px system-ui,
     sans-serif;
-  fill: #fff;
+  fill: var(--ink);
   fill-opacity: 0.8;
   letter-spacing: 0.4px;
 }
@@ -451,18 +466,21 @@ const illustration = computed(() => publicationIllustrations[props.name]);
   font:
     700 10px system-ui,
     sans-serif;
-  fill: #fff;
+  fill: var(--ink);
   letter-spacing: 0.5px;
 }
 .glass {
-  fill: #fff;
-  fill-opacity: 0.09;
-  stroke: #fff;
+  fill: var(--glass-fill);
+  fill-opacity: 0.56;
+  stroke: var(--glass-stroke);
   stroke-opacity: 0.18;
+}
+:global(.dark .publication-illustration .glass) {
+  fill-opacity: 0.09;
 }
 .grid-line {
   fill: none;
-  stroke: #fff;
+  stroke: var(--accent);
   stroke-opacity: 0.12;
   stroke-width: 1;
 }

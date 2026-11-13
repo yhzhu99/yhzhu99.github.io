@@ -29,6 +29,10 @@ test("featured publications have a matching visual summary", () => {
   for (const item of siteData.publications.filter((entry) => entry.featured)) {
     assert.ok(item.illustration, `${item.title} is missing a visual summary`);
     assert.ok(publicationIllustrations[item.illustration], item.illustration);
+    assert.ok(
+      item.links.some((link) => link.type === "Paper"),
+      item.title,
+    );
   }
 });
 

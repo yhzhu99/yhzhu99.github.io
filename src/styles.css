@@ -406,7 +406,7 @@
     border-radius: 0.5rem;
     background: var(--theme-surface);
     padding: 0.65rem;
-    transition: border-color 0.2s ease-out;
+    transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
   }
 
   @media (min-width: 640px) {
@@ -419,9 +419,11 @@
 
   .publication-card:hover {
     border-color: var(--theme-border-strong);
+    box-shadow: var(--theme-shadow-soft);
   }
 
   .publication-image {
+    position: relative;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -431,7 +433,43 @@
     overflow: hidden;
     border: 1px solid var(--theme-border);
     border-radius: 0.35rem;
-    background: #f5f8fc;
+    background: var(--theme-bg-secondary);
+  }
+
+  .publication-image-action {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    border-radius: 999px;
+    background: var(--theme-surface);
+    color: var(--theme-text);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    box-shadow: var(--theme-shadow-soft);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .publication-image:hover .publication-image-action,
+  .publication-image:focus .publication-image-action {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .publication-image-action {
+      transition: none;
+    }
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .publication-illustration {
+      transition: transform 0.35s ease;
+    }
+
+    .publication-card:hover .publication-illustration {
+      transform: scale(1.025);
+    }
   }
 
   @media (min-width: 640px) {

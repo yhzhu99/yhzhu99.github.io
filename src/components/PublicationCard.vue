@@ -16,6 +16,10 @@ const props = defineProps<{
   showImage?: boolean;
 }>();
 
+const paperUrl = computed(
+  () => props.item.links.find((link) => link.type === "Paper")?.url,
+);
+
 const copyState = ref<"idle" | "copied" | "failed">("idle");
 const authorDetailsOpen = ref(false);
 const authorsTruncated = ref(false);
@@ -159,12 +163,21 @@ onBeforeUnmount(() => {
 
 <template>
   <article class="publication-card">
-    <div
-      v-if="showImage && 'illustration' in item && item.illustration"
+    <a
+      v-if="
+        showImage && paperUrl && 'illustration' in item && item.illustration
+      "
       class="publication-image"
+      :href="paperUrl"
+      :aria-label="`Read paper: ${item.title}`"
+      target="_blank"
+      rel="noopener noreferrer"
     >
       <PublicationIllustration :name="item.illustration" />
-    </div>
+      <span class="publication-image-action" aria-hidden="true"
+        >Read paper ↗</span
+      >
+    </a>
     <div class="min-w-0 flex-1">
       <h4 class="mb-1 text-sm font-semibold leading-tight text-text-gray">
         {{ item.title }}

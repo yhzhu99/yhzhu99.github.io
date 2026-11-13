@@ -37,6 +37,18 @@ test("keeps MedMMV as one publication with its earlier workshop noted", () => {
   );
 });
 
+test("keeps the COVID-19 benchmark journal paper and earlier oral abstract together", () => {
+  const entries = siteData.publications.filter((item) =>
+    item.title
+      .toLowerCase()
+      .startsWith("a comprehensive benchmark for covid-19 predictive modeling"),
+  );
+  assert.equal(entries.length, 1);
+  assert.equal(entries[0].venue, "Cell Patterns");
+  assert.match(entries[0].presentationNote ?? "", /AMIA 2023.*Oral/);
+  assert.match(formatBibtex(entries[0]), /journal = \{Cell Patterns\}/);
+});
+
 test("formats journal BibTeX with complete authors, DOI, and escaped text", () => {
   const bibtex = formatBibtex(publication());
 
